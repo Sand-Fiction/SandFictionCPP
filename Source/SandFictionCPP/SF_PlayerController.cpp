@@ -134,7 +134,7 @@ void ASF_PlayerController::OnJumpReleased()
 
 void ASF_PlayerController::OnAttackPressed()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Attack"));
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Attack"));
 	StopMovement();
 }
 
@@ -144,7 +144,7 @@ void ASF_PlayerController::OnAttackReleased()
 
 void ASF_PlayerController::OnInteractPressed()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Interact"));
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Interact"));
 }
 
 void ASF_PlayerController::OnInteractReleased()

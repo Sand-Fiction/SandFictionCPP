@@ -1,8 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SF_GameMode.h"
-#include "SF_PlayerController.h"
-#include "SF_Character.h"
+#include "SandFictionCPP/Character/SF_PlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 
 ASF_GameMode::ASF_GameMode()

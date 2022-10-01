@@ -3,12 +3,13 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class SandFictionCPPEditorTarget : TargetRules
+public class SandFictionCPP_EditorTarget : TargetRules
 {
-	public SandFictionCPPEditorTarget(TargetInfo Target) : base(Target)
+	public SandFictionCPP_EditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.Add("SandFictionCPP");
+		ExtraModuleNames.Add("SandFictionCPP_Editor");
 	}
 }

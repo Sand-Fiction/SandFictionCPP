@@ -9,7 +9,16 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine"
+				"Engine",
+				"Flow"
+			]
+		},
+		{
+			"Name": "SandFictionCPP_Editor",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit",
+			"AdditionalDependencies": [
+				"FlowEditor"
 			]
 		}
 	],

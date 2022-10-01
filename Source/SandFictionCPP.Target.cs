@@ -10,5 +10,6 @@ public class SandFictionCPPTarget : TargetRules
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.Add("SandFictionCPP");
+		ExtraModuleNames.Add("SandFictionCPP_Editor");
 	}
 }

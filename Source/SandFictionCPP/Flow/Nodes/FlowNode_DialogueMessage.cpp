@@ -2,6 +2,9 @@
 
 
 #include "FlowNode_DialogueMessage.h"
+
+#include "Kismet/GameplayStatics.h"
+#include "SandFictionCPP/Core/SF_HUD.h"
 #include "SandFictionCPP/Data/NPCData.h"
 
 
@@ -15,7 +18,7 @@ FText UFlowNode_DialogueMessage::GetReadableDialogueString() const
 		Args.Add("OldLines", DialogueText);
 		Args.Add("NewLine", DialogueLine);
 
-		DialogueText = FText::Format(NSLOCTEXT("SFNameSpace", "FullTextFormat", "{OldLines} \n {NewLine}"), Args);
+		DialogueText = FText::Format(NSLOCTEXT("SFNameSpace", "FullTextFormat", "{OldLines} {NewLine}"), Args);
 	}
 
 	return DialogueText;
@@ -50,7 +53,11 @@ FLinearColor UFlowNode_DialogueMessage::GetSpeakerColor() const
 
 void UFlowNode_DialogueMessage::ExecuteInput(const FName& PinName)
 {
-	// Node Functionality here!
-
-	TriggerFirstOutput(true);
+	if (const auto HUD = Cast<ASF_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD()))
+	{
+		HUD->SetDialogueLines(DialogueLines);
+		HUD->SetDialogueSpeaker(GetSpeakerName());
+		HUD->UpdateMainDialogue();
+		HUD->OnAllDialogueLinesFinished.AddDynamic(this, &UFlowNode_DialogueMessage::TriggerFirstOutput);
+	}
 }

@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Graph/Nodes/FlowGraphNode.h"
-#include "FlowGraphNode_DialogueMessage.generated.h"
+#include "FlowGraphNode_PlayerReply.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SANDFICTIONCPP_EDITOR_API UFlowGraphNode_DialogueMessage : public UFlowGraphNode
+class SANDFICTIONCPP_EDITOR_API UFlowGraphNode_PlayerReply : public UFlowGraphNode
 {
 	GENERATED_UCLASS_BODY()
 

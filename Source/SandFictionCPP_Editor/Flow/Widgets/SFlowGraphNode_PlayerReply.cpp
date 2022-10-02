@@ -1,5 +1,6 @@
 
-#include "SFlowGraphNode_DialogueMessage.h"
+#include "SFlowGraphNode_PlayerReply.h"
+
 #include "FlowEditorStyle.h"
 #include "GraphEditorSettings.h"
 #include "SCommentBubble.h"
@@ -8,13 +9,13 @@
 #include "TutorialMetaData.h"
 #include "Materials/MaterialInstance.h"
 
-#include "SandFictionCPP/Flow/Nodes/FlowNode_DialogueMessage.h"
+#include "SandFictionCPP/Flow/Nodes/FlowNode_PlayerReply.h"
 #include "Widgets/Text/SInlineEditableTextBlock.h"
 
 
 #define LOCTEXT_NAMESPACE "FlowEditor"
 
-void SFlowGraphNode_DialogueMessage::UpdateGraphNode()
+void SFlowGraphNode_PlayerReply::UpdateGraphNode()
 {
 	InputPins.Empty();
 	OutputPins.Empty();
@@ -192,24 +193,7 @@ void SFlowGraphNode_DialogueMessage::UpdateGraphNode()
 	CreateAdvancedViewArrow(InnerVerticalBox);
 }
 
-TSharedRef<SWidget> SFlowGraphNode_DialogueMessage::CreateDialogueContentArea()
-{
-	if (UFlowNode* FlowNode = FlowGraphNode->GetFlowNode())
-	{
-		if (const UFlowNode_DialogueMessage* DialogueNode = Cast<UFlowNode_DialogueMessage>(FlowNode))
-		{
-			FText DialogueText = DialogueNode->GetReadableDialogueString();
-
-			return SNew(STextBlock)
-				.Text(FText::FromString(""))
-				.WrapTextAt(250.f);
-		}
-		return SNew(SHorizontalBox);
-	}
-	return SNew(SHorizontalBox);
-}
-
-TSharedRef<SWidget> SFlowGraphNode_DialogueMessage::CreateNodeContentArea()
+TSharedRef<SWidget> SFlowGraphNode_PlayerReply::CreateNodeContentArea()
 {
 	return SNew(SBorder)
 		.BorderImage(FEditorStyle::GetBrush("NoBorder"))
@@ -224,12 +208,12 @@ TSharedRef<SWidget> SFlowGraphNode_DialogueMessage::CreateNodeContentArea()
 			[
 				SAssignNew(LeftNodeBox, SVerticalBox)
 			]
-			+SHorizontalBox::Slot()
+			/*+SHorizontalBox::Slot()
 			.HAlign(HAlign_Center)
 			.FillWidth(1.0f)
 			[
 				CreateDialogueContentArea()
-			]
+			]*/
 			+SHorizontalBox::Slot()
 			.AutoWidth()
 			.HAlign(HAlign_Right)
@@ -240,43 +224,16 @@ TSharedRef<SWidget> SFlowGraphNode_DialogueMessage::CreateNodeContentArea()
 		];
 }
 
-void SFlowGraphNode_DialogueMessage::CreateBelowPinControls(TSharedPtr<SVerticalBox> MainBox)
-{
-	if (UFlowNode* FlowNode = FlowGraphNode->GetFlowNode())
-	{
-		if (const UFlowNode_DialogueMessage* DialogueNode = Cast<UFlowNode_DialogueMessage>(FlowNode))
-		{
-			const FText DialogueText = DialogueNode->GetReadableDialogueString();
 
-			MainBox->AddSlot()
-				[
-					SNew(SHorizontalBox)
-					+ SHorizontalBox::Slot()
-				.HAlign(HAlign_Fill)
-				.VAlign(VAlign_Center)
-				.FillWidth(1.0f)
-				.Padding(10.f)
-					[
-						SNew(STextBlock)
-						.Text(DialogueText)
-						.WrapTextAt(250.f)
-					]
-				];
-		}
-	}
-}
-
-TSharedRef<SWidget> SFlowGraphNode_DialogueMessage::CreateTitleBar()
+TSharedRef<SWidget> SFlowGraphNode_PlayerReply::CreateTitleBar()
 {
 	FText NodeTitleText = LOCTEXT("InvalidSpeaker", "Invalid Speaker!");
 	FLinearColor SpeakerColor;
 	if (UFlowNode* FlowNode = FlowGraphNode->GetFlowNode())
 	{
-		{
-			const UFlowNode_DialogueMessage* DialogueNode = Cast<UFlowNode_DialogueMessage>(FlowNode);
-			NodeTitleText = DialogueNode->GetSpeakerName();
-			SpeakerColor = DialogueNode->GetSpeakerColor();
-		}
+		const UFlowNode_PlayerReply* PlayerReplyNode = Cast<UFlowNode_PlayerReply>(FlowNode);
+		NodeTitleText = PlayerReplyNode->GetSpeakerName();
+		SpeakerColor = PlayerReplyNode->GetSpeakerColor();
 	}
 
 	SpeakerBgBrush.TintColor = SpeakerColor;
@@ -298,14 +255,14 @@ TSharedRef<SWidget> SFlowGraphNode_DialogueMessage::CreateTitleBar()
 		.Text(NodeTitleText)
 		.ColorAndOpacity(SpeakerTextColor)
 		.IsReadOnly(true)
-		.IsSelected(this, &SFlowGraphNode_DialogueMessage::IsSelectedExclusively)
+		.IsSelected(this, &SFlowGraphNode_PlayerReply::IsSelectedExclusively)
 		]
 		];
 
 	return TitleBoxH.ToSharedRef();
 }
 
-void SFlowGraphNode_DialogueMessage::Construct(const FArguments& InArgs, UFlowGraphNode* InNode)
+void SFlowGraphNode_PlayerReply::Construct(const FArguments& InArgs, UFlowGraphNode* InNode)
 {
 	SpeakerTextColor = FLinearColor(0.f, 0.f, 0.f, 1.f);
 	

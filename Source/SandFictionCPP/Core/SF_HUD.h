@@ -7,6 +7,7 @@
 #include "SF_HUD.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDialogueLinesFinished, bool, bFinish);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerReplyGiven, int32, Index);
 
 UCLASS()
 class SANDFICTIONCPP_API ASF_HUD : public AHUD
@@ -27,19 +28,34 @@ public:
 	void SetPlayerReplies(TArray<FText> PlayerReplies);
 	void SetDialogueSpeaker(const FText SpeakerName);
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void ShowPlayerReplies();
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void UpdateMainDialogue();
+	// Main Dialogue Functions
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void StartMainDialogue();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void UpdateMainDialogue();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void EndMainDialogue();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ShowPlayerReplies();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void RemovePlayerReplies();
+
+	// Side Dialogue Functions
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void SpawnSideDialogue();
+
+	
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDialogueLinesFinished OnAllDialogueLinesFinished;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FPlayerReplyGiven OnPlayerAnswered;
 	
 };

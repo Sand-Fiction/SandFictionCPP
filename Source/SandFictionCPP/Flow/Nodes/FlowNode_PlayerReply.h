@@ -25,4 +25,8 @@ public:
 	void UpdateReplyPins();
 	
 	virtual void ExecuteInput(const FName& PinName) override;
+
+	UFUNCTION()
+	void TriggerOutPutAtIndex(int32 Index);
+	
 };

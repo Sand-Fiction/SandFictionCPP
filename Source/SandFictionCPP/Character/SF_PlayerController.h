@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SF_Character.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "SF_PlayerController.generated.h"
@@ -27,7 +28,7 @@ public:
 	UNiagaraSystem* FXCursor;
 
 	UPROPERTY(BlueprintReadOnly, Category = References)
-	ACharacter* PawnReference;	
+	ASF_Character* PawnReference;	
 
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
@@ -52,6 +53,13 @@ protected:
 
 	void OnInteractPressed();
 	void OnInteractReleased();
+
+	void OnMoveForward(float AxisInput);
+	void OnMoveRight(float AxisInput);
+
+	// Rotation Function
+	void RotateToCursor(FVector HitLocation);
+	
 
 private:
 	bool bInputPressed; // Input is bring pressed

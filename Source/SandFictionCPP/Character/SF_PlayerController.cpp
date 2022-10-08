@@ -8,6 +8,8 @@
 #include "SF_Character.h"
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ASF_PlayerController::ASF_PlayerController()
 {
@@ -19,7 +21,7 @@ ASF_PlayerController::ASF_PlayerController()
 void ASF_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	PawnReference = GetCharacter();
+	PawnReference = Cast<ASF_Character>(GetCharacter());
 }
 
 //Tick -> Move Pawn to Cursor Location if RMB Input
@@ -32,30 +34,28 @@ void ASF_PlayerController::PlayerTick(float DeltaTime)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("PawnNotValid"));
 	}
 
-	if (bInputPressed)
+	else
 	{
-		FollowTime += DeltaTime;
-
-		// Look for Cursor location
-		FVector HitLocation = FVector::ZeroVector;
 		FHitResult Hit;
-		
 		{
 			GetHitResultUnderCursor(ECC_Visibility, true, Hit);
 		}
-		HitLocation = Hit.Location;
+		const FVector HitLocation = Hit.Location;
+		RotateToCursor(HitLocation);
 
-		// Direct the Pawn towards that location
-		if(PawnReference)
+		if (bInputPressed)
 		{
+			FollowTime += DeltaTime;
+
+			// Direct the Pawn towards that location
 			const FVector WorldDirection = (HitLocation - PawnReference->GetActorLocation()).GetSafeNormal();
 			PawnReference->AddMovementInput(WorldDirection, 1.f, false);
 		}
-	}
-	else
-	{
-		FollowTime = 0.f;
-	}
+		else
+		{
+			FollowTime = 0.f;
+		}
+	}	
 }
 
 void ASF_PlayerController::SetupInputComponent()
@@ -74,6 +74,9 @@ void ASF_PlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Interact", IE_Pressed, this, &ASF_PlayerController::OnInteractPressed);
 	InputComponent->BindAction("Interact", IE_Released, this, &ASF_PlayerController::OnInteractReleased);
+
+	InputComponent->BindAxis("MoveForward", this, &ASF_PlayerController::OnMoveForward);
+	InputComponent->BindAxis("MoveRight", this, &ASF_PlayerController::OnMoveRight);
 }
 
 void ASF_PlayerController::OnSetDestinationPressed()
@@ -111,10 +114,7 @@ bool ASF_PlayerController::JumpCheck()
 		return false;
 	}
 
-	else
-	{
-		return true;
-	}	
+	return true;
 }
 
 void ASF_PlayerController::OnJumpPressed()
@@ -122,14 +122,20 @@ void ASF_PlayerController::OnJumpPressed()
 	
 	if (JumpCheck())
 	{
-		PawnReference->Jump();
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Jump"));
+		if (PawnReference)
+		{
+			PawnReference->Jump();
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Jump"));
+		}
 	}
 }
 
 void ASF_PlayerController::OnJumpReleased()
 {
-	PawnReference->StopJumping();
+	if (PawnReference)
+	{
+		PawnReference->StopJumping();
+	}
 }
 
 void ASF_PlayerController::OnAttackPressed()
@@ -150,3 +156,39 @@ void ASF_PlayerController::OnInteractPressed()
 void ASF_PlayerController::OnInteractReleased()
 {
 }
+
+void ASF_PlayerController::OnMoveForward(float AxisInput)
+{
+	if (PawnReference)
+	{
+		const auto SpringArm = PawnReference->GetCameraBoom();
+		const auto Rotation = SpringArm->GetTargetRotation();
+		const FRotator Rotation2D(0, Rotation.Yaw, 0);
+		const auto WorldDirection = UKismetMathLibrary::GetRightVector(Rotation2D);
+
+		PawnReference->AddMovementInput(WorldDirection, AxisInput);
+	}
+}
+
+void ASF_PlayerController::OnMoveRight(float AxisInput)
+{
+	if (PawnReference)
+	{
+		const auto SpringArm = PawnReference->GetCameraBoom();
+		const auto Rotation = SpringArm->GetTargetRotation();
+		const FRotator Rotation2D(0,Rotation.Yaw,0);
+		const auto WorldDirection = UKismetMathLibrary::GetForwardVector(Rotation2D);
+
+		PawnReference->AddMovementInput(WorldDirection, AxisInput);
+	}
+}
+
+void ASF_PlayerController::RotateToCursor(FVector HitLocation)
+{
+	if (PawnReference)
+	{
+		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(PawnReference->GetActorLocation(), HitLocation);
+		SetControlRotation(FRotator(0, LookAtRotation.Yaw, 0));
+	}
+}
+

@@ -44,7 +44,7 @@ protected:
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
 
-	bool JumpCheck();
+	bool JumpCheck() const;
 	void OnJumpPressed();
 	void OnJumpReleased();
 

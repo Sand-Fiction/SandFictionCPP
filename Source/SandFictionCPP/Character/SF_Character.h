@@ -23,6 +23,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FactionComponent subobject **/
 	FORCEINLINE class USF_CharacterFactionComponent* GetFactionComponent() const { return CharacterFactionComponent; }
+	/** Returns StateComponent subobject **/
+	FORCEINLINE class USF_CharacterStateComponent* GetCharacterStateComponent() const { return CharacterStateComponent; }
 
 private:
 	/** Top down camera */
@@ -36,5 +38,9 @@ private:
 	/** Faction Component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	class USF_CharacterFactionComponent* CharacterFactionComponent;
+
+	/** State Component */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	class USF_CharacterStateComponent* CharacterStateComponent;
 };
 

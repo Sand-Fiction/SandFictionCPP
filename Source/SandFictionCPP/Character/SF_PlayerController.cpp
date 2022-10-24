@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "SandFictionCPP/Components/SF_CharacterStateComponent.h"
 
 ASF_PlayerController::ASF_PlayerController()
 {
@@ -107,22 +108,31 @@ void ASF_PlayerController::OnSetDestinationReleased()
 	}
 }
 
-bool ASF_PlayerController::JumpCheck()
+bool ASF_PlayerController::JumpCheck() const
 {
-	if (PawnReference->GetMovementComponent()->IsFalling())
+	if (PawnReference)
 	{
-		return false;
+		switch (PawnReference->GetCharacterStateComponent()->CharacterState)
+		{
+		case ECharacterState::Idle: return true;
+		case ECharacterState::Running: return true;
+		case ECharacterState::Falling: return false;
+		case ECharacterState::Attacking: return false;
+		case ECharacterState::Blocking: return true;
+		case ECharacterState::Rolling: return false;
+		case ECharacterState::Interacting: return false;
+		default: return true;
+		}
 	}
-
-	return true;
+	return false;
 }
 
 void ASF_PlayerController::OnJumpPressed()
 {
 	
-	if (JumpCheck())
+	if (PawnReference)
 	{
-		if (PawnReference)
+		if (JumpCheck())
 		{
 			PawnReference->Jump();
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Jump"));

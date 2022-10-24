@@ -6,10 +6,6 @@
 #include "UObject/ObjectMacros.h"
 #include "SF_CharacterEnums.generated.h"
 
-/**
- * 
- */
-
 UENUM(BlueprintType)
 enum class ECharacterState : uint8
 {
@@ -18,4 +14,12 @@ enum class ECharacterState : uint8
 	Blocking,
 	Rolling,
 	Interacting
+};
+
+UENUM(BlueprintType)
+enum class ECharacterFaction : uint8
+{
+	Player,
+	Friendly,
+	Hostile
 };

@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "SandFictionCPP/Components/SF_CharacterFactionComponent.h"
 
 ASF_Character::ASF_Character()
 {
@@ -20,6 +21,9 @@ ASF_Character::ASF_Character()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
+
+	// Create Faction Component
+	CharacterFactionComponent = CreateDefaultSubobject<USF_CharacterFactionComponent>(TEXT("FactionComponent"));
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Rotate character to moving direction
@@ -36,9 +40,9 @@ ASF_Character::ASF_Character()
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
 	// Create a camera...
-	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
-	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
+	CameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	CameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;

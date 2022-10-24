@@ -164,7 +164,7 @@ void ASF_PlayerController::OnMoveForward(float AxisInput)
 		const auto SpringArm = PawnReference->GetCameraBoom();
 		const auto Rotation = SpringArm->GetTargetRotation();
 		const FRotator Rotation2D(0, Rotation.Yaw, 0);
-		const auto WorldDirection = UKismetMathLibrary::GetRightVector(Rotation2D);
+		const auto WorldDirection = UKismetMathLibrary::GetForwardVector(Rotation2D);
 
 		PawnReference->AddMovementInput(WorldDirection, AxisInput);
 	}
@@ -177,7 +177,7 @@ void ASF_PlayerController::OnMoveRight(float AxisInput)
 		const auto SpringArm = PawnReference->GetCameraBoom();
 		const auto Rotation = SpringArm->GetTargetRotation();
 		const FRotator Rotation2D(0,Rotation.Yaw,0);
-		const auto WorldDirection = UKismetMathLibrary::GetForwardVector(Rotation2D);
+		const auto WorldDirection = UKismetMathLibrary::GetRightVector(Rotation2D);
 
 		PawnReference->AddMovementInput(WorldDirection, AxisInput);
 	}

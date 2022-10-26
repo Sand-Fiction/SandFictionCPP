@@ -11,6 +11,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "SandFictionCPP/Components/SF_CharacterStateComponent.h"
+#include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
 
 ASF_PlayerController::ASF_PlayerController()
 {
@@ -75,6 +76,8 @@ void ASF_PlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Interact", IE_Pressed, this, &ASF_PlayerController::OnInteractPressed);
 	InputComponent->BindAction("Interact", IE_Released, this, &ASF_PlayerController::OnInteractReleased);
+
+	InputComponent->BindAction("TargetLockOnOff", IE_Pressed, this, &ASF_PlayerController::OnTargetLockOnOffPressed);
 
 	InputComponent->BindAxis("MoveForward", this, &ASF_PlayerController::OnMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &ASF_PlayerController::OnMoveRight);
@@ -165,6 +168,17 @@ void ASF_PlayerController::OnInteractPressed()
 
 void ASF_PlayerController::OnInteractReleased()
 {
+
+}
+
+void ASF_PlayerController::OnTargetLockOnOffPressed()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Target"));
+
+	if (const auto TargetSystem = PawnReference->GetTargetSystem())
+	{
+		TargetSystem->IsLockedOn ? TargetSystem->LockOff() : TargetSystem->LockOn();
+	}
 }
 
 void ASF_PlayerController::OnMoveForward(float AxisInput)

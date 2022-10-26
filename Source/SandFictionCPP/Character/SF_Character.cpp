@@ -12,6 +12,7 @@
 #include "Engine/World.h"
 #include "SandFictionCPP/Components/SF_CharacterFactionComponent.h"
 #include "SandFictionCPP/Components/SF_CharacterStateComponent.h"
+#include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
 
 ASF_Character::ASF_Character()
 {
@@ -26,6 +27,7 @@ ASF_Character::ASF_Character()
 	// Create Custom Components
 	CharacterFactionComponent = CreateDefaultSubobject<USF_CharacterFactionComponent>(TEXT("FactionComponent"));
 	CharacterStateComponent = CreateDefaultSubobject<USF_CharacterStateComponent>(TEXT("StateComponent"));
+	TargetSystem = CreateDefaultSubobject<USF_CharacterTargetSystem>(TEXT("TargetSystem"));
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Rotate character to moving direction

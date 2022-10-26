@@ -54,6 +54,8 @@ protected:
 	void OnInteractPressed();
 	void OnInteractReleased();
 
+	void OnTargetLockOnOffPressed();
+
 	void OnMoveForward(float AxisInput);
 	void OnMoveRight(float AxisInput);
 

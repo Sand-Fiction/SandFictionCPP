@@ -17,6 +17,12 @@ public:
 	// Sets default values for this component's properties
 	USF_CharacterTargetSystem();
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> WidgetClass;
+
+	UPROPERTY(BlueprintReadOnly)
+	class UWidgetComponent* WidgetComponent;
+
 	UPROPERTY(BlueprintReadWrite)
 	TArray<USF_CharacterTargetComponent*> TargetComponents;
 
@@ -33,7 +39,7 @@ public:
 	void LockOff();
 
 	UPROPERTY(EditAnywhere)
-	float MaxLockOnDistance = 10000;
+	float MaxLockOnDistance = 1000;
 
 	UPROPERTY(BlueprintReadOnly)
 	bool IsLockedOn;
@@ -41,10 +47,12 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	USF_CharacterTargetComponent* CurrentTarget;
 
-	
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void SpawnWidgetComponent();
+	void DestroyWidgetComponent();
 
 };

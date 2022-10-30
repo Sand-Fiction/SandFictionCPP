@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "SF_Character.h"
-#include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "SF_PlayerController.generated.h"
 

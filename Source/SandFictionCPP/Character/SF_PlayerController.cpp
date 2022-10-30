@@ -159,6 +159,7 @@ void ASF_PlayerController::OnAttackPressed()
 
 void ASF_PlayerController::OnAttackReleased()
 {
+
 }
 
 void ASF_PlayerController::OnInteractPressed()

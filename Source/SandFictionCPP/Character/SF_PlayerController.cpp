@@ -2,21 +2,18 @@
 
 #include "SF_PlayerController.h"
 #include "GameFramework/Pawn.h"
-#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 #include "SF_Character.h"
-#include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "SandFictionCPP/Camera/SF_CameraActor_Gameplay.h"
 #include "SandFictionCPP/Components/SF_CharacterStateComponent.h"
 #include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
 
 ASF_PlayerController::ASF_PlayerController()
 {
-	bShowMouseCursor = true;
-	DefaultMouseCursor = EMouseCursor::Default;
+	
 }
 
 // Initialization
@@ -24,6 +21,9 @@ void ASF_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	PawnReference = Cast<ASF_Character>(GetCharacter());
+
+	SetupFollowCamera();
+
 }
 
 //Tick -> Move Pawn to Cursor Location if RMB Input
@@ -35,38 +35,12 @@ void ASF_PlayerController::PlayerTick(float DeltaTime)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("PawnNotValid"));
 	}
-
-	else
-	{
-		FHitResult Hit;
-		{
-			GetHitResultUnderCursor(ECC_Visibility, true, Hit);
-		}
-		const FVector HitLocation = Hit.Location;
-		RotateToCursor(HitLocation);
-
-		if (bInputPressed)
-		{
-			FollowTime += DeltaTime;
-
-			// Direct the Pawn towards that location
-			const FVector WorldDirection = (HitLocation - PawnReference->GetActorLocation()).GetSafeNormal();
-			PawnReference->AddMovementInput(WorldDirection, 1.f, false);
-		}
-		else
-		{
-			FollowTime = 0.f;
-		}
-	}	
 }
 
 void ASF_PlayerController::SetupInputComponent()
 {
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
-
-	InputComponent->BindAction("SetDestination", IE_Pressed, this, &ASF_PlayerController::OnSetDestinationPressed);
-	InputComponent->BindAction("SetDestination", IE_Released, this, &ASF_PlayerController::OnSetDestinationReleased);
 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ASF_PlayerController::OnJumpPressed);
 	InputComponent->BindAction("Jump", IE_Released, this, &ASF_PlayerController::OnJumpReleased);
@@ -83,37 +57,9 @@ void ASF_PlayerController::SetupInputComponent()
 	InputComponent->BindAxis("MoveRight", this, &ASF_PlayerController::OnMoveRight);
 }
 
-void ASF_PlayerController::OnSetDestinationPressed()
-{
-	// We flag that the input is being pressed
-	bInputPressed = true;
-	// Just in case the character was moving because of a previous short press we stop it
-	StopMovement();
-}
-
-void ASF_PlayerController::OnSetDestinationReleased()
-{
-	// Player is no longer pressing the input
-	bInputPressed = false;
-
-	// If it was a short press
-	if(FollowTime <= ShortPressThreshold)
-	{
-		// We look for the location in the world where the player has pressed the input
-		FVector HitLocation = FVector::ZeroVector;
-		FHitResult Hit;
-		GetHitResultUnderCursor(ECC_Visibility, true, Hit);
-		HitLocation = Hit.Location;
-
-		// We move there and spawn some particles
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, HitLocation);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, HitLocation, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
-	}
-}
-
 bool ASF_PlayerController::JumpCheck() const
 {
-	if (PawnReference)
+	if (PawnReference != nullptr)
 	{
 		switch (PawnReference->GetCharacterStateComponent()->CharacterState)
 		{
@@ -133,7 +79,7 @@ bool ASF_PlayerController::JumpCheck() const
 void ASF_PlayerController::OnJumpPressed()
 {
 	
-	if (PawnReference)
+	if (PawnReference != nullptr)
 	{
 		if (JumpCheck())
 		{
@@ -145,7 +91,7 @@ void ASF_PlayerController::OnJumpPressed()
 
 void ASF_PlayerController::OnJumpReleased()
 {
-	if (PawnReference)
+	if (PawnReference != nullptr)
 	{
 		PawnReference->StopJumping();
 	}
@@ -184,36 +130,48 @@ void ASF_PlayerController::OnTargetLockOnOffPressed()
 
 void ASF_PlayerController::OnMoveForward(float AxisInput)
 {
-	if (PawnReference)
+	if (PawnReference != nullptr)
 	{
+		/*
 		const auto SpringArm = PawnReference->GetCameraBoom();
 		const auto Rotation = SpringArm->GetTargetRotation();
 		const FRotator Rotation2D(0, Rotation.Yaw, 0);
 		const auto WorldDirection = UKismetMathLibrary::GetForwardVector(Rotation2D);
-
 		PawnReference->AddMovementInput(WorldDirection, AxisInput);
+		*/
+		PawnReference->AddMovementInput(FollowCamera->GetActorForwardVector(), AxisInput);
 	}
 }
 
 void ASF_PlayerController::OnMoveRight(float AxisInput)
 {
-	if (PawnReference)
+	if (PawnReference != nullptr)
 	{
+		/*
 		const auto SpringArm = PawnReference->GetCameraBoom();
 		const auto Rotation = SpringArm->GetTargetRotation();
 		const FRotator Rotation2D(0,Rotation.Yaw,0);
 		const auto WorldDirection = UKismetMathLibrary::GetRightVector(Rotation2D);
-
 		PawnReference->AddMovementInput(WorldDirection, AxisInput);
+		*/
+
+		PawnReference->AddMovementInput(FollowCamera->GetActorRightVector(), AxisInput);
 	}
 }
 
-void ASF_PlayerController::RotateToCursor(FVector HitLocation)
+// Spawn Follow Camera at Pawns Location or 0/0/0
+void ASF_PlayerController::SetupFollowCamera()
 {
-	if (PawnReference)
+	FVector Location;
+	if (PawnReference != nullptr)
 	{
-		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(PawnReference->GetActorLocation(), HitLocation);
-		SetControlRotation(FRotator(0, LookAtRotation.Yaw, 0));
+		Location = PawnReference->GetActorLocation();
 	}
+	else
+	{
+		Location = FVector::ZeroVector;
+	}
+	const auto SpawnedActor = GetWorld()->SpawnActor(ASF_CameraActor_Gameplay::StaticClass(), &Location);
+	FollowCamera = Cast<ASF_CameraActor_Gameplay>(SpawnedActor);
+	SetViewTarget(FollowCamera);
 }
-

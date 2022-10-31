@@ -13,14 +13,19 @@ ASF_CameraActor_Gameplay::ASF_CameraActor_Gameplay()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Create Root
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+
 	// Create a SpringArm...
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->SetUsingAbsoluteRotation(false); // Don't want arm to rotate when character does
+	SpringArmComponent->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when character does
 	SpringArmComponent->TargetArmLength = 700;
 	SpringArmComponent->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
 	SpringArmComponent->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 	SpringArmComponent->bEnableCameraLag = true;
+	SpringArmComponent->CameraLagSpeed = 5;
+	SpringArmComponent->CameraRotationLagSpeed = 5;
 
 	// Create a camera...
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));

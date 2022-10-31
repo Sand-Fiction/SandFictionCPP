@@ -3,7 +3,7 @@
 #include "SF_PlayerController.h"
 #include "GameFramework/Pawn.h"
 #include "NiagaraSystem.h"
-#include "NiagaraFunctionLibrary.h"
+#include "Math/Vector.h"
 #include "SF_Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"

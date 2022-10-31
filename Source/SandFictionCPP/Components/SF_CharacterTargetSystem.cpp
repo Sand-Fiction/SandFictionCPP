@@ -4,6 +4,8 @@
 #include "Math/Vector.h"
 #include "SandFictionCPP/Components/SF_CharacterTargetComponent.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
 USF_CharacterTargetSystem::USF_CharacterTargetSystem()
@@ -68,6 +70,10 @@ void USF_CharacterTargetSystem::LockOn()
 				IsLockedOn = true;
 				SpawnWidgetComponent();
 				SetComponentTickEnabled(true);
+				if (const auto OwningCharacter = Cast<ACharacter>(GetOwner()))
+				{
+					OwningCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+				}
 			}
 		}
 	}
@@ -81,6 +87,10 @@ void USF_CharacterTargetSystem::LockOff()
 		CurrentTarget = nullptr;
 		DestroyWidgetComponent();
 		SetComponentTickEnabled(false);
+		if (const auto OwningCharacter = Cast<ACharacter>(GetOwner()))
+		{
+			OwningCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
+		}
 	}
 }
 

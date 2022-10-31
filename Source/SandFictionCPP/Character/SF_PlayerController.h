@@ -41,6 +41,7 @@ protected:
 
 	void OnAttackPressed();
 	void OnAttackReleased();
+	bool AttackCheck() const;
 
 	void OnInteractPressed();
 	void OnInteractReleased();

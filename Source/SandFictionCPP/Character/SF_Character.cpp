@@ -7,9 +7,12 @@
 #include "SandFictionCPP/Components/SF_CharacterFactionComponent.h"
 #include "SandFictionCPP/Components/SF_CharacterStateComponent.h"
 #include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
+#include "SandFictionCPP/Components/SF_CombatComponent.h"
 
 ASF_Character::ASF_Character()
 {
+	
+
 	// Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -22,6 +25,7 @@ ASF_Character::ASF_Character()
 	CharacterFactionComponent = CreateDefaultSubobject<USF_CharacterFactionComponent>(TEXT("FactionComponent"));
 	CharacterStateComponent = CreateDefaultSubobject<USF_CharacterStateComponent>(TEXT("StateComponent"));
 	TargetSystem = CreateDefaultSubobject<USF_CharacterTargetSystem>(TEXT("TargetSystem"));
+	CombatComponent = CreateDefaultSubobject<USF_CombatComponent>(TEXT("CombatComponent"));
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Rotate character to moving direction

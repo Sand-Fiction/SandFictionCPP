@@ -39,7 +39,10 @@ void ASF_CameraActor_Gameplay::BeginPlay()
 void ASF_CameraActor_Gameplay::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	const auto CameraLocation = (CurrentCameraTarget->GetActorLocation()) + (CurrentCameraTarget->GetActorForwardVector() * CameraForwardOffset);
-	SetActorLocation(CameraLocation);
+
+	//Interpolate to offsetted Location in front of CurrentCameraTarget
+	const auto NewCamLocation = (CurrentCameraTarget->GetActorLocation()) + (CurrentCameraTarget->GetActorForwardVector() * CameraForwardOffset);
+	const auto NewCamLocationInterp = FMath::VInterpTo(GetActorLocation(), NewCamLocation, DeltaTime, CameraInterpSpeed);
+	SetActorLocation(NewCamLocationInterp);
 }
 

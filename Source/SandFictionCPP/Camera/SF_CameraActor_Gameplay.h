@@ -20,6 +20,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	float CameraForwardOffset = 150;
 
+	UPROPERTY(EditAnywhere)
+	float CameraInterpSpeed = 3;
+
 private:	
 	// Sets default values for this actor's properties
 	ASF_CameraActor_Gameplay();

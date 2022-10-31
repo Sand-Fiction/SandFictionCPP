@@ -10,6 +10,7 @@
 #include "SandFictionCPP/Camera/SF_CameraActor_Gameplay.h"
 #include "SandFictionCPP/Components/SF_CharacterStateComponent.h"
 #include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
+#include "SandFictionCPP/Components/SF_CombatComponent.h"
 
 ASF_PlayerController::ASF_PlayerController()
 {
@@ -97,8 +98,37 @@ void ASF_PlayerController::OnJumpReleased()
 	}
 }
 
+bool ASF_PlayerController::AttackCheck() const
+{
+	if (PawnReference != nullptr)
+	{
+		switch (PawnReference->GetCharacterStateComponent()->CharacterState)
+		{
+		case ECharacterState::Idle: return true;
+		case ECharacterState::Running: return true;
+		case ECharacterState::Falling: return false;
+		case ECharacterState::Attacking: return false;
+		case ECharacterState::Blocking: return true;
+		case ECharacterState::Rolling: return false;
+		case ECharacterState::Interacting: return false;
+		default: return true;
+		}
+	}
+	return false;
+}
+
 void ASF_PlayerController::OnAttackPressed()
 {
+	if (PawnReference != nullptr)
+	{
+		if (AttackCheck())
+		{
+			// PawnReference->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Attacking);
+			PawnReference->GetCombatComponent()->MeleeAttack();
+		}
+		
+	}
+
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Attack"));
 	StopMovement();
 }

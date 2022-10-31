@@ -2,7 +2,7 @@
 
 
 #include "SF_CombatComponent.h"
-
+#include "SandFictionCPP/Character/SF_Character.h"
 #include "SF_CharacterStateComponent.h"
 
 // Sets default values for this component's properties
@@ -42,7 +42,7 @@ void USF_CombatComponent::GetHit(USF_CombatComponent* Source)
 			const auto AnimData = AnimDataTable->FindRow<FCharacterAnimationData>(TEXT("GetHit"), TEXT("GetHit not found in AnimDT."), true);
 			if (AnimData->AnimMontage)
 			{
-				OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Attacking);
+				OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::GetHit);
 				OwningCharacter->PlayAnimMontage(AnimData->AnimMontage);
 			}
 		}

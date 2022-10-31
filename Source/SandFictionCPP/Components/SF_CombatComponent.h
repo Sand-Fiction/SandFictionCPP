@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Engine/DataTable.h"
-#include "SandFictionCPP/Character/SF_Character.h"
 #include "SF_CombatComponent.generated.h"
 
 // Struct for Animation DataTable

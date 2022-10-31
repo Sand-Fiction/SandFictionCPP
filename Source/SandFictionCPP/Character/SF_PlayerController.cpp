@@ -68,6 +68,7 @@ bool ASF_PlayerController::JumpCheck() const
 		case ECharacterState::Running: return true;
 		case ECharacterState::Falling: return false;
 		case ECharacterState::Attacking: return false;
+		case ECharacterState::GetHit: return false;
 		case ECharacterState::Blocking: return true;
 		case ECharacterState::Rolling: return false;
 		case ECharacterState::Interacting: return false;
@@ -108,6 +109,7 @@ bool ASF_PlayerController::AttackCheck() const
 		case ECharacterState::Running: return true;
 		case ECharacterState::Falling: return false;
 		case ECharacterState::Attacking: return false;
+		case ECharacterState::GetHit: return false;
 		case ECharacterState::Blocking: return true;
 		case ECharacterState::Rolling: return false;
 		case ECharacterState::Interacting: return false;

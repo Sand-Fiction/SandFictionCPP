@@ -24,8 +24,8 @@ ASF_CameraActor_Gameplay::ASF_CameraActor_Gameplay()
 	SpringArmComponent->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
 	SpringArmComponent->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 	SpringArmComponent->bEnableCameraLag = true;
-	SpringArmComponent->CameraLagSpeed = 5;
-	SpringArmComponent->CameraRotationLagSpeed = 5;
+	SpringArmComponent->CameraLagSpeed = 8;
+	SpringArmComponent->CameraRotationLagSpeed = 8;
 
 	// Create a camera...
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));

@@ -14,7 +14,7 @@ class SANDFICTIONCPP_API UFlowNode_PlayerReply final : public UFlowNode
 public:
 
 	UPROPERTY(EditAnywhere)
-		TArray<FText> PlayerReplies;
+	TArray<FText> PlayerReplies;
 
 	TArray<FText> GetReadablePlayerReplyString() const;
 	FText GetSpeakerName() const;
@@ -22,6 +22,7 @@ public:
 
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
+	UFUNCTION()
 	void UpdateReplyPins();
 	
 	virtual void ExecuteInput(const FName& PinName) override;

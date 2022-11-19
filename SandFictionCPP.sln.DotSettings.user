@@ -173,11 +173,11 @@ He had me in his claws the last hours or so.
 
 But seems like I look good enough now, don't you think?
 
-	Good enough for what?
-	I think so.
-	I don't think so.
+	A1 Good enough for what?
+	A2 I think so.
+	A3 I don't think so.
 
-A: Good enough for what?
+A1: Good enough for what?
 
 Well ... It is supposed to be a secret, but if everything goes as planned -
 I want to tell Selene how I feel. You know, romantically.
@@ -187,4 +187,19 @@ I really don't want to scare her. She's so tiny.
 
 What do you think? Do I have a chance?
 
-A: 
+A1.1: Yes!
+A1.2: No, absolutely not!
+
+A1.1: Wow, you seem very sure of yourself. I should follow your example and go to Selene!
+*gulp* Yes, I can do this.
+
+Thank you so much Cleo!
+
+A 1.2: H- How can you be so certain? Have you talked to her?
+       No, don't answer. I don't want to know.
+
+	   *Sigh* I guess I should apologize to Claude then. All of his work wasted for nothing.
+	   And he was so excited.
+
+
+A 2.1

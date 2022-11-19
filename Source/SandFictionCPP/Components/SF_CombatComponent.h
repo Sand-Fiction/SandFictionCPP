@@ -17,6 +17,8 @@ struct FCharacterAnimationData : public FTableRowBase
 		UAnimMontage* AnimMontage;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCurrentHealthChanged, float, NewCurrentHealth);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SANDFICTIONCPP_API USF_CombatComponent : public UActorComponent
 {
@@ -37,6 +39,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = Resources)
 	float DamageMax = 15;
 
+	// Attack Range
+	UPROPERTY(EditAnywhere, Category = Resources)
+	float AttackRange = 150;
+
 	// Maximum Health
 	UPROPERTY(EditAnywhere, Category = Resources)
 	float HealthMax = 100;
@@ -45,12 +51,23 @@ public:
 	UPROPERTY(EditAnywhere, Category = Resources)
 	float HealthRegen = 1;
 
+	UFUNCTION(BlueprintCallable)
+	void AttackCheck();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void MeleeAttack();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentHealth(float NewCurrentHealth);
+
+	UFUNCTION(BlueprintCallable)
+	void TakeDamage(USF_CombatComponent* Source);
+
+	UFUNCTION(BlueprintCallable)
 	void GetHit(USF_CombatComponent* Source);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCurrentHealthChanged OnCurrentHealthChanged;
 
 private:
 

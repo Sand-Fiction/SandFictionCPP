@@ -1,3 +1,190 @@
-﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:Boolean x:Key="/Default/UserDictionary/Words/=Interactable/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/UserDictionary/Words/=Interactables/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+﻿The Lovers
+
+Before the Festival
+
+Selene:
+
+Bubble above head:
+Just what am I supposed to do ...
+
+Dialogue:
+
+Oh, Cleo! I am sorry, I didn't see you there.
+Are you getting ready for the festival as well? 
+
+This time, I sewed my dress myself.
+I hope he... Ah nevermind.
+
+1. Are you bothered by something?
+2. I can not sew.
+
+1- A
+Oh - No it's ... You noticed?
+Well, I guess I could tell you, since you wouldn't share it. Right?
+
+1.1 Who would I share with?
+1.2 Why would I not share?
+1.3 I will not share. 
+
+1.1 - A
+True, you don't have many friends ... Oh, I am sorry!
+I don't have many friends either, but I hope -
+
+I hope that this evening, I will have a boyfriend.
+You see, I really, really like Helios.
+
+But I don't know if I should tell him ...
+What do you think?
+
+1.1.1 Share your feelings with him.
+1.1.2 You should not share.
+
+1.1.1 A
+Truly? You truly think so?
+Oh stars, but I am not prepared!
+
+Breath, Selene, deep breaths. Alright, I will tell him.
+As soon as the festival starts, I will tell him.
+
+Thank you Cleo.
+
+Dialogue Ends
+New Bubble: Oh stars, how do I tell him?
+
+1.1.2
+*sighs* You are probably right.
+It would be so embarassing if it was just me.
+
+Haha, I am so stupid right?
+So ... stupid ...
+
+Dialogue ends
+New bubble: What was I thinking ...
+
+1.1.3
+I knew I could trust you!
+It's about Helios. You know, Helios, that works on the fields?
+
+He is so tall, so gallant, so *sighs* perfect.
+Oh, sorry! Well, as you saw, I really, really like Helios.
+
+1.1.3.1 You do?
+1.1.3.2 I see.
+
+1.1.3.1 A 
+Of course I do! 
+At least I think I do ...
+
+Oh, Cleo, I was so sure! But now I am not ...
+Maybe I should think some more.
+
+Or do I tell him?
+What do you think?
+
+1.1.3.1.1 Just tell him
+1.1.3.1.2 Thinking sounds good
+
+1.1.3.1.1 A
+Truly? You truly think so?
+Oh stars, but I am not prepared!
+
+Breath, Selene, deep breaths. Alright, I will tell him.
+As soon as the festival starts, I will tell him.
+
+Thank you Cleo.
+
+Dialogue Ends
+New Bubble: Oh stars, how do I tell him?
+
+1.1.3.1.2 A
+Oh... Yes, you are right.
+You can never be sure enough in such things.
+
+Thank you Cleo. I wouldn't want to make a fool out of me.
+
+Dialogue Ends
+New Bubble: How stupid of me ...
+
+1.1.3.2 A
+But I don't know if I should tell him ...
+What do you think?
+
+1.2 A
+Because I asked you not to?
+Maybe I can't tell you after all ...
+
+*sighs* I will see you later on the festival Cleo.
+
+Dialogue ends
+New Bubble: What should I do?
+
+.
+
+2- A
+I - I can teach you! Oh, but you are leaving so soon ...
+Maybe Claude could teach you. Is he not coming with you? 
+
+He even advised me with dress, saying I should accentuate my -
+Y-You know, I think that doesn't matter right now. 
+
+You wanted to get ready right? 
+And I also still have to - well, to think.
+
+1. Are you bothered by something?
+2. Have fun thinking.
+
+1-A
+
+2-A
+I - I will? See you later Cleo. *sighs*
+
+On Festival if together:
+
+Bubble: So this is love ...
+
+Oh Cleo, this must be the most beautiful evening of my live!
+I wish you would stay, I would definetly invite you to our wedding!
+
+Haha, maybe I am a bit rash.
+...
+
+Do you think he likes children?
+
+On Festival if alone:
+Bubble: Just one more glass ...
+
+Cleoooo! *hick*
+Why don't you also get yourself a glass? *hick*
+
+On us- single women! *hick*
+Who needs beautiful, nice, wonderful - *hick*
+
+*sighs* Helios ...
+
+
+
+Helios - Before Festival Dialogue
+
+Ya Cleo!
+What are you doing here? 
+
+Also hoping for a make-over from the great Claude?
+He had me in his claws the last hours or so. 
+
+But seems like I look good enough now, don't you think?
+
+	Good enough for what?
+	I think so.
+	I don't think so.
+
+A: Good enough for what?
+
+Well ... It is supposed to be a secret, but if everything goes as planned -
+I want to tell Selene how I feel. You know, romantically.
+
+Hah, but I've never been good with such things. I am much better suited for simple things. Tilling, for example.
+I really don't want to scare her. She's so tiny.
+
+What do you think? Do I have a chance?
+
+A: 

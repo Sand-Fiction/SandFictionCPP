@@ -36,10 +36,12 @@ void UFlowNode_PlayerReply::PostEditChangeProperty(FPropertyChangedEvent& Proper
 void UFlowNode_PlayerReply::UpdateReplyPins()
 {
 	OutputPins.Empty();
-
-	for (const FText& PlayerReply : PlayerReplies)
+	if (PlayerReplies.Num() > 0)
 	{
-		OutputPins.Add(FFlowPin(PlayerReply));
+		for (const FText& PlayerReply : PlayerReplies)
+		{
+			OutputPins.Add(FFlowPin(PlayerReply));
+		}
 	}
 }
 
@@ -59,12 +61,18 @@ void UFlowNode_PlayerReply::ExecuteInput(const FName& PinName)
 
 void UFlowNode_PlayerReply::TriggerOutPutAtIndex(const int32 Index)
 {
-	const FFlowPin OutputPin = OutputPins[Index];
-	
-	TriggerOutput(OutputPin.PinName);
-
-	if (const auto HUD = Cast<ASF_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD()))
+	if (OutputPins.Num() > 0)
 	{
-		HUD->OnPlayerAnswered.RemoveDynamic(this, &UFlowNode_PlayerReply::TriggerOutPutAtIndex);
+		if (OutputPins[Index].IsValid())
+		{
+			const FFlowPin OutputPin = OutputPins[Index];
+	
+			TriggerOutput(OutputPin.PinName);
+
+			if (const auto HUD = Cast<ASF_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD()))
+			{
+				HUD->OnPlayerAnswered.RemoveDynamic(this, &UFlowNode_PlayerReply::TriggerOutPutAtIndex);
+			}
+		}
 	}
 }

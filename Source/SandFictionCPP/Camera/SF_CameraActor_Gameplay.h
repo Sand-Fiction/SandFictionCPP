@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SF_CameraActor_Gameplay.generated.h"
 
+class USF_CameraTransition;
+
 UCLASS()
 class SANDFICTIONCPP_API ASF_CameraActor_Gameplay : public AActor
 {
@@ -21,7 +23,10 @@ public:
 	float CameraForwardOffset = 150;
 
 	UPROPERTY(EditAnywhere)
-	float CameraInterpSpeed = 3;
+	float CameraInterpolationSpeed = 3;
+
+	UFUNCTION(BlueprintCallable)
+	void SwitchCameraTarget(AActor* NewTarget, TSubclassOf<USF_CameraTransition> Transition);
 
 private:	
 	// Sets default values for this actor's properties
@@ -36,7 +41,7 @@ private:
 	class USpringArmComponent* SpringArmComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	ACharacter* CurrentCameraTarget;
+	AActor* CurrentCameraTarget;
 
 
 protected:

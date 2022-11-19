@@ -8,11 +8,10 @@
 #include "SandFictionCPP/Components/SF_CharacterStateComponent.h"
 #include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
 #include "SandFictionCPP/Components/SF_CombatComponent.h"
+#include "SandFictionCPP/Components/SF_InteractionSystem.h"
 
 ASF_Character::ASF_Character()
 {
-	
-
 	// Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -24,7 +23,6 @@ ASF_Character::ASF_Character()
 	// Create Custom Components
 	CharacterFactionComponent = CreateDefaultSubobject<USF_CharacterFactionComponent>(TEXT("FactionComponent"));
 	CharacterStateComponent = CreateDefaultSubobject<USF_CharacterStateComponent>(TEXT("StateComponent"));
-	TargetSystem = CreateDefaultSubobject<USF_CharacterTargetSystem>(TEXT("TargetSystem"));
 	CombatComponent = CreateDefaultSubobject<USF_CombatComponent>(TEXT("CombatComponent"));
 
 	// Configure character movement
@@ -41,4 +39,21 @@ ASF_Character::ASF_Character()
 void ASF_Character::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+}
+
+void ASF_Character::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+{
+	Super::OnMovementModeChanged(PrevMovementMode, PreviousCustomMode);
+
+	// Go back to Idle if Previous Mode was Falling
+	if (PrevMovementMode == EMovementMode::MOVE_Falling)
+	{
+		GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Idle);
+	}
+
+	// Set State to Falling if MovementMode is Falling
+	if (GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Falling)
+	{
+		GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Falling);
+	}
 }

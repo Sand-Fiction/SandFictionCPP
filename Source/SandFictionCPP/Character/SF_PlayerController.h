@@ -3,13 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SF_Character.h"
 #include "GameFramework/PlayerController.h"
 #include "SF_PlayerController.generated.h"
 
-
 /** Forward declaration to improve compiling times */
 class ASF_CameraActor_Gameplay;
+class ASF_Character_Main;
 
 UCLASS()
 class ASF_PlayerController : public APlayerController
@@ -20,7 +19,7 @@ public:
 	ASF_PlayerController();
 
 	UPROPERTY(BlueprintReadOnly, Category = References)
-	ASF_Character* PawnReference;
+	ASF_Character_Main* PawnReference;
 
 	FORCEINLINE ASF_CameraActor_Gameplay* GetFollowCamera() const { return FollowCamera; }
 
@@ -43,15 +42,15 @@ protected:
 
 	void OnInteractPressed();
 	void OnInteractReleased();
+	bool InteractCheck() const;
 
 	void OnTargetLockOnOffPressed();
 
-	void OnMoveForward(float AxisInput) ;
+	void OnMoveForward(float AxisInput);
 	void OnMoveRight(float AxisInput);
 
 	//Camera
 	void SetupFollowCamera();
-	
 
 private:
 

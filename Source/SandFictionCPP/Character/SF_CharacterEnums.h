@@ -13,7 +13,7 @@ enum class ECharacterState : uint8
 	Running,
 	Falling,
 	Attacking,
-	GetHit,
+	GettingHit,
 	Blocking,
 	Rolling,
 	Interacting

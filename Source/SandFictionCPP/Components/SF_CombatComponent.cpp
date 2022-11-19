@@ -39,10 +39,10 @@ void USF_CombatComponent::GetHit(USF_CombatComponent* Source)
 		check(AnimDataTable)
 		if (AnimDataTable != nullptr)
 		{
-			const auto AnimData = AnimDataTable->FindRow<FCharacterAnimationData>(TEXT("GetHit"), TEXT("GetHit not found in AnimDT."), true);
+			const auto AnimData = AnimDataTable->FindRow<FCharacterAnimationData>(TEXT("GettingHit"), TEXT("GettingHit not found in AnimDT."), true);
 			if (AnimData->AnimMontage)
 			{
-				OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::GetHit);
+				OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::GettingHit);
 				OwningCharacter->PlayAnimMontage(AnimData->AnimMontage);
 			}
 		}

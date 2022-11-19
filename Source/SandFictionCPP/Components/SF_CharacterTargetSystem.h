@@ -3,10 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SF_InteractableComponent.h"
 #include "Components/ActorComponent.h"
 #include "SF_CharacterTargetSystem.generated.h"
 
 class USF_CharacterTargetComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLockOn);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLockOff);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SANDFICTIONCPP_API USF_CharacterTargetSystem : public UActorComponent
@@ -46,6 +50,13 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	USF_CharacterTargetComponent* CurrentTarget;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnLockOn OnLockOn;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnLockOff OnLockOff;
+
 
 protected:
 	// Called when the game starts

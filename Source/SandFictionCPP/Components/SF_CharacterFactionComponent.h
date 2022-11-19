@@ -17,6 +17,9 @@ public:
 	// Sets default values for this component's properties
 	USF_CharacterFactionComponent();
 
+	UFUNCTION(BlueprintCallable)
+	void SetFaction(ECharacterFaction NewFaction);
+
 	UPROPERTY(EditAnywhere)
 	ECharacterFaction Faction;
 

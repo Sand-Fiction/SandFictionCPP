@@ -74,6 +74,7 @@ void USF_CharacterTargetSystem::LockOn()
 				{
 					OwningCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
 				}
+				OnLockOn.Broadcast();
 			}
 		}
 	}
@@ -91,6 +92,7 @@ void USF_CharacterTargetSystem::LockOff()
 		{
 			OwningCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
 		}
+		OnLockOff.Broadcast();
 	}
 }
 
@@ -110,22 +112,26 @@ void USF_CharacterTargetSystem::TickComponent(float DeltaTime, ELevelTick TickTy
 
 void USF_CharacterTargetSystem::SpawnWidgetComponent()
 {
-	if (CurrentTarget != nullptr)
+	if (CurrentTarget)
 	{
-		const FTransform SpawnTransform = CurrentTarget->GetRelativeTransform();
-		const auto NewComponent = CurrentTarget->GetOwner()->AddComponentByClass(UWidgetComponent::StaticClass(), false, SpawnTransform, false);
-		WidgetComponent = Cast<UWidgetComponent>(NewComponent);
+		WidgetComponent = NewObject<UWidgetComponent>(GetOwner(), UWidgetComponent::StaticClass(), FName("TargetWidgetComponent"));
+
+		WidgetComponent->SetupAttachment(CurrentTarget->GetOwner()->GetRootComponent());
+		WidgetComponent->RegisterComponent();
+
+		CurrentTarget->GetOwner()->AddInstanceComponent(WidgetComponent);
+
 		WidgetComponent->SetWidgetClass(WidgetClass);
 		WidgetComponent->SetDrawAtDesiredSize(true);
 		WidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
-		WidgetComponent->SetTwoSided(true);
 		WidgetComponent->SetCastShadow(false);
+		WidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
 void USF_CharacterTargetSystem::DestroyWidgetComponent()
 {
-	if (WidgetComponent != nullptr)
+	if (WidgetComponent)
 	{
 		WidgetComponent->DestroyComponent();
 		WidgetComponent = nullptr;

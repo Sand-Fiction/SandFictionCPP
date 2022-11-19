@@ -13,6 +13,11 @@ USF_CharacterFactionComponent::USF_CharacterFactionComponent()
 	// ...
 }
 
+void USF_CharacterFactionComponent::SetFaction(ECharacterFaction NewFaction)
+{
+	Faction = NewFaction;
+}
+
 
 // Called when the game starts
 void USF_CharacterFactionComponent::BeginPlay()

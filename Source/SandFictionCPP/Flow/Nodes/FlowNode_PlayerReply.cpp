@@ -49,7 +49,11 @@ void UFlowNode_PlayerReply::ExecuteInput(const FName& PinName)
 	{
 		HUD->SetPlayerReplies(PlayerReplies);
 		HUD->ShowPlayerReplies();
-		HUD->OnPlayerAnswered.AddDynamic(this, &UFlowNode_PlayerReply::TriggerOutPutAtIndex);
+
+		if (!HUD->OnPlayerAnswered.IsAlreadyBound(this, &UFlowNode_PlayerReply::TriggerOutPutAtIndex))
+		{
+			HUD->OnPlayerAnswered.AddDynamic(this, &UFlowNode_PlayerReply::TriggerOutPutAtIndex);
+		}
 	}
 }
 
@@ -58,4 +62,9 @@ void UFlowNode_PlayerReply::TriggerOutPutAtIndex(const int32 Index)
 	const FFlowPin OutputPin = OutputPins[Index];
 	
 	TriggerOutput(OutputPin.PinName);
+
+	if (const auto HUD = Cast<ASF_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD()))
+	{
+		HUD->OnPlayerAnswered.RemoveDynamic(this, &UFlowNode_PlayerReply::TriggerOutPutAtIndex);
+	}
 }

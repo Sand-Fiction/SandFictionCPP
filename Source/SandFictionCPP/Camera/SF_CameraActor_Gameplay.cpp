@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "SandFictionCPP/Camera/SF_CameraTransition.h"
+
 
 // Sets default values
 ASF_CameraActor_Gameplay::ASF_CameraActor_Gameplay()
@@ -47,7 +49,11 @@ void ASF_CameraActor_Gameplay::Tick(float DeltaTime)
 
 	//Interpolate to offsetted Location in front of CurrentCameraTarget
 	const auto NewCamLocation = (CurrentCameraTarget->GetActorLocation()) + (CurrentCameraTarget->GetActorForwardVector() * CameraForwardOffset);
-	const auto NewCamLocationInterp = FMath::VInterpTo(GetActorLocation(), NewCamLocation, DeltaTime, CameraInterpSpeed);
+	const auto NewCamLocationInterp = FMath::VInterpTo(GetActorLocation(), NewCamLocation, DeltaTime, CameraInterpolationSpeed);
 	SetActorLocation(NewCamLocationInterp);
 }
 
+void ASF_CameraActor_Gameplay::SwitchCameraTarget(AActor* NewTarget, TSubclassOf<USF_CameraTransition> Transition)
+{
+	CurrentCameraTarget = NewTarget;
+}

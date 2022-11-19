@@ -26,5 +26,7 @@ public:
 	FText GetSpeakerName() const;
 	FLinearColor GetSpeakerColor() const;
 
+	void TriggerOutput(const bool Finish);
+
 	virtual void ExecuteInput(const FName& PinName) override;
 };

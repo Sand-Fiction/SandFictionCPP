@@ -4,13 +4,15 @@
 #include "GameFramework/Pawn.h"
 #include "NiagaraSystem.h"
 #include "Math/Vector.h"
-#include "SF_Character.h"
+#include "SF_Character_Main.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "SandFictionCPP/Camera/SF_CameraActor_Gameplay.h"
 #include "SandFictionCPP/Components/SF_CharacterStateComponent.h"
+#include "SandFictionCPP/Components/SF_CharacterTargetComponent.h"
 #include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
 #include "SandFictionCPP/Components/SF_CombatComponent.h"
+#include "SandFictionCPP/Components/SF_InteractionSystem.h"
 
 ASF_PlayerController::ASF_PlayerController()
 {
@@ -21,10 +23,9 @@ ASF_PlayerController::ASF_PlayerController()
 void ASF_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	PawnReference = Cast<ASF_Character>(GetCharacter());
 
+	PawnReference = Cast<ASF_Character_Main>(GetCharacter());
 	SetupFollowCamera();
-
 }
 
 //Tick -> Move Pawn to Cursor Location if RMB Input
@@ -32,9 +33,32 @@ void ASF_PlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	if (PawnReference == nullptr)
+	if (!PawnReference)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("PawnNotValid"));
+	}
+
+	if (PawnReference && PawnReference->GetTargetSystem())
+	{
+		if (PawnReference->GetTargetSystem()->IsLockedOn)
+		{
+			PawnReference->bUseControllerRotationYaw = true;
+
+			FRotator NewControlRotation;
+			const auto LookAtStart = PawnReference->GetActorLocation();
+			const auto LookAtEnd = PawnReference->GetTargetSystem()->CurrentTarget->GetComponentLocation();
+			const auto LookAtRotation = UKismetMathLibrary::FindLookAtRotation(LookAtStart, LookAtEnd);
+
+			NewControlRotation.Roll = ControlRotation.Roll;
+			NewControlRotation.Pitch = ControlRotation.Pitch;
+			NewControlRotation.Yaw = LookAtRotation.Yaw;
+
+			SetControlRotation(NewControlRotation);
+		}
+		else
+		{
+			PawnReference->bUseControllerRotationYaw = false;
+		}
 	}
 }
 
@@ -60,7 +84,7 @@ void ASF_PlayerController::SetupInputComponent()
 
 bool ASF_PlayerController::JumpCheck() const
 {
-	if (PawnReference != nullptr)
+	if (PawnReference)
 	{
 		switch (PawnReference->GetCharacterStateComponent()->CharacterState)
 		{
@@ -68,7 +92,7 @@ bool ASF_PlayerController::JumpCheck() const
 		case ECharacterState::Running: return true;
 		case ECharacterState::Falling: return false;
 		case ECharacterState::Attacking: return false;
-		case ECharacterState::GetHit: return false;
+		case ECharacterState::GettingHit: return false;
 		case ECharacterState::Blocking: return true;
 		case ECharacterState::Rolling: return false;
 		case ECharacterState::Interacting: return false;
@@ -80,13 +104,11 @@ bool ASF_PlayerController::JumpCheck() const
 
 void ASF_PlayerController::OnJumpPressed()
 {
-	
-	if (PawnReference != nullptr)
+	if (PawnReference)
 	{
 		if (JumpCheck())
 		{
 			PawnReference->Jump();
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Jump"));
 		}
 	}
 }
@@ -101,7 +123,7 @@ void ASF_PlayerController::OnJumpReleased()
 
 bool ASF_PlayerController::AttackCheck() const
 {
-	if (PawnReference != nullptr)
+	if (PawnReference)
 	{
 		switch (PawnReference->GetCharacterStateComponent()->CharacterState)
 		{
@@ -109,7 +131,7 @@ bool ASF_PlayerController::AttackCheck() const
 		case ECharacterState::Running: return true;
 		case ECharacterState::Falling: return false;
 		case ECharacterState::Attacking: return false;
-		case ECharacterState::GetHit: return false;
+		case ECharacterState::GettingHit: return false;
 		case ECharacterState::Blocking: return true;
 		case ECharacterState::Rolling: return false;
 		case ECharacterState::Interacting: return false;
@@ -121,17 +143,14 @@ bool ASF_PlayerController::AttackCheck() const
 
 void ASF_PlayerController::OnAttackPressed()
 {
-	if (PawnReference != nullptr)
+	if (PawnReference)
 	{
 		if (AttackCheck())
 		{
-			// PawnReference->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Attacking);
 			PawnReference->GetCombatComponent()->MeleeAttack();
 		}
-		
 	}
-
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Attack"));
+	
 	StopMovement();
 }
 
@@ -140,53 +159,66 @@ void ASF_PlayerController::OnAttackReleased()
 
 }
 
+bool ASF_PlayerController::InteractCheck() const
+{
+	if (PawnReference)
+	{
+		switch (PawnReference->GetCharacterStateComponent()->CharacterState)
+		{
+		case ECharacterState::Idle: return true;
+		case ECharacterState::Running: return true;
+		case ECharacterState::Falling: return false;
+		case ECharacterState::Attacking: return false;
+		case ECharacterState::GettingHit: return false;
+		case ECharacterState::Blocking: return true;
+		case ECharacterState::Rolling: return false;
+		case ECharacterState::Interacting: return true;
+		default: return true;
+		}
+	}
+	return false;
+}
+
 void ASF_PlayerController::OnInteractPressed()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Interact"));
+	if (PawnReference && InteractCheck())
+	{
+		PawnReference->GetInteractionSystem()->Interact();
+		PawnReference->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Interacting);
+	}
 }
 
 void ASF_PlayerController::OnInteractReleased()
 {
-
+	if (PawnReference && PawnReference->GetCharacterStateComponent()->CharacterState == ECharacterState::Interacting)
+	{
+		PawnReference->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Idle);
+	}
 }
 
 void ASF_PlayerController::OnTargetLockOnOffPressed()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Target"));
 
-	if (const auto TargetSystem = PawnReference->GetTargetSystem())
+	if (PawnReference)
 	{
+		const auto TargetSystem = PawnReference->GetTargetSystem();
 		TargetSystem->IsLockedOn ? TargetSystem->LockOff() : TargetSystem->LockOn();
 	}
 }
 
 void ASF_PlayerController::OnMoveForward(float AxisInput)
 {
-	if (PawnReference != nullptr)
+	if (PawnReference)
 	{
-		/*
-		const auto SpringArm = PawnReference->GetCameraBoom();
-		const auto Rotation = SpringArm->GetTargetRotation();
-		const FRotator Rotation2D(0, Rotation.Yaw, 0);
-		const auto WorldDirection = UKismetMathLibrary::GetForwardVector(Rotation2D);
-		PawnReference->AddMovementInput(WorldDirection, AxisInput);
-		*/
 		PawnReference->AddMovementInput(FollowCamera->GetActorForwardVector(), AxisInput);
 	}
 }
 
 void ASF_PlayerController::OnMoveRight(float AxisInput)
 {
-	if (PawnReference != nullptr)
+	if (PawnReference)
 	{
-		/*
-		const auto SpringArm = PawnReference->GetCameraBoom();
-		const auto Rotation = SpringArm->GetTargetRotation();
-		const FRotator Rotation2D(0,Rotation.Yaw,0);
-		const auto WorldDirection = UKismetMathLibrary::GetRightVector(Rotation2D);
-		PawnReference->AddMovementInput(WorldDirection, AxisInput);
-		*/
-
 		PawnReference->AddMovementInput(FollowCamera->GetActorRightVector(), AxisInput);
 	}
 }
@@ -195,7 +227,7 @@ void ASF_PlayerController::OnMoveRight(float AxisInput)
 void ASF_PlayerController::SetupFollowCamera()
 {
 	FVector Location;
-	if (PawnReference != nullptr)
+	if (PawnReference)
 	{
 		Location = PawnReference->GetActorLocation();
 	}

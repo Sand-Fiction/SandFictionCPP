@@ -51,13 +51,14 @@ FLinearColor UFlowNode_DialogueMessage::GetSpeakerColor() const
 	return FLinearColor::White;
 }
 
-void UFlowNode_DialogueMessage::TriggerOutput(const bool Finish)
+void UFlowNode_DialogueMessage::UnbindAndTriggerOutput(const bool Finish)
 {
-	TriggerFirstOutput(Finish);
 	if (const auto HUD = Cast<ASF_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD()))
 	{
-		HUD->OnAllDialogueLinesFinished.RemoveDynamic(this, &UFlowNode_DialogueMessage::TriggerFirstOutput);
+		HUD->OnAllDialogueLinesFinished.RemoveDynamic(this, &UFlowNode_DialogueMessage::UnbindAndTriggerOutput);
 	}
+
+	TriggerFirstOutput(Finish);
 }
 
 void UFlowNode_DialogueMessage::ExecuteInput(const FName& PinName)
@@ -67,9 +68,9 @@ void UFlowNode_DialogueMessage::ExecuteInput(const FName& PinName)
 		HUD->SetDialogueLines(DialogueLines);
 		HUD->SetDialogueSpeaker(GetSpeakerName());
 		HUD->UpdateMainDialogue();
-		if (!HUD->OnAllDialogueLinesFinished.IsAlreadyBound(this, &UFlowNode_DialogueMessage::TriggerFirstOutput))
+		if (!HUD->OnAllDialogueLinesFinished.IsAlreadyBound(this, &UFlowNode_DialogueMessage::UnbindAndTriggerOutput))
 		{
-			HUD->OnAllDialogueLinesFinished.AddDynamic(this, &UFlowNode_DialogueMessage::TriggerFirstOutput);
+			HUD->OnAllDialogueLinesFinished.AddDynamic(this, &UFlowNode_DialogueMessage::UnbindAndTriggerOutput);
 		}
 	}
 }

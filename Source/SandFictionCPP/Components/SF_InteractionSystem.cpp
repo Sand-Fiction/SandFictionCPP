@@ -32,7 +32,7 @@ void USF_InteractionSystem::Interact()
 {
 	if (CurrentInteractable)
 	{
-		CurrentInteractable->OnInteraction.Broadcast();
+		CurrentInteractable->OnInteraction.Broadcast(this);
 	}
 }
 

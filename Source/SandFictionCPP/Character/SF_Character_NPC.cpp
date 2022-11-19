@@ -24,7 +24,7 @@ void ASF_Character_NPC::BeginPlay()
 	GetInteractableComponent()->OnInteraction.AddDynamic(this, &ASF_Character_NPC::StartDialogue);
 }
 
-void ASF_Character_NPC::StartDialogue()
+void ASF_Character_NPC::StartDialogue(USF_InteractionSystem* InteractionSystem)
 {
 	FlowComponent->NotifyGraph(Dialogue);
 }

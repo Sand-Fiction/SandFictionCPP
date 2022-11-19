@@ -7,6 +7,8 @@
 #include "SF_Character.h"
 #include "SF_Character_NPC.generated.h"
 
+class USF_InteractionSystem;
+
 UCLASS()
 class SANDFICTIONCPP_API ASF_Character_NPC : public ASF_Character
 {
@@ -38,5 +40,5 @@ private:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable)
-	void StartDialogue();
+	void StartDialogue(USF_InteractionSystem* InteractionSystem);
 };

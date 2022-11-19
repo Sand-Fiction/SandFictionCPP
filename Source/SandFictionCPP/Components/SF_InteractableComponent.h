@@ -6,7 +6,9 @@
 #include "Components/SceneComponent.h"
 #include "SF_InteractableComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteraction);
+class USF_InteractionSystem;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteraction, USF_InteractionSystem*, Interactor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStatusChanged);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

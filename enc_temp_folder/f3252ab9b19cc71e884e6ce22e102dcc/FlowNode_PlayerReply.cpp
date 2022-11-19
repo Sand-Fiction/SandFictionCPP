@@ -30,7 +30,7 @@ FLinearColor UFlowNode_PlayerReply::GetSpeakerColor()
 void UFlowNode_PlayerReply::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
-	UpdateReplyPins();
+	// UpdateReplyPins();
 }
 
 void UFlowNode_PlayerReply::UpdateReplyPins()

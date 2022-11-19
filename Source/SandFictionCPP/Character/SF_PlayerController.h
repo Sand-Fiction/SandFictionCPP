@@ -3,13 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SF_Character.h"
-#include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "SF_PlayerController.generated.h"
 
 /** Forward declaration to improve compiling times */
-class UNiagaraSystem;
+class ASF_CameraActor_Gameplay;
+class ASF_Character_Main;
 
 UCLASS()
 class ASF_PlayerController : public APlayerController
@@ -19,20 +18,12 @@ class ASF_PlayerController : public APlayerController
 public:
 	ASF_PlayerController();
 
-	/** Time Threshold to know if it was a short press */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	float ShortPressThreshold;
-
-	/** FX Class that we will spawn when clicking */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UNiagaraSystem* FXCursor;
-
 	UPROPERTY(BlueprintReadOnly, Category = References)
-	ASF_Character* PawnReference;	
+	ASF_Character_Main* PawnReference;
+
+	FORCEINLINE ASF_CameraActor_Gameplay* GetFollowCamera() const { return FollowCamera; }
 
 protected:
-	/** True if the controlled character should navigate to the mouse cursor. */
-	uint32 bMoveToMouseCursor : 1;
 
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;
@@ -41,27 +32,28 @@ protected:
 	// End PlayerController interface
 
 	/** Input handlers for SetDestination action. */
-	void OnSetDestinationPressed();
-	void OnSetDestinationReleased();
-
-	bool JumpCheck();
 	void OnJumpPressed();
 	void OnJumpReleased();
+	bool JumpCheck() const;
 
 	void OnAttackPressed();
 	void OnAttackReleased();
+	bool AttackCheck() const;
 
 	void OnInteractPressed();
 	void OnInteractReleased();
+	bool InteractCheck() const;
+
+	void OnTargetLockOnOffPressed();
 
 	void OnMoveForward(float AxisInput);
 	void OnMoveRight(float AxisInput);
 
-	// Rotation Function
-	void RotateToCursor(FVector HitLocation);
-	
+	//Camera
+	void SetupFollowCamera();
 
 private:
-	bool bInputPressed; // Input is bring pressed
-	float FollowTime; // For how long it has been pressed
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	ASF_CameraActor_Gameplay* FollowCamera;
 };

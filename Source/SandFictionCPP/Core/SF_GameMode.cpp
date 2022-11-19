@@ -9,6 +9,7 @@ ASF_GameMode::ASF_GameMode()
 	// use our custom PlayerController class
 	PlayerControllerClass = ASF_PlayerController::StaticClass();
 
+	/*
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_Character"));
 	if (PlayerPawnBPClass.Class != nullptr)
@@ -22,4 +23,5 @@ ASF_GameMode::ASF_GameMode()
 	{
 		PlayerControllerClass = PlayerControllerBPClass.Class;
 	}
+	*/
 }

@@ -20,6 +20,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetFaction(ECharacterFaction NewFaction);
 
+	UFUNCTION(BlueprintPure)
+	bool IsHostile(USF_CharacterFactionComponent* OtherFactionComponent);
+
 	UPROPERTY(EditAnywhere)
 	ECharacterFaction Faction;
 

@@ -25,6 +25,7 @@ void ASF_PlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	PawnReference = Cast<ASF_Character_Main>(GetCharacter());
+
 	SetupFollowCamera();
 }
 
@@ -73,13 +74,16 @@ void ASF_PlayerController::SetupInputComponent()
 	InputComponent->BindAction("Attack", IE_Pressed, this, &ASF_PlayerController::OnAttackPressed);
 	InputComponent->BindAction("Attack", IE_Released, this, &ASF_PlayerController::OnAttackReleased);
 
+	InputComponent->BindAction("Skill", IE_Pressed, this, &ASF_PlayerController::OnSkillPressed);
+	InputComponent->BindAction("Skill", IE_Released, this, &ASF_PlayerController::OnSkillReleased);
+
 	InputComponent->BindAction("Interact", IE_Pressed, this, &ASF_PlayerController::OnInteractPressed);
 	InputComponent->BindAction("Interact", IE_Released, this, &ASF_PlayerController::OnInteractReleased);
 
-	InputComponent->BindAction("TargetLockOnOff", IE_Pressed, this, &ASF_PlayerController::OnTargetLockOnOffPressed);
-
 	InputComponent->BindAxis("MoveForward", this, &ASF_PlayerController::OnMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &ASF_PlayerController::OnMoveRight);
+
+	InputComponent->BindAction("TargetLockOnOff", IE_Pressed, this, &ASF_PlayerController::OnTargetLockOnOffPressed);
 }
 
 bool ASF_PlayerController::JumpCheck() const
@@ -104,18 +108,15 @@ bool ASF_PlayerController::JumpCheck() const
 
 void ASF_PlayerController::OnJumpPressed()
 {
-	if (PawnReference)
+	if (JumpCheck())
 	{
-		if (JumpCheck())
-		{
-			PawnReference->Jump();
-		}
+		PawnReference->Jump();
 	}
 }
 
 void ASF_PlayerController::OnJumpReleased()
 {
-	if (PawnReference != nullptr)
+	if (PawnReference)
 	{
 		PawnReference->StopJumping();
 	}
@@ -123,7 +124,7 @@ void ASF_PlayerController::OnJumpReleased()
 
 bool ASF_PlayerController::AttackCheck() const
 {
-	if (PawnReference)
+	if (PawnReference && !PawnReference->IsSafe)
 	{
 		switch (PawnReference->GetCharacterStateComponent()->CharacterState)
 		{
@@ -141,20 +142,52 @@ bool ASF_PlayerController::AttackCheck() const
 	return false;
 }
 
+
+
 void ASF_PlayerController::OnAttackPressed()
 {
-	if (PawnReference)
+	if (AttackCheck())
 	{
-		if (AttackCheck())
-		{
-			PawnReference->GetCombatComponent()->MeleeAttack();
-		}
+		PawnReference->GetCombatComponent()->MeleeAttack();
+		StopMovement();
 	}
-	
-	StopMovement();
 }
 
 void ASF_PlayerController::OnAttackReleased()
+{
+
+}
+
+bool ASF_PlayerController::SkillCheck() const
+{
+	if (PawnReference && !PawnReference->IsSafe)
+	{
+		switch (PawnReference->GetCharacterStateComponent()->CharacterState)
+		{
+		case ECharacterState::Idle: return true;
+		case ECharacterState::Running: return true;
+		case ECharacterState::Falling: return false;
+		case ECharacterState::Attacking: return false;
+		case ECharacterState::GettingHit: return false;
+		case ECharacterState::Blocking: return true;
+		case ECharacterState::Rolling: return false;
+		case ECharacterState::Interacting: return false;
+		default: return false;
+		}
+	}	
+	return false;
+}
+
+void ASF_PlayerController::OnSkillPressed()
+{
+	if (SkillCheck())
+	{
+		PawnReference->GetCombatComponent()->UseSkill();
+		StopMovement();
+	}
+}
+
+void ASF_PlayerController::OnSkillReleased()
 {
 
 }
@@ -181,7 +214,7 @@ bool ASF_PlayerController::InteractCheck() const
 
 void ASF_PlayerController::OnInteractPressed()
 {
-	if (PawnReference && InteractCheck())
+	if (InteractCheck())
 	{
 		PawnReference->GetInteractionSystem()->Interact();
 		PawnReference->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Interacting);
@@ -207,9 +240,29 @@ void ASF_PlayerController::OnTargetLockOnOffPressed()
 	}
 }
 
-void ASF_PlayerController::OnMoveForward(float AxisInput)
+bool ASF_PlayerController::MoveCheck() const
 {
 	if (PawnReference)
+	{
+		switch (PawnReference->GetCharacterStateComponent()->CharacterState)
+		{
+		case ECharacterState::Idle: return true;
+		case ECharacterState::Running: return true;
+		case ECharacterState::Falling: return false;
+		case ECharacterState::Attacking: return false;
+		case ECharacterState::GettingHit: return false;
+		case ECharacterState::Blocking: return true;
+		case ECharacterState::Rolling: return false;
+		case ECharacterState::Interacting: return false;
+		default: return true;
+		}
+	}
+	return false;
+}
+
+void ASF_PlayerController::OnMoveForward(float AxisInput)
+{
+	if (MoveCheck())
 	{
 		PawnReference->AddMovementInput(FollowCamera->GetActorForwardVector(), AxisInput);
 	}
@@ -217,7 +270,7 @@ void ASF_PlayerController::OnMoveForward(float AxisInput)
 
 void ASF_PlayerController::OnMoveRight(float AxisInput)
 {
-	if (PawnReference)
+	if (MoveCheck())
 	{
 		PawnReference->AddMovementInput(FollowCamera->GetActorRightVector(), AxisInput);
 	}

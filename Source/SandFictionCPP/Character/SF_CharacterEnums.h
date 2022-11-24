@@ -23,6 +23,6 @@ UENUM(BlueprintType)
 enum class ECharacterFaction : uint8
 {
 	Player,
-	Friendly,
-	Hostile
+	Neutral,
+	Enemy
 };

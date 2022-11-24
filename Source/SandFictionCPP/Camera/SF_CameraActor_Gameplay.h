@@ -20,10 +20,10 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return SpringArmComponent; }
 
 	UPROPERTY(EditAnywhere)
-	float CameraForwardOffset = 150;
+	float CameraForwardOffset = 50;
 
 	UPROPERTY(EditAnywhere)
-	float CameraInterpolationSpeed = 3;
+	float CameraInterpolationSpeed = 8;
 
 	UFUNCTION(BlueprintCallable)
 	void SwitchCameraTarget(AActor* NewTarget, TSubclassOf<USF_CameraTransition> Transition);

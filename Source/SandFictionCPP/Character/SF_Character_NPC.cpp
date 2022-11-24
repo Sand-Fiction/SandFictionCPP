@@ -10,7 +10,7 @@
 
 ASF_Character_NPC::ASF_Character_NPC()
 {
-	GetFactionComponent()->SetFaction(ECharacterFaction::Friendly);
+	GetFactionComponent()->SetFaction(ECharacterFaction::Neutral);
 	InteractableComponent = CreateDefaultSubobject<USF_InteractableComponent>(TEXT("InteractableComponent"));
 	InteractableComponent->SetupAttachment(GetRootComponent());
 

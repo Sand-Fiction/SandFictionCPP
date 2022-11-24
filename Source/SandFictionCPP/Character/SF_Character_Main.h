@@ -18,11 +18,17 @@ public:
 
 	ASF_Character_Main();
 
+	UFUNCTION(BlueprintCallable)
+	void SetCharacterSafety(bool isSafe);
+
 	/** Returns TargetSystem SubObject **/
 	FORCEINLINE class USF_CharacterTargetSystem* GetTargetSystem() const { return TargetSystem; }
 
 	/** Returns InteractionSystem SubObject **/
 	FORCEINLINE class USF_InteractionSystem* GetInteractionSystem() const { return InteractionSystem; }
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
+	bool IsSafe;
 
 private:
 
@@ -33,5 +39,11 @@ private:
 	/** Interaction System Component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	class USF_InteractionSystem* InteractionSystem;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float DefaultMaxWalkSpeed;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float SafeMaxWalkSpeed;
 
 };

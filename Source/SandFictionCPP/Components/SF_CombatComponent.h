@@ -7,6 +7,7 @@
 #include "Engine/DataTable.h"
 #include "SF_CombatComponent.generated.h"
 
+class ASF_Skill;
 // Struct for Animation DataTable
 USTRUCT()
 struct FCharacterAnimationData : public FTableRowBase
@@ -65,6 +66,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void GetHit(USF_CombatComponent* Source);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<ASF_Skill> CurrentSkillClass;
+
+	UPROPERTY(BlueprintReadOnly)
+	ASF_Skill* SpawnedSkill;
+
+	UFUNCTION(BlueprintCallable)
+	void UseSkill();
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCurrentHealthChanged OnCurrentHealthChanged;

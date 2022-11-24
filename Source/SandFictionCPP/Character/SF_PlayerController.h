@@ -31,23 +31,34 @@ protected:
 	virtual void SetupInputComponent() override;
 	// End PlayerController interface
 
-	/** Input handlers for SetDestination action. */
+	// Jump
 	void OnJumpPressed();
 	void OnJumpReleased();
 	bool JumpCheck() const;
 
+	// Attack
 	void OnAttackPressed();
 	void OnAttackReleased();
 	bool AttackCheck() const;
 
+	// Skill
+
+	void OnSkillPressed();
+	void OnSkillReleased();
+	bool SkillCheck() const;
+
+	// Interact
 	void OnInteractPressed();
 	void OnInteractReleased();
 	bool InteractCheck() const;
 
-	void OnTargetLockOnOffPressed();
-
+	// Move
 	void OnMoveForward(float AxisInput);
 	void OnMoveRight(float AxisInput);
+	bool MoveCheck() const;
+
+	// TargetLock
+	void OnTargetLockOnOffPressed();
 
 	//Camera
 	void SetupFollowCamera();
@@ -56,4 +67,5 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	ASF_CameraActor_Gameplay* FollowCamera;
+
 };

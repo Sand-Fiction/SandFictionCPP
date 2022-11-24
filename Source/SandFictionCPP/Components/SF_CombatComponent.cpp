@@ -6,6 +6,8 @@
 #include "SF_CharacterFactionComponent.h"
 #include "SandFictionCPP/Character/SF_Character.h"
 #include "SF_CharacterStateComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "SandFictionCPP/Skills/SF_Skill.h"
 
 // Sets default values for this component's properties
 USF_CombatComponent::USF_CombatComponent()
@@ -37,29 +39,9 @@ void USF_CombatComponent::AttackCheck()
 		{
 			if (const auto HitCharacter = Cast<ASF_Character>(HitResult.GetActor()))
 			{
-				switch (FactionComponent->Faction)
+				if (HitCharacter->GetFactionComponent()->IsHostile(FactionComponent))
 				{
-					// If Faction is Player, look for Hostile HitCharacter
-					case ECharacterFaction::Player:
-					{
-						if (HitCharacter->GetFactionComponent()->Faction == ECharacterFaction::Hostile)
-						{
-							HitCharacter->GetCombatComponent()->GetHit(this);
-						}
-					}
-
-					case ECharacterFaction::Friendly: break;
-
-					// If Faction is Enemy/Hostile, look for Player HitCharacter
-					case ECharacterFaction::Hostile:
-					{
-						{
-							if (HitCharacter->GetFactionComponent()->Faction == ECharacterFaction::Player)
-							{
-								HitCharacter->GetCombatComponent()->GetHit(this);
-							}
-						}
-					}
+					HitCharacter->GetCombatComponent()->GetHit(this);
 				}
 			}
 		}
@@ -94,6 +76,14 @@ void USF_CombatComponent::GetHit(USF_CombatComponent* Source)
 			const auto AnimData = AnimDataTable->FindRow<FCharacterAnimationData>(TEXT("GettingHit"), TEXT("GettingHit not found in AnimDT."), true);
 			if (AnimData && AnimData->AnimMontage)
 			{
+				// Rotate Character to Source Location 
+				FRotator TargetRotation;
+				const auto LookAtRotation = UKismetMathLibrary::FindLookAtRotation(OwningCharacter->GetActorLocation(), Source->GetOwner()->GetActorLocation());
+				TargetRotation.Yaw = LookAtRotation.Yaw;
+				TargetRotation.Pitch = OwningCharacter->GetActorRotation().Pitch;
+				TargetRotation.Roll = OwningCharacter->GetActorRotation().Roll;
+				OwningCharacter->SetActorRotation(TargetRotation);
+
 				OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::GettingHit);
 				OwningCharacter->PlayAnimMontage(AnimData->AnimMontage);
 			}
@@ -101,6 +91,38 @@ void USF_CombatComponent::GetHit(USF_CombatComponent* Source)
 
 		// Calculate Damage
 		TakeDamage(Source);
+	}
+}
+
+void USF_CombatComponent::UseSkill()
+{
+	if (const auto OwningCharacter = Cast<ASF_Character>(GetOwner()))
+	{
+		// Spawn Current SkillComponent
+		if (!SpawnedSkill)
+		{
+			const FVector SpawnLocation = GetOwner()->GetActorLocation();
+			const FRotator SpawnRotation = GetOwner()->GetActorRotation();
+			SpawnedSkill = GetWorld()->SpawnActor<ASF_Skill>(CurrentSkillClass, FTransform(SpawnRotation, SpawnLocation));
+			SpawnedSkill->CombatComponent = this;
+			SpawnedSkill->SkillStart();
+
+			// Animation
+			if (AnimDataTable)
+			{
+				// Replace with AnimMontage from "CurrentSkillClass->AnimMontage"
+				const auto AnimData = AnimDataTable->FindRow<FCharacterAnimationData>(TEXT("Skill"), TEXT("Skill not found in AnimDT."), true);
+				if (AnimData && AnimData->AnimMontage)
+				{
+					OwningCharacter->PlayAnimMontage(AnimData->AnimMontage);
+					OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Attacking);
+				}
+			}
+		}
+		else
+		{
+			// Skill is still spawned / on Cooldown
+		}		
 	}
 }
 

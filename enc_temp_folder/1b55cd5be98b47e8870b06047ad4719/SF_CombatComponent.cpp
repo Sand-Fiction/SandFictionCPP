@@ -175,9 +175,6 @@ void USF_CombatComponent::StartKillOwner()
 
 		// ToDo: Spawn VFX Effect
 	}
-
-	// ToDo: Delay until Anim / VFX played
-	EndKillOwner();
 }
 
 void USF_CombatComponent::EndKillOwner(UAnimMontage* AnimMontage, bool Finished)

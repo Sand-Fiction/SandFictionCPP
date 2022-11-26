@@ -52,11 +52,20 @@ public:
 	UPROPERTY(EditAnywhere, Category = Resources)
 	float HealthRegen = 1;
 
+	UPROPERTY(BlueprintReadWrite, Category = Combat)
+	int32 AttackCounter;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Combat)
+	int32 MaxAttackChain;
+
 	UFUNCTION(BlueprintCallable)
 	void AttackCheck();
 
 	UFUNCTION(BlueprintCallable)
 	void MeleeAttack();
+
+	UFUNCTION(BlueprintCallable)
+	void ResetAttackCounter();
 
 	UFUNCTION(BlueprintCallable)
 	void SetCurrentHealth(float NewCurrentHealth);
@@ -76,6 +85,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UseSkill();
 
+	UFUNCTION(BlueprintCallable)
+	void StartKillOwner();
+
+private:
+	UFUNCTION()
+	void EndKillOwner(UAnimMontage* AnimMontage = nullptr, bool Finished = true);
+
+public:
 	UPROPERTY(BlueprintAssignable)
 	FOnCurrentHealthChanged OnCurrentHealthChanged;
 
@@ -84,6 +101,8 @@ private:
 	// Current Health
 	UPROPERTY(VisibleAnywhere, Category = Resources)
 	float HealthCurrent = 100;
+
+	
 
 protected:
 	// Called when the game starts

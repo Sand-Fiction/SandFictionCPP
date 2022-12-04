@@ -2,8 +2,6 @@
 
 
 #include "SF_Character_NPC.h"
-
-#include "FlowAsset.h"
 #include "FlowSubsystem.h"
 #include "SandFictionCPP/Components/SF_CharacterFactionComponent.h"
 #include "SandFictionCPP/Components/SF_InteractableComponent.h"
@@ -13,7 +11,6 @@ ASF_Character_NPC::ASF_Character_NPC()
 	GetFactionComponent()->SetFaction(ECharacterFaction::Neutral);
 	InteractableComponent = CreateDefaultSubobject<USF_InteractableComponent>(TEXT("InteractableComponent"));
 	InteractableComponent->SetupAttachment(GetRootComponent());
-
 	FlowComponent = CreateDefaultSubobject<UFlowComponent>(TEXT("FlowComponent"));
 }
 

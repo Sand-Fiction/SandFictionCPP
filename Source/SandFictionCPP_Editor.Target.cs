@@ -11,5 +11,6 @@ public class SandFictionCPP_EditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.Add("SandFictionCPP");
 		ExtraModuleNames.Add("SandFictionCPP_Editor");
-	}
+        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
+    }
 }

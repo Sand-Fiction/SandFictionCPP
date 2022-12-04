@@ -212,7 +212,7 @@ TSharedRef<SWidget> SFlowGraphNode_DialogueMessage::CreateDialogueContentArea()
 TSharedRef<SWidget> SFlowGraphNode_DialogueMessage::CreateNodeContentArea()
 {
 	return SNew(SBorder)
-		.BorderImage(FEditorStyle::GetBrush("NoBorder"))
+		.BorderImage(FFlowEditorStyle::GetBrush("NoBorder"))
 		.HAlign(HAlign_Fill)
 		.VAlign(VAlign_Fill)
 		[
@@ -294,7 +294,7 @@ TSharedRef<SWidget> SFlowGraphNode_DialogueMessage::CreateTitleBar()
 		.VAlign(VAlign_Fill)
 		[
 			SAssignNew(InlineEditableText, SInlineEditableTextBlock)
-			.Style(FEditorStyle::Get(), "Graph.Node.NodeTitleInlineEditableText")
+			.Style(FFlowEditorStyle::Get(), "Graph.Node.NodeTitleInlineEditableText")
 		.Text(NodeTitleText)
 		.ColorAndOpacity(SpeakerTextColor)
 		.IsReadOnly(true)

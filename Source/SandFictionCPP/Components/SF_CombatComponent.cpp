@@ -19,6 +19,12 @@ USF_CombatComponent::USF_CombatComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 	ResetAttackCounter();
 
+	HealthRegen = 1;
+	HealthMax = 100;
+	AttackRange = 150;
+	DamageMin = 5;
+	DamageMax = 15;
+
 	// ...
 }
 
@@ -70,12 +76,23 @@ void USF_CombatComponent::MeleeAttack()
 			{
 				OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Attacking);
 				OwningCharacter->PlayAnimMontage(AnimData->AnimMontage);
+				// Do Stuff when Anim finishes or gets interrupted
+				// OwningCharacter->GetMesh()->GetAnimInstance()->OnMontageEnded.AddDynamic();
 			}
 			else
 			{
 				ResetAttackCounter();
 			}
 		}
+	}
+}
+
+void USF_CombatComponent::AttachWeapon()
+{
+	if (!CurrentWeaponMesh)
+	{
+		CurrentWeaponMesh = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass(), TEXT("Weapon"));
+		CurrentWeaponMesh->RegisterComponent();
 	}
 }
 
@@ -177,7 +194,7 @@ void USF_CombatComponent::StartKillOwner()
 	}
 
 	// ToDo: Delay until Anim / VFX played
-	EndKillOwner();
+	// EndKillOwner();
 }
 
 void USF_CombatComponent::EndKillOwner(UAnimMontage* AnimMontage, bool Finished)
@@ -189,6 +206,7 @@ void USF_CombatComponent::TakeDamage(USF_CombatComponent* Source)
 {
 	const auto Damage = FMath::RandRange(Source->DamageMin, Source->DamageMax);
 	SetCurrentHealth(HealthCurrent - Damage);
+	OnDamageTaken.Broadcast(Damage, Source);
 }
 
 void USF_CombatComponent::SetCurrentHealth(float NewCurrentHealth)
@@ -199,6 +217,7 @@ void USF_CombatComponent::SetCurrentHealth(float NewCurrentHealth)
 	if (HealthCurrent <= 0.0f)
 	{
 		StartKillOwner();
+		OnCharacterDied.Broadcast();
 	}
 }
 
@@ -207,6 +226,8 @@ void USF_CombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+
+	SetCurrentHealth(HealthMax);
 	SetComponentTickEnabled(false);
 
 	// ...

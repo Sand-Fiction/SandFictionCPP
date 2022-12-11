@@ -8,6 +8,7 @@
 #include "SF_CombatComponent.generated.h"
 
 class ASF_Skill;
+
 // Struct for Animation DataTable
 USTRUCT()
 struct FCharacterAnimationData : public FTableRowBase
@@ -19,6 +20,8 @@ struct FCharacterAnimationData : public FTableRowBase
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCurrentHealthChanged, float, NewCurrentHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDamageTaken, float, Damage, USF_CombatComponent*, Source);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterDied);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SANDFICTIONCPP_API USF_CombatComponent : public UActorComponent
@@ -33,24 +36,24 @@ public:
 	UDataTable* AnimDataTable;
 
 	// Minimum Damage
-	UPROPERTY(EditAnywhere, Category = Resources)
-	float DamageMin = 5;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Resources)
+	float DamageMin;
 
 	// Maximum Damage
-	UPROPERTY(EditAnywhere, Category = Resources)
-	float DamageMax = 15;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Resources)
+	float DamageMax;
 
 	// Attack Range
-	UPROPERTY(EditAnywhere, Category = Resources)
-	float AttackRange = 150;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Resources)
+	float AttackRange;
 
 	// Maximum Health
-	UPROPERTY(EditAnywhere, Category = Resources)
-	float HealthMax = 100;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Resources)
+	float HealthMax;
 
 	// Health Regeneration per Second
-	UPROPERTY(EditAnywhere, Category = Resources)
-	float HealthRegen = 1;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Resources)
+	float HealthRegen;
 
 	UPROPERTY(BlueprintReadWrite, Category = Combat)
 	int32 AttackCounter;
@@ -58,11 +61,23 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Combat)
 	int32 MaxAttackChain;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Combat)
+	UStaticMesh* MeleeWeapon;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Combat)
+	UStaticMesh* RangedWeapon;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Combat)
+	UStaticMeshComponent* CurrentWeaponMesh;
+
 	UFUNCTION(BlueprintCallable)
 	void AttackCheck();
 
 	UFUNCTION(BlueprintCallable)
 	void MeleeAttack();
+
+	UFUNCTION(BlueprintCallable)
+	void AttachWeapon();
 
 	UFUNCTION(BlueprintCallable)
 	void ResetAttackCounter();
@@ -96,10 +111,14 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnCurrentHealthChanged OnCurrentHealthChanged;
 
-private:
+	UPROPERTY(BlueprintAssignable)
+	FOnCharacterDied OnCharacterDied;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnDamageTaken OnDamageTaken;
 
 	// Current Health
-	UPROPERTY(VisibleAnywhere, Category = Resources)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Resources)
 	float HealthCurrent = 100;
 
 	

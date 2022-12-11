@@ -36,14 +36,13 @@ void USF_CharacterTargetSystem::RegisterTargetComponent(USF_CharacterTargetCompo
 
 void USF_CharacterTargetSystem::UnRegisterTargetComponent(USF_CharacterTargetComponent* TargetComponent)
 {
-	
+	TargetComponents.Remove(TargetComponent);
+
 	if (CurrentTarget == TargetComponent)
 	{
 		LockOff();
 		LockOn();
 	}
-
-	TargetComponents.Remove(TargetComponent);
 }
 
 void USF_CharacterTargetSystem::LockOn()

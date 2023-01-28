@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Engine/DataTable.h"
+#include "SandFictionCPP/Character/SF_CharacterEnums.h"
 #include "SF_CombatComponent.generated.h"
 
 class ASF_Skill;
@@ -17,6 +18,13 @@ struct FCharacterAnimationData : public FTableRowBase
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UAnimMontage* AnimMontage;
+};
+
+UENUM(BlueprintType)
+enum ECombatStance
+{
+	Melee  UMETA(DisplayName = "Melee"),
+	Ranged UMETA(DisplayName = "Ranged")
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCurrentHealthChanged, float, NewCurrentHealth);
@@ -61,13 +69,16 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Combat)
 	int32 MaxAttackChain;
 
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Combat)
+	TEnumAsByte<ECombatStance> CombatStance;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Combat)
 	UStaticMesh* MeleeWeapon;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Combat)
 	UStaticMesh* RangedWeapon;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Combat)
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = Combat)
 	UStaticMeshComponent* CurrentWeaponMesh;
 
 	UFUNCTION(BlueprintCallable)
@@ -76,8 +87,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MeleeAttack();
 
+	UFUNCTION()
+	void MeleeAttackEnd(ECharacterState OldCharacterState, ECharacterState NewCharacterState);
+
 	UFUNCTION(BlueprintCallable)
 	void AttachWeapon();
+
+	UFUNCTION(BlueprintCallable)
+	void DetachWeapon();
 
 	UFUNCTION(BlueprintCallable)
 	void ResetAttackCounter();

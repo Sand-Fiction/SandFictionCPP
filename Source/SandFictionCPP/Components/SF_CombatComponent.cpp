@@ -74,10 +74,12 @@ void USF_CombatComponent::MeleeAttack()
 			const auto AnimData = AnimDataTable->FindRow<FCharacterAnimationData>(AnimName, TEXT("MeleeAttackAnim not found in AnimDT."), true);
 			if (AnimData && AnimData->AnimMontage)
 			{
+				AttachWeapon();
 				OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Attacking);
 				OwningCharacter->PlayAnimMontage(AnimData->AnimMontage);
-				// Do Stuff when Anim finishes or gets interrupted
-				// OwningCharacter->GetMesh()->GetAnimInstance()->OnMontageEnded.AddDynamic();
+
+				// Call MeleeAttackEnd when Anim finishes
+				OwningCharacter->GetCharacterStateComponent()->OnCharacterStateChanged.AddUniqueDynamic(this, &USF_CombatComponent::MeleeAttackEnd);
 			}
 			else
 			{
@@ -87,12 +89,49 @@ void USF_CombatComponent::MeleeAttack()
 	}
 }
 
+void USF_CombatComponent::MeleeAttackEnd(ECharacterState OldCharacterState, ECharacterState NewCharacterState)
+{
+	if (NewCharacterState != ECharacterState::Attacking)
+	{
+		DetachWeapon();
+		if (const auto OwningCharacter = Cast<ASF_Character>(GetOwner()))
+		{
+			OwningCharacter->GetCharacterStateComponent()->OnCharacterStateChanged.RemoveDynamic(this, &USF_CombatComponent::MeleeAttackEnd);
+		}
+	}
+}
+
 void USF_CombatComponent::AttachWeapon()
 {
 	if (!CurrentWeaponMesh)
 	{
-		CurrentWeaponMesh = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass(), TEXT("Weapon"));
+		CurrentWeaponMesh = NewObject<UStaticMeshComponent>(GetOwner(), UStaticMeshComponent::StaticClass(), TEXT("Weapon"));
 		CurrentWeaponMesh->RegisterComponent();
+		if (const auto Character = Cast<ACharacter>(GetOwner()))
+		{
+			CurrentWeaponMesh->AttachToComponent
+			(
+				Character->GetMesh(),
+				FAttachmentTransformRules::SnapToTargetNotIncludingScale,
+				"Weapon_R"
+			);
+		}
+
+		switch (CombatStance)
+		{
+			default: CurrentWeaponMesh->SetStaticMesh(MeleeWeapon); break;
+			case Melee: CurrentWeaponMesh->SetStaticMesh(MeleeWeapon); break;
+			case Ranged:  CurrentWeaponMesh->SetStaticMesh(RangedWeapon); break;
+		}
+	}
+}
+
+void USF_CombatComponent::DetachWeapon()
+{
+	if (CurrentWeaponMesh)
+	{
+		CurrentWeaponMesh->DestroyComponent();
+		CurrentWeaponMesh = nullptr;
 	}
 }
 

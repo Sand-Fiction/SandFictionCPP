@@ -14,6 +14,9 @@
 #include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
 #include "SandFictionCPP/Components/SF_CombatComponent.h"
 #include "SandFictionCPP/Components/SF_InteractionSystem.h"
+#include <EnhancedInputComponent.h>
+
+#include "EnhancedInputSubsystems.h"
 
 ASF_PlayerController::ASF_PlayerController()
 {
@@ -69,6 +72,27 @@ void ASF_PlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
+	if (const auto EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
+	{
+		// Get Input Subsystem and add MappingContext
+		if (const auto Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+		{
+			Subsystem->ClearAllMappings();
+			Subsystem->AddMappingContext(InputMapping, 0);
+		}
+
+		EnhancedInputComponent->BindAction(InputMove, ETriggerEvent::Triggered, this, &ASF_PlayerController::Move);
+		EnhancedInputComponent->BindAction(InputAttack, ETriggerEvent::Triggered, this, &ASF_PlayerController::Attack);
+		EnhancedInputComponent->BindAction(InputInteract, ETriggerEvent::Triggered, this, &ASF_PlayerController::Interact);
+		EnhancedInputComponent->BindAction(InputBlock, ETriggerEvent::Triggered, this, &ASF_PlayerController::Block);
+		EnhancedInputComponent->BindAction(InputRotateCamera, ETriggerEvent::Triggered, this, &ASF_PlayerController::RotateCamera);
+		EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Triggered, this, &ASF_PlayerController::Jump);
+		EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Completed, this, &ASF_PlayerController::JumpEnd);
+		EnhancedInputComponent->BindAction(InputTargetLock, ETriggerEvent::Triggered, this, &ASF_PlayerController::TargetLock);
+		EnhancedInputComponent->BindAction(InputSkill, ETriggerEvent::Triggered, this, &ASF_PlayerController::Skill);
+		EnhancedInputComponent->BindAction(InputZoomCamera, ETriggerEvent::Triggered, this, &ASF_PlayerController::ZoomCamera);
+	}
+
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ASF_PlayerController::OnJumpPressed);
 	InputComponent->BindAction("Jump", IE_Released, this, &ASF_PlayerController::OnJumpReleased);
 
@@ -80,28 +104,76 @@ void ASF_PlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Interact", IE_Pressed, this, &ASF_PlayerController::OnInteractPressed);
 	InputComponent->BindAction("Interact", IE_Released, this, &ASF_PlayerController::OnInteractReleased);
-
-	InputComponent->BindAxis("MoveForward", this, &ASF_PlayerController::OnMoveForward);
-	InputComponent->BindAxis("MoveRight", this, &ASF_PlayerController::OnMoveRight);
-
-	InputComponent->BindAction("TargetLockOnOff", IE_Pressed, this, &ASF_PlayerController::OnTargetLockOnOffPressed);
-
-	InputComponent->BindAction("RotateCameraRight", IE_Repeat, this, &ASF_PlayerController::OnRotateCameraRightPressed);
-	InputComponent->BindAction("RotateCameraLeft", IE_Repeat, this, &ASF_PlayerController::OnRotateCameraLeftPressed);
 }
 
-// ToDo: ENHANCED INPUT / FInterpCamera Rotation in Tick instead of hard setting value here
-
-void ASF_PlayerController::OnRotateCameraRightPressed()
+void ASF_PlayerController::Move(const FInputActionValue& InputActionValue)
 {
-	const auto RotationOffset = FRotator(0, 5, 0);
+	if (MoveCheck())
+	{
+		const auto AxisInput = InputActionValue.Get<FVector2D>();
+		if (AxisInput.X != 0.0f)
+		{
+			PawnReference->AddMovementInput(FollowCamera->GetActorForwardVector().GetSafeNormal2D(), AxisInput.X);
+		}
+
+		if (AxisInput.Y != 0.0f)
+		{
+			PawnReference->AddMovementInput(FollowCamera->GetActorRightVector().GetSafeNormal2D(), AxisInput.Y);
+		}
+	}
+}
+
+void ASF_PlayerController::Attack(const FInputActionValue& InputActionValue)
+{
+
+}
+
+void ASF_PlayerController::Interact(const FInputActionValue& InputActionValue)
+{
+
+}
+
+void ASF_PlayerController::Block(const FInputActionValue& InputActionValue)
+{
+
+}
+
+void ASF_PlayerController::RotateCamera(const FInputActionValue& InputActionValue)
+{
+	const auto AxisInput = InputActionValue.Get<FVector2D>();
+	const float Yaw = AxisInput.X + AxisInput.Y;
+	const auto RotationOffset = FRotator(0, Yaw, 0);
 	FollowCamera->AddActorWorldRotation(RotationOffset);
 }
 
-void ASF_PlayerController::OnRotateCameraLeftPressed()
+void ASF_PlayerController::Jump(const FInputActionValue& InputActionValue)
 {
-	const auto RotationOffset = FRotator(0, -5, 0);
-	FollowCamera->AddActorWorldRotation(RotationOffset);
+
+}
+
+void ASF_PlayerController::JumpEnd(const FInputActionValue& InputActionValue)
+{
+
+}
+
+void ASF_PlayerController::TargetLock(const FInputActionValue& InputActionValue)
+{
+	if (PawnReference)
+	{
+		const auto TargetSystem = PawnReference->GetTargetSystem();
+		TargetSystem->IsLockedOn ? TargetSystem->LockOff() : TargetSystem->LockOn();
+	}
+}
+
+void ASF_PlayerController::Skill(const FInputActionValue& InputActionValue)
+{
+
+}
+
+void ASF_PlayerController::ZoomCamera(const FInputActionValue& InputActionValue)
+{
+
+
 }
 
 bool ASF_PlayerController::JumpCheck() const
@@ -247,17 +319,6 @@ void ASF_PlayerController::OnInteractReleased()
 	}
 }
 
-void ASF_PlayerController::OnTargetLockOnOffPressed()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Target"));
-
-	if (PawnReference)
-	{
-		const auto TargetSystem = PawnReference->GetTargetSystem();
-		TargetSystem->IsLockedOn ? TargetSystem->LockOff() : TargetSystem->LockOn();
-	}
-}
-
 bool ASF_PlayerController::MoveCheck() const
 {
 	if (PawnReference)
@@ -276,22 +337,6 @@ bool ASF_PlayerController::MoveCheck() const
 		}
 	}
 	return false;
-}
-
-void ASF_PlayerController::OnMoveForward(float AxisInput)
-{
-	if (MoveCheck())
-	{
-		PawnReference->AddMovementInput(FollowCamera->GetActorForwardVector().GetSafeNormal2D(), AxisInput);
-	}
-}
-
-void ASF_PlayerController::OnMoveRight(float AxisInput)
-{
-	if (MoveCheck())
-	{
-		PawnReference->AddMovementInput(FollowCamera->GetActorRightVector().GetSafeNormal2D(), AxisInput);
-	}
 }
 
 // Spawn Follow Camera at Pawns Location or 0/0/0

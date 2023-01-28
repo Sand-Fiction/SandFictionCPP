@@ -30,5 +30,9 @@ private:
 	/** Target Component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	USF_CharacterTargetComponent* TargetComponent;
+
+protected:
+
+	virtual void StartDeath() override;
 	
 };

@@ -40,7 +40,14 @@ private:
 
 protected:
 
+	UFUNCTION()
+	virtual void StartDeath();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveStartDeath();
+
+	virtual void BeginPlay() override;
+
 	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode) override;
 
 };
-

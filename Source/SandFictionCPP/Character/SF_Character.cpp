@@ -41,6 +41,19 @@ void ASF_Character::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
 }
 
+void ASF_Character::StartDeath()
+{
+	ReceiveStartDeath();
+}
+
+void ASF_Character::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CombatComponent->OnCharacterDied.AddUniqueDynamic(this, &ASF_Character::StartDeath);
+
+}
+
 void ASF_Character::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
 	Super::OnMovementModeChanged(PrevMovementMode, PreviousCustomMode);

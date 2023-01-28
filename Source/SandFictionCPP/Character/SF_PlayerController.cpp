@@ -84,6 +84,7 @@ void ASF_PlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputMove, ETriggerEvent::Triggered, this, &ASF_PlayerController::Move);
 		EnhancedInputComponent->BindAction(InputAttack, ETriggerEvent::Triggered, this, &ASF_PlayerController::Attack);
 		EnhancedInputComponent->BindAction(InputInteract, ETriggerEvent::Triggered, this, &ASF_PlayerController::Interact);
+		EnhancedInputComponent->BindAction(InputInteract, ETriggerEvent::Completed, this, &ASF_PlayerController::InteractEnd);
 		EnhancedInputComponent->BindAction(InputBlock, ETriggerEvent::Triggered, this, &ASF_PlayerController::Block);
 		EnhancedInputComponent->BindAction(InputRotateCamera, ETriggerEvent::Triggered, this, &ASF_PlayerController::RotateCamera);
 		EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Triggered, this, &ASF_PlayerController::Jump);
@@ -92,18 +93,6 @@ void ASF_PlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputSkill, ETriggerEvent::Triggered, this, &ASF_PlayerController::Skill);
 		EnhancedInputComponent->BindAction(InputZoomCamera, ETriggerEvent::Triggered, this, &ASF_PlayerController::ZoomCamera);
 	}
-
-	InputComponent->BindAction("Jump", IE_Pressed, this, &ASF_PlayerController::OnJumpPressed);
-	InputComponent->BindAction("Jump", IE_Released, this, &ASF_PlayerController::OnJumpReleased);
-
-	InputComponent->BindAction("Attack", IE_Pressed, this, &ASF_PlayerController::OnAttackPressed);
-	InputComponent->BindAction("Attack", IE_Released, this, &ASF_PlayerController::OnAttackReleased);
-
-	InputComponent->BindAction("Skill", IE_Pressed, this, &ASF_PlayerController::OnSkillPressed);
-	InputComponent->BindAction("Skill", IE_Released, this, &ASF_PlayerController::OnSkillReleased);
-
-	InputComponent->BindAction("Interact", IE_Pressed, this, &ASF_PlayerController::OnInteractPressed);
-	InputComponent->BindAction("Interact", IE_Released, this, &ASF_PlayerController::OnInteractReleased);
 }
 
 void ASF_PlayerController::Move(const FInputActionValue& InputActionValue)
@@ -125,12 +114,28 @@ void ASF_PlayerController::Move(const FInputActionValue& InputActionValue)
 
 void ASF_PlayerController::Attack(const FInputActionValue& InputActionValue)
 {
-
+	if (AttackCheck())
+	{
+		PawnReference->GetCombatComponent()->MeleeAttack();
+		StopMovement();
+	}
 }
 
 void ASF_PlayerController::Interact(const FInputActionValue& InputActionValue)
 {
+	if (InteractCheck())
+	{
+		PawnReference->GetInteractionSystem()->Interact();
+		PawnReference->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Interacting);
+	}
+}
 
+void ASF_PlayerController::InteractEnd(const FInputActionValue& InputActionValue)
+{
+	if (PawnReference && PawnReference->GetCharacterStateComponent()->CharacterState == ECharacterState::Interacting)
+	{
+		PawnReference->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Idle);
+	}
 }
 
 void ASF_PlayerController::Block(const FInputActionValue& InputActionValue)
@@ -148,12 +153,18 @@ void ASF_PlayerController::RotateCamera(const FInputActionValue& InputActionValu
 
 void ASF_PlayerController::Jump(const FInputActionValue& InputActionValue)
 {
-
+	if (JumpCheck())
+	{
+		PawnReference->Jump();
+	}
 }
 
 void ASF_PlayerController::JumpEnd(const FInputActionValue& InputActionValue)
 {
-
+	if (PawnReference)
+	{
+		PawnReference->StopJumping();
+	}
 }
 
 void ASF_PlayerController::TargetLock(const FInputActionValue& InputActionValue)
@@ -167,12 +178,15 @@ void ASF_PlayerController::TargetLock(const FInputActionValue& InputActionValue)
 
 void ASF_PlayerController::Skill(const FInputActionValue& InputActionValue)
 {
-
+	if (SkillCheck())
+	{
+		PawnReference->GetCombatComponent()->UseSkill();
+		StopMovement();
+	}
 }
 
 void ASF_PlayerController::ZoomCamera(const FInputActionValue& InputActionValue)
 {
-
 
 }
 
@@ -196,22 +210,6 @@ bool ASF_PlayerController::JumpCheck() const
 	return false;
 }
 
-void ASF_PlayerController::OnJumpPressed()
-{
-	if (JumpCheck())
-	{
-		PawnReference->Jump();
-	}
-}
-
-void ASF_PlayerController::OnJumpReleased()
-{
-	if (PawnReference)
-	{
-		PawnReference->StopJumping();
-	}
-}
-
 bool ASF_PlayerController::AttackCheck() const
 {
 	if (PawnReference && !PawnReference->IsSafe)
@@ -230,22 +228,6 @@ bool ASF_PlayerController::AttackCheck() const
 		}
 	}
 	return false;
-}
-
-
-
-void ASF_PlayerController::OnAttackPressed()
-{
-	if (AttackCheck())
-	{
-		PawnReference->GetCombatComponent()->MeleeAttack();
-		StopMovement();
-	}
-}
-
-void ASF_PlayerController::OnAttackReleased()
-{
-
 }
 
 bool ASF_PlayerController::SkillCheck() const
@@ -268,20 +250,6 @@ bool ASF_PlayerController::SkillCheck() const
 	return false;
 }
 
-void ASF_PlayerController::OnSkillPressed()
-{
-	if (SkillCheck())
-	{
-		PawnReference->GetCombatComponent()->UseSkill();
-		StopMovement();
-	}
-}
-
-void ASF_PlayerController::OnSkillReleased()
-{
-
-}
-
 bool ASF_PlayerController::InteractCheck() const
 {
 	if (PawnReference)
@@ -300,23 +268,6 @@ bool ASF_PlayerController::InteractCheck() const
 		}
 	}
 	return false;
-}
-
-void ASF_PlayerController::OnInteractPressed()
-{
-	if (InteractCheck())
-	{
-		PawnReference->GetInteractionSystem()->Interact();
-		PawnReference->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Interacting);
-	}
-}
-
-void ASF_PlayerController::OnInteractReleased()
-{
-	if (PawnReference && PawnReference->GetCharacterStateComponent()->CharacterState == ECharacterState::Interacting)
-	{
-		PawnReference->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Idle);
-	}
 }
 
 bool ASF_PlayerController::MoveCheck() const

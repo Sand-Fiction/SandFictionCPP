@@ -49,6 +49,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
 	UInputAction* InputInteract;
 	void Interact(const FInputActionValue& InputActionValue);
+	void InteractEnd(const FInputActionValue& InputActionValue);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
 	UInputAction* InputBlock;
@@ -77,31 +78,11 @@ protected:
 
 #pragma endregion
 
-	// CameraRotation
-	void OnRotateCameraRightPressed();
-	void OnRotateCameraLeftPressed();
-
-	// Jump
-	void OnJumpPressed();
-	void OnJumpReleased();
+	// State Checks
 	bool JumpCheck() const;
-
-	// Attack
-	void OnAttackPressed();
-	void OnAttackReleased();
 	bool AttackCheck() const;
-
-	// Skill
-
-	void OnSkillPressed();
-	void OnSkillReleased();
 	bool SkillCheck() const;
-
-	// Interact
-	void OnInteractPressed();
-	void OnInteractReleased();
 	bool InteractCheck() const;
-
 	bool MoveCheck() const;
 
 	//Camera

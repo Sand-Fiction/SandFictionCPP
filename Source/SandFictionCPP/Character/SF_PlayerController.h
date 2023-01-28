@@ -31,6 +31,10 @@ protected:
 	virtual void SetupInputComponent() override;
 	// End PlayerController interface
 
+	// CameraRotation
+	void OnRotateCameraRightPressed();
+	void OnRotateCameraLeftPressed();
+
 	// Jump
 	void OnJumpPressed();
 	void OnJumpReleased();

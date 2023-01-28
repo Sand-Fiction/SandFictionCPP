@@ -6,6 +6,7 @@
 #include "Math/Vector.h"
 #include "SF_Character_Main.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "SandFictionCPP/Camera/SF_CameraActor_Gameplay.h"
 #include "SandFictionCPP/Components/SF_CharacterStateComponent.h"
@@ -84,6 +85,23 @@ void ASF_PlayerController::SetupInputComponent()
 	InputComponent->BindAxis("MoveRight", this, &ASF_PlayerController::OnMoveRight);
 
 	InputComponent->BindAction("TargetLockOnOff", IE_Pressed, this, &ASF_PlayerController::OnTargetLockOnOffPressed);
+
+	InputComponent->BindAction("RotateCameraRight", IE_Repeat, this, &ASF_PlayerController::OnRotateCameraRightPressed);
+	InputComponent->BindAction("RotateCameraLeft", IE_Repeat, this, &ASF_PlayerController::OnRotateCameraLeftPressed);
+}
+
+// ToDo: ENHANCED INPUT / FInterpCamera Rotation in Tick instead of hard setting value here
+
+void ASF_PlayerController::OnRotateCameraRightPressed()
+{
+	const auto RotationOffset = FRotator(0, 5, 0);
+	FollowCamera->AddActorWorldRotation(RotationOffset);
+}
+
+void ASF_PlayerController::OnRotateCameraLeftPressed()
+{
+	const auto RotationOffset = FRotator(0, -5, 0);
+	FollowCamera->AddActorWorldRotation(RotationOffset);
 }
 
 bool ASF_PlayerController::JumpCheck() const
@@ -264,7 +282,7 @@ void ASF_PlayerController::OnMoveForward(float AxisInput)
 {
 	if (MoveCheck())
 	{
-		PawnReference->AddMovementInput(FollowCamera->GetActorForwardVector(), AxisInput);
+		PawnReference->AddMovementInput(FollowCamera->GetActorForwardVector().GetSafeNormal2D(), AxisInput);
 	}
 }
 
@@ -272,7 +290,7 @@ void ASF_PlayerController::OnMoveRight(float AxisInput)
 {
 	if (MoveCheck())
 	{
-		PawnReference->AddMovementInput(FollowCamera->GetActorRightVector(), AxisInput);
+		PawnReference->AddMovementInput(FollowCamera->GetActorRightVector().GetSafeNormal2D(), AxisInput);
 	}
 }
 

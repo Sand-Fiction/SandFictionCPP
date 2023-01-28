@@ -28,6 +28,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SwitchCameraTarget(AActor* NewTarget, TSubclassOf<USF_CameraTransition> Transition);
 
+	/** Camera boom positioning the camera above the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class USpringArmComponent* SpringArmComponent;
+
 private:	
 	// Sets default values for this actor's properties
 	ASF_CameraActor_Gameplay();
@@ -35,10 +39,6 @@ private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent;
-
-	/** Camera boom positioning the camera above the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* SpringArmComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	AActor* CurrentCameraTarget;

@@ -19,7 +19,7 @@ public:
 	// Sets default values for this component's properties
 	USF_CharacterStateComponent();
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ECharacterState CharacterState;
 
 	UPROPERTY(BlueprintAssignable)

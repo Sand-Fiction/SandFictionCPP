@@ -40,7 +40,7 @@ public:
 	// Sets default values for this component's properties
 	USF_CombatComponent();
 
-	UPROPERTY(EditAnywhere, Category = Animation)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Animation)
 	UDataTable* AnimDataTable;
 
 	// Minimum Damage
@@ -107,6 +107,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void GetHit(USF_CombatComponent* Source);
+
+	UFUNCTION()
+	void GetHitEnd(UAnimMontage* Montage, bool bBInterrupted);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<ASF_Skill> CurrentSkillClass;

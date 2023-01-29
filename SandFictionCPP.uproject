@@ -11,7 +11,8 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"Flow",
-				"UMG"
+				"UMG",
+				"AIModule"
 			]
 		},
 		{

@@ -6,9 +6,7 @@
 
 #include "SandFictionCPP/Components/SF_CharacterFactionComponent.h"
 #include "SandFictionCPP/Components/SF_CharacterStateComponent.h"
-#include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
 #include "SandFictionCPP/Components/SF_CombatComponent.h"
-#include "SandFictionCPP/Components/SF_InteractionSystem.h"
 
 ASF_Character::ASF_Character()
 {

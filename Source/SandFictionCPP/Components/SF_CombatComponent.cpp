@@ -162,11 +162,21 @@ void USF_CombatComponent::GetHit(USF_CombatComponent* Source)
 
 				OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::GettingHit);
 				OwningCharacter->PlayAnimMontage(AnimData->AnimMontage);
+				OwningCharacter->GetMesh()->GetAnimInstance()->OnMontageEnded.AddUniqueDynamic(this, &USF_CombatComponent::GetHitEnd);
 			}
 		}
 
 		// Calculate Damage
 		TakeDamage(Source);
+	}
+}
+
+void USF_CombatComponent::GetHitEnd(UAnimMontage* Montage, bool bBInterrupted)
+{
+	if (const auto OwningCharacter = Cast<ASF_Character>(GetOwner()))
+	{
+		OwningCharacter->GetMesh()->GetAnimInstance()->OnMontageEnded.RemoveDynamic(this, &USF_CombatComponent::GetHitEnd);
+		OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Idle);
 	}
 }
 
@@ -253,7 +263,7 @@ void USF_CombatComponent::SetCurrentHealth(float NewCurrentHealth)
 	HealthCurrent = FMath::Clamp(NewCurrentHealth, 0.0f, HealthMax);
 	OnCurrentHealthChanged.Broadcast(NewCurrentHealth);
 
-	if (HealthCurrent <= 0.0f)
+	if (FMath::IsNearlyZero(HealthCurrent) || HealthCurrent <= 0.0f)
 	{
 		StartKillOwner();
 		OnCharacterDied.Broadcast();

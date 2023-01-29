@@ -5,7 +5,6 @@
 #include "NiagaraSystem.h"
 #include "Math/Vector.h"
 #include "SF_Character_Main.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "SandFictionCPP/Camera/SF_CameraActor_Gameplay.h"
@@ -15,7 +14,6 @@
 #include "SandFictionCPP/Components/SF_CombatComponent.h"
 #include "SandFictionCPP/Components/SF_InteractionSystem.h"
 #include <EnhancedInputComponent.h>
-
 #include "EnhancedInputSubsystems.h"
 
 ASF_PlayerController::ASF_PlayerController()
@@ -89,7 +87,7 @@ void ASF_PlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputRotateCamera, ETriggerEvent::Triggered, this, &ASF_PlayerController::RotateCamera);
 		EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Triggered, this, &ASF_PlayerController::Jump);
 		EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Completed, this, &ASF_PlayerController::JumpEnd);
-		EnhancedInputComponent->BindAction(InputTargetLock, ETriggerEvent::Triggered, this, &ASF_PlayerController::TargetLock);
+		EnhancedInputComponent->BindAction(InputTargetLock, ETriggerEvent::Started, this, &ASF_PlayerController::TargetLock);
 		EnhancedInputComponent->BindAction(InputSkill, ETriggerEvent::Triggered, this, &ASF_PlayerController::Skill);
 		EnhancedInputComponent->BindAction(InputZoomCamera, ETriggerEvent::Triggered, this, &ASF_PlayerController::ZoomCamera);
 	}
@@ -187,7 +185,7 @@ void ASF_PlayerController::Skill(const FInputActionValue& InputActionValue)
 
 void ASF_PlayerController::ZoomCamera(const FInputActionValue& InputActionValue)
 {
-
+	FollowCamera->ZoomCamera(InputActionValue.Get<float>());
 }
 
 bool ASF_PlayerController::JumpCheck() const

@@ -300,7 +300,7 @@ void ASF_PlayerController::SetupFollowCamera()
 	{
 		Location = FVector::ZeroVector;
 	}
-	const auto SpawnedActor = GetWorld()->SpawnActor(ASF_CameraActor_Gameplay::StaticClass(), &Location);
+	const auto SpawnedActor = GetWorld()->SpawnActor(CameraClass, &Location);
 	FollowCamera = Cast<ASF_CameraActor_Gameplay>(SpawnedActor);
 	SetViewTarget(FollowCamera);
 }

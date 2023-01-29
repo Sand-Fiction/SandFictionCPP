@@ -20,10 +20,14 @@ class ASF_PlayerController : public APlayerController
 public:
 	ASF_PlayerController();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<ASF_CameraActor_Gameplay> CameraClass;
+
 	UPROPERTY(BlueprintReadOnly, Category = References)
 	ASF_Character_Main* PawnReference;
 
 	FORCEINLINE ASF_CameraActor_Gameplay* GetFollowCamera() const { return FollowCamera; }
+
 
 protected:
 

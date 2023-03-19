@@ -196,7 +196,7 @@ void SFlowGraphNode_PlayerReply::UpdateGraphNode()
 TSharedRef<SWidget> SFlowGraphNode_PlayerReply::CreateNodeContentArea()
 {
 	return SNew(SBorder)
-		.BorderImage(FFlowEditorStyle::GetBrush("NoBorder"))
+		.BorderImage(FFlowEditorStyle::GetBrush("Flow.Node.Body"))
 		.HAlign(HAlign_Fill)
 		.VAlign(VAlign_Fill)
 		[
@@ -251,7 +251,7 @@ TSharedRef<SWidget> SFlowGraphNode_PlayerReply::CreateTitleBar()
 		.VAlign(VAlign_Fill)
 		[
 			SAssignNew(InlineEditableText, SInlineEditableTextBlock)
-			.Style(FFlowEditorStyle::Get(), "Graph.Node.NodeTitleInlineEditableText")
+			.Style(FAppStyle::Get(), "Graph.Node.NodeTitleInlineEditableText")
 		.Text(NodeTitleText)
 		.ColorAndOpacity(SpeakerTextColor)
 		.IsReadOnly(true)

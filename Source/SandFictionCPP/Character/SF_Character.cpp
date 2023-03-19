@@ -32,6 +32,7 @@ ASF_Character::ASF_Character()
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
+	DefaultSpeed = GetCharacterMovement()->MaxWalkSpeed;
 }
 
 void ASF_Character::Tick(float DeltaSeconds)
@@ -42,6 +43,8 @@ void ASF_Character::Tick(float DeltaSeconds)
 void ASF_Character::SetIsCharging(bool IsCharging)
 {
 	bIsCharging = IsCharging;
+	bIsCharging ? GetCharacterMovement()->MaxWalkSpeed = ChargingSpeed : GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
+
 }
 
 bool ASF_Character::GetIsCharging()

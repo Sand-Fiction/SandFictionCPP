@@ -47,6 +47,12 @@ private:
 	UPROPERTY(BlueprintReadWrite, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	bool bIsCharging;
 
+	UPROPERTY()
+	float ChargingSpeed = 750.f;
+
+	UPROPERTY()
+	float DefaultSpeed;
+
 protected:
 
 	UFUNCTION()

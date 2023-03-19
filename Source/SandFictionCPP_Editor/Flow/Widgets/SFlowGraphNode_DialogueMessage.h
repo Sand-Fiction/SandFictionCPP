@@ -22,10 +22,6 @@ protected:
 
 
 public:
-	SLATE_BEGIN_ARGS(SFlowGraphNode_DialogueMessage) {}
-	SLATE_END_ARGS()
-
-	void Construct(const FArguments& InArgs, UFlowGraphNode* InNode);
 
 	/** Used to display the name of the node and allow renaming of the node */
 	TSharedPtr<SVerticalBox> TitleBox;

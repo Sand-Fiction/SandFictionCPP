@@ -16,6 +16,8 @@
 
 void SFlowGraphNode_DialogueMessage::UpdateGraphNode()
 {
+	SpeakerTextColor = FLinearColor(0.f, 0.f, 0.f, 1.f);
+
 	InputPins.Empty();
 	OutputPins.Empty();
 
@@ -303,17 +305,6 @@ TSharedRef<SWidget> SFlowGraphNode_DialogueMessage::CreateTitleBar()
 		];
 
 	return TitleBoxH.ToSharedRef();
-}
-
-void SFlowGraphNode_DialogueMessage::Construct(const FArguments& InArgs, UFlowGraphNode* InNode)
-{
-	SpeakerTextColor = FLinearColor(0.f, 0.f, 0.f, 1.f);
-	
-	GraphNode = InNode;
-	FlowGraphNode = InNode;
-
-	SetCursor(EMouseCursor::CardinalCross);
-	UpdateGraphNode();
 }
 
 #undef LOCTEXT_NAMESPACE

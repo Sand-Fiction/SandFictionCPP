@@ -18,15 +18,8 @@ protected:
 	
 	virtual TSharedRef<SWidget> CreateTitleBar();
 
-
-
 public:
-	SLATE_BEGIN_ARGS(SFlowGraphNode_PlayerReply) {}
-	SLATE_END_ARGS()
-
-	void Construct(const FArguments& InArgs, UFlowGraphNode* InNode);
-
-
+	
 	/** Used to display the name of the node and allow renaming of the node */
 	TSharedPtr<SVerticalBox> TitleBox;
 	TSharedPtr<SHorizontalBox> TitleBoxH;

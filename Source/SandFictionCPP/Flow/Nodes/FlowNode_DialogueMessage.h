@@ -17,10 +17,10 @@ class SANDFICTIONCPP_API UFlowNode_DialogueMessage final : public UFlowNode
 public:
 
 	UPROPERTY(EditAnywhere)
-		FDataTableRowHandle NPCData;
+	FDataTableRowHandle NPCData;
 
 	UPROPERTY(EditAnywhere)
-		TArray<FText> DialogueLines;
+	TArray<FText> DialogueLines;
 
 	FText GetReadableDialogueString() const;
 	FText GetSpeakerName() const;

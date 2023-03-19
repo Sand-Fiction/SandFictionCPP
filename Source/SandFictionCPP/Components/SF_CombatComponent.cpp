@@ -75,11 +75,16 @@ void USF_CombatComponent::MeleeAttack()
 				{
 					AttackCounter = FMath::RandRange(1, 3);
 				}
-				else if (AttackCounter >= MaxAttackChain)
-				{
-					ResetAttackCounter();
-					AttackCounter++;
-				}
+				else 
+					if (AttackCounter >= MaxAttackChain)
+					{
+						ResetAttackCounter();
+						AttackCounter++;
+					}
+					else
+					{
+						AttackCounter++;
+					}
 
 				AnimNameString = FString::Printf(TEXT("MeleeAttack0%d"), AttackCounter);
 			}

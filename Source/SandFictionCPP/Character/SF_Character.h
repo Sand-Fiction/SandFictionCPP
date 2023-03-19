@@ -24,6 +24,12 @@ public:
 	/** Returns CombatComponent SubObject **/
 	FORCEINLINE class USF_CombatComponent* GetCombatComponent() const { return CombatComponent; }
 
+	UFUNCTION(BlueprintCallable)
+	void SetIsCharging(bool IsCharging);
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsCharging();
+
 private:
 
 	/** Faction Component */
@@ -37,6 +43,9 @@ private:
 	/** Combat Component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	class USF_CombatComponent* CombatComponent;
+
+	UPROPERTY(BlueprintReadWrite, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	bool bIsCharging;
 
 protected:
 

@@ -63,13 +63,27 @@ void USF_CombatComponent::MeleeAttack()
 	{
 		if (AnimDataTable)
 		{
-			if (AttackCounter >= MaxAttackChain)
+			FString AnimNameString;
+
+			if (OwningCharacter->GetIsCharging())
 			{
-				ResetAttackCounter();
+				AnimNameString = FString::Printf(TEXT("ChargeAttack"));
+			}
+			else
+			{
+				if (MaxAttackChain == 0)
+				{
+					AttackCounter = FMath::RandRange(1, 3);
+				}
+				else if (AttackCounter >= MaxAttackChain)
+				{
+					ResetAttackCounter();
+					AttackCounter++;
+				}
+
+				AnimNameString = FString::Printf(TEXT("MeleeAttack0%d"), AttackCounter);
 			}
 
-			AttackCounter++;
-			const auto AnimNameString = FString::Printf(TEXT("MeleeAttack0%d"), AttackCounter);
 			const auto AnimName = FName(AnimNameString);
 			const auto AnimData = AnimDataTable->FindRow<FCharacterAnimationData>(AnimName, TEXT("MeleeAttackAnim not found in AnimDT."), true);
 			if (AnimData && AnimData->AnimMontage)

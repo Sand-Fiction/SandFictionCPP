@@ -11,14 +11,20 @@
 FText UFlowNode_DialogueMessage::GetReadableDialogueString() const
 {
 	FText DialogueText;
-
 	for (const FText DialogueLine :DialogueLines)
 	{
 		FFormatNamedArguments Args;
 		Args.Add("OldLines", DialogueText);
 		Args.Add("NewLine", DialogueLine);
 
-		DialogueText = FText::Format(NSLOCTEXT("SFNameSpace", "FullTextFormat", "{OldLines} {NewLine}"), Args);
+		if (!DialogueLine.EqualTo(DialogueLines.Last()))
+		{
+			DialogueText = FText::Format(NSLOCTEXT("SFNameSpace", "FullTextFormat", "{OldLines} {NewLine} \n \n "), Args);
+		}
+		else
+		{
+			DialogueText = FText::Format(NSLOCTEXT("SFNameSpace", "FullTextFormat", "{OldLines} {NewLine}"), Args);
+		}
 	}
 
 	return DialogueText;

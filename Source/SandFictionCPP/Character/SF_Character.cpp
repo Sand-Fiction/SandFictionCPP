@@ -39,6 +39,16 @@ void ASF_Character::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
 }
 
+void ASF_Character::SetIsCharging(bool IsCharging)
+{
+	bIsCharging = IsCharging;
+}
+
+bool ASF_Character::GetIsCharging()
+{
+	return bIsCharging;
+}
+
 void ASF_Character::StartDeath()
 {
 	ReceiveStartDeath();

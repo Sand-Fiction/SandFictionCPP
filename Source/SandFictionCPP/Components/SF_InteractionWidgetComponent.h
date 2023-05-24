@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class SANDFICTIONCPP_API USF_InteractionWidgetComponent : public UWidgetComponent
 {
 	GENERATED_BODY()

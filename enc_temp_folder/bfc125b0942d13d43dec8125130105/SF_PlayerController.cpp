@@ -114,7 +114,6 @@ void ASF_PlayerController::Attack(const FInputActionValue& InputActionValue)
 {
 	if (AttackCheck())
 	{
-		PawnReference->SetActorRotation(GetFollowCamera()->GetActorForwardVector().Rotation());
 		PawnReference->GetCombatComponent()->MeleeAttack();
 		StopMovement();
 	}

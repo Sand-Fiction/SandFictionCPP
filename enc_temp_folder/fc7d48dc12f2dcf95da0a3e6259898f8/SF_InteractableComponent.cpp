@@ -58,7 +58,7 @@ void USF_InteractableComponent::BeginPlay()
 	// Spawn Widget Component
 	if (!InteractWidgetComponent)
 	{
-		const FName InteractWidgetName = FName(this->GetReadableName().Append("_Widget"));
+		const FName InteractWidgetName = FName(this->GetReadableName().Append("Widget"));
 		InteractWidgetComponent = NewObject<USF_InteractionWidgetComponent>(this, USF_InteractionWidgetComponent::StaticClass(), InteractWidgetName);
 
 		InteractWidgetComponent->SetupAttachment(this);

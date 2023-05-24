@@ -37,7 +37,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnStatusChanged OnStatusChanged;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	class USF_InteractionWidgetComponent* InteractWidgetComponent;
 
 protected:

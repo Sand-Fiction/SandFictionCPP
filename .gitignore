@@ -72,3 +72,25 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+Content/Assets/Environment/Flora/Bush/SM_ENV_Foliage_bush_01.uasset
+
+Content/Assets/Environment/Flora/Bush/SM_ENV_Foliage_bush_02.uasset
+
+Content/Assets/Environment/Flora/M_SpruceTree_Bark.uasset
+
+Content/Assets/Environment/Flora/Trees/Akacia/MI_ENV_Foliage_Akacia_Brushed.uasset
+
+Content/Assets/Environment/Flora/Trees/Akacia/MI_ENV_Foliage_Akacia.uasset
+
+Content/Assets/Environment/Flora/Trees/Akacia/SM_ENV_Foliage_Akacia_01.uasset
+
+Content/Assets/Environment/Flora/Trees/Akacia/SM_ENV_Foliage_Akacia_02.uasset
+
+Content/Assets/Environment/Flora/Trees/Cypress/SM_ENV_Cypress_01.uasset
+
+Content/Assets/Environment/Flora/Trees/Cypress/SM_ENV_Cypress_02.uasset
+
+Content/Assets/Environment/Flora/Trees/Cypress/SM_ENV_Cypress_03.uasset
+
+Content/Assets/Environment/Flora/Trees/Cypress/SM_ENV_Cypress_Small.uasset

@@ -61,10 +61,13 @@ void ASF_CameraActor_Gameplay::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//Interpolate to offset Location in front of CurrentCameraTarget
-	const auto NewCamLocation = (CurrentCameraTarget->GetActorLocation()) + (CurrentCameraTarget->GetActorForwardVector() * CameraForwardOffset);
-	const auto NewCamLocationInterp = FMath::VInterpTo(GetActorLocation(), NewCamLocation, DeltaTime, CameraInterpolationSpeed);
-	SetActorLocation(NewCamLocationInterp);
+	if (CurrentCameraTarget)
+	{
+		//Interpolate to offset Location in front of CurrentCameraTarget
+		const auto NewCamLocation = (CurrentCameraTarget->GetActorLocation()) + (CurrentCameraTarget->GetActorForwardVector() * CameraForwardOffset);
+		const auto NewCamLocationInterp = FMath::VInterpTo(GetActorLocation(), NewCamLocation, DeltaTime, CameraInterpolationSpeed);
+		SetActorLocation(NewCamLocationInterp);
+	}
 
 	switch (ZoomState)
 	{
@@ -81,6 +84,15 @@ void ASF_CameraActor_Gameplay::Tick(float DeltaTime)
 	{
 		ZoomState = EZoomState::None;
 	}
+}
+
+void ASF_CameraActor_Gameplay::Rotate(float Pitch, float Yaw)
+{
+	const auto ClampedPitch = FMath::Clamp(GetActorRotation().Pitch + Pitch, -15.f, 25.f);
+	const auto NewYaw = GetActorRotation().Yaw + Yaw;
+	const auto Rotation = FRotator(ClampedPitch, NewYaw, 0.f);
+
+	SetActorRotation(Rotation);
 }
 
 void ASF_CameraActor_Gameplay::SwitchCameraTarget(AActor* NewTarget, TSubclassOf<USF_CameraTransition> Transition)

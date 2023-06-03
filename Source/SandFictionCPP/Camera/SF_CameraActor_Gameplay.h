@@ -28,6 +28,8 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return SpringArmComponent; }
 
+	void Rotate(float Pitch, float Yaw);
+
 	UPROPERTY(EditAnywhere)
 	float CameraForwardOffset = 50.0f;
 

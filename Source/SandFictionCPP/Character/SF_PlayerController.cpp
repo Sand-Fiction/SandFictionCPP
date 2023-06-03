@@ -15,6 +15,7 @@
 #include "SandFictionCPP/Components/SF_InteractionSystem.h"
 #include <EnhancedInputComponent.h>
 #include "EnhancedInputSubsystems.h"
+#include "Camera/CameraComponent.h"
 
 ASF_PlayerController::ASF_PlayerController()
 {
@@ -114,7 +115,12 @@ void ASF_PlayerController::Attack(const FInputActionValue& InputActionValue)
 {
 	if (AttackCheck())
 	{
-		PawnReference->SetActorRotation(GetFollowCamera()->GetActorForwardVector().Rotation());
+		if (FollowCamera)
+		{
+			const auto ForwardVector = FollowCamera->GetActorForwardVector().GetSafeNormal2D();
+			PawnReference->SetActorRotation(ForwardVector.Rotation());
+		}
+
 		PawnReference->GetCombatComponent()->MeleeAttack();
 		StopMovement();
 	}
@@ -144,10 +150,13 @@ void ASF_PlayerController::Block(const FInputActionValue& InputActionValue)
 
 void ASF_PlayerController::RotateCamera(const FInputActionValue& InputActionValue)
 {
-	const auto AxisInput = InputActionValue.Get<FVector2D>();
-	const float Yaw = AxisInput.X + AxisInput.Y;
-	const auto RotationOffset = FRotator(0, Yaw, 0);
-	FollowCamera->AddActorWorldRotation(RotationOffset);
+	if (!FollowCamera)
+	{
+		return;
+	}
+	
+	const auto Rotation = InputActionValue.Get<FVector2D>();
+	FollowCamera->Rotate(Rotation.Y, Rotation.X);
 }
 
 void ASF_PlayerController::Jump(const FInputActionValue& InputActionValue)

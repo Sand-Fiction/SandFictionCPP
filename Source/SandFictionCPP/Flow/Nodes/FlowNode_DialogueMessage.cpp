@@ -8,6 +8,16 @@
 #include "SandFictionCPP/Data/NPCData.h"
 
 
+void UFlowNode_DialogueMessage::DEBUG_FillInStructs()
+{
+	NewDialogueLines.Empty();
+
+	for (const auto DialogueLine : DialogueLines)
+	{
+		NewDialogueLines.Add(FDialogueLineStruct(DialogueLine));
+	}
+}
+
 FText UFlowNode_DialogueMessage::GetReadableDialogueString() const
 {
 	FText DialogueText;

@@ -7,27 +7,16 @@
 #include "SandFictionCPP/Core/SF_HUD.h"
 #include "SandFictionCPP/Data/NPCData.h"
 
-
-void UFlowNode_DialogueMessage::DEBUG_FillInStructs()
-{
-	NewDialogueLines.Empty();
-
-	for (const auto DialogueLine : DialogueLines)
-	{
-		NewDialogueLines.Add(FDialogueLineStruct(DialogueLine));
-	}
-}
-
 FText UFlowNode_DialogueMessage::GetReadableDialogueString() const
 {
 	FText DialogueText;
-	for (const FText DialogueLine :DialogueLines)
+	for (const auto DialogueLineStruct : NewDialogueLines)
 	{
 		FFormatNamedArguments Args;
 		Args.Add("OldLines", DialogueText);
-		Args.Add("NewLine", DialogueLine);
+		Args.Add("NewLine", DialogueLineStruct.DialogueLine);
 
-		if (!DialogueLine.EqualTo(DialogueLines.Last()))
+		if (!DialogueLineStruct.DialogueLine.EqualTo(NewDialogueLines.Last().DialogueLine))
 		{
 			DialogueText = FText::Format(NSLOCTEXT("SFNameSpace", "FullTextFormat", "{OldLines} {NewLine} \n \n "), Args);
 		}
@@ -81,7 +70,7 @@ void UFlowNode_DialogueMessage::ExecuteInput(const FName& PinName)
 {
 	if (const auto HUD = Cast<ASF_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD()))
 	{
-		HUD->SetDialogueLines(DialogueLines);
+		HUD->SetDialogueLines(NewDialogueLines);
 		HUD->SetDialogueSpeaker(GetSpeakerName());
 		HUD->UpdateMainDialogue();
 		if (!HUD->OnAllDialogueLinesFinished.IsAlreadyBound(this, &UFlowNode_DialogueMessage::UnbindAndTriggerOutput))

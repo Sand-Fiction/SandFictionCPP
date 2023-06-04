@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "SandFictionCPP/Flow/Nodes/FlowNode_DialogueMessage.h"
 #include "SF_HUD.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDialogueLinesFinished, bool, bFinish);
@@ -16,7 +17,7 @@ class SANDFICTIONCPP_API ASF_HUD : public AHUD
 
 public:
 	UPROPERTY(BlueprintReadWrite)
-	TArray<FText> DialogueLineArray;
+	TArray<FDialogueLineStruct> DialogueLineArray;
 
 	UPROPERTY(BlueprintReadWrite)
 	FText DialogueSpeaker;
@@ -24,7 +25,7 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FText> PlayerReplyArray;
 
-	void SetDialogueLines(TArray<FText> DialogueLines);
+	void SetDialogueLines(TArray<FDialogueLineStruct> DialogueLines);
 	void SetPlayerReplies(TArray<FText> PlayerReplies);
 	void SetDialogueSpeaker(const FText SpeakerName);
 

@@ -16,13 +16,13 @@ class SANDFICTIONCPP_API ASF_HUD : public AHUD
 
 public:
 	UPROPERTY(BlueprintReadWrite)
-		TArray<FText> DialogueLineArray;
+	TArray<FText> DialogueLineArray;
 
 	UPROPERTY(BlueprintReadWrite)
-		FText DialogueSpeaker;
+	FText DialogueSpeaker;
 
 	UPROPERTY(BlueprintReadWrite)
-		TArray<FText> PlayerReplyArray;
+	TArray<FText> PlayerReplyArray;
 
 	void SetDialogueLines(TArray<FText> DialogueLines);
 	void SetPlayerReplies(TArray<FText> PlayerReplies);

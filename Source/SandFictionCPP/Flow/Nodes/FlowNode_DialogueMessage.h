@@ -47,13 +47,7 @@ public:
 	FDataTableRowHandle NPCData;
 
 	UPROPERTY(EditAnywhere)
-	TArray<FText> DialogueLines;
-
-	UPROPERTY(EditAnywhere)
 	TArray<FDialogueLineStruct> NewDialogueLines;
-
-	UFUNCTION(CallInEditor)
-	void DEBUG_FillInStructs();
 
 	FText GetReadableDialogueString() const;
 	FText GetSpeakerName() const;

@@ -7,7 +7,6 @@
 #include "Components/ActorComponent.h"
 #include "SF_InteractionSystem.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SANDFICTIONCPP_API USF_InteractionSystem : public UActorComponent
 {

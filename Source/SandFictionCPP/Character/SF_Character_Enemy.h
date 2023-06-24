@@ -6,6 +6,7 @@
 #include "SF_Character.h"
 #include "SF_Character_Enemy.generated.h"
 
+class ASF_ItemActor;
 UCLASS()
 class SANDFICTIONCPP_API ASF_Character_Enemy : public ASF_Character
 {
@@ -34,5 +35,10 @@ private:
 protected:
 
 	virtual void StartDeath() override;
-	
+
+	void SpawnItemDrop() const;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<ASF_ItemActor> ItemDropClass;
+
 };

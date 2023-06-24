@@ -6,6 +6,10 @@
 #include "SF_Character.h"
 #include "SF_Character_Main.generated.h"
 
+class USF_InventoryComponent;
+class USF_CharacterTargetSystem;
+class USF_InteractionSystem;
+
 /**
  * 
  */
@@ -22,10 +26,13 @@ public:
 	void SetCharacterSafety(bool isSafe);
 
 	/** Returns TargetSystem SubObject **/
-	FORCEINLINE class USF_CharacterTargetSystem* GetTargetSystem() const { return TargetSystem; }
+	FORCEINLINE USF_CharacterTargetSystem* GetTargetSystem() const { return TargetSystem; }
 
 	/** Returns InteractionSystem SubObject **/
-	FORCEINLINE class USF_InteractionSystem* GetInteractionSystem() const { return InteractionSystem; }
+	FORCEINLINE USF_InteractionSystem* GetInteractionSystem() const { return InteractionSystem; }
+
+	/** Returns InventoryComponent SubObject **/
+	FORCEINLINE USF_InventoryComponent* GetInventoryComponent() const { return InventoryComponent; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
 	bool IsSafe;
@@ -34,11 +41,15 @@ private:
 
 	/** Target System Component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
-	class USF_CharacterTargetSystem* TargetSystem;
+	USF_CharacterTargetSystem* TargetSystem;
 
 	/** Interaction System Component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
-	class USF_InteractionSystem* InteractionSystem;
+	USF_InteractionSystem* InteractionSystem;
+
+	/** Inventory Component */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	USF_InventoryComponent* InventoryComponent;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float DefaultMaxWalkSpeed;

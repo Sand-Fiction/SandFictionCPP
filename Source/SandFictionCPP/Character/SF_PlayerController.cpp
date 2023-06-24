@@ -82,7 +82,7 @@ void ASF_PlayerController::SetupInputComponent()
 
 		EnhancedInputComponent->BindAction(InputMove, ETriggerEvent::Triggered, this, &ASF_PlayerController::Move);
 		EnhancedInputComponent->BindAction(InputAttack, ETriggerEvent::Triggered, this, &ASF_PlayerController::Attack);
-		EnhancedInputComponent->BindAction(InputInteract, ETriggerEvent::Triggered, this, &ASF_PlayerController::Interact);
+		EnhancedInputComponent->BindAction(InputInteract, ETriggerEvent::Started, this, &ASF_PlayerController::Interact);
 		EnhancedInputComponent->BindAction(InputInteract, ETriggerEvent::Completed, this, &ASF_PlayerController::InteractEnd);
 		EnhancedInputComponent->BindAction(InputBlock, ETriggerEvent::Triggered, this, &ASF_PlayerController::Block);
 		EnhancedInputComponent->BindAction(InputRotateCamera, ETriggerEvent::Triggered, this, &ASF_PlayerController::RotateCamera);

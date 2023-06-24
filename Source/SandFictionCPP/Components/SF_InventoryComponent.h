@@ -12,16 +12,16 @@ struct FItemData : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName Name;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText Description;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 MaxStackSize;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* Icon;
 
 	FItemData()
@@ -41,8 +41,14 @@ struct FInventoryData
 	UPROPERTY(EditDefaultsOnly)
 	FDataTableRowHandle ItemData;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Quantity;
+
+	// Override the equality operator
+	bool operator==(const FInventoryData& Other) const
+	{
+		return (ItemData == Other.ItemData) && (Quantity == Other.Quantity);
+	}
 
 	FInventoryData()
 	{
@@ -60,7 +66,23 @@ public:
 	// Sets default values for this component's properties
 	USF_InventoryComponent();
 
+	UFUNCTION(BlueprintCallable)
+	void AddItemToInventory(FInventoryData ItemDataToAdd);
 
+	UFUNCTION(BlueprintPure)
+	bool HasItemInInventory(FInventoryData InventoryData) const;
+
+	UFUNCTION(BlueprintPure)
+	TArray<FInventoryData> GetInventory() const;
+
+	UFUNCTION(BlueprintPure)
+	FItemData GetItemDataByInventoryData(FInventoryData InventoryData, bool &Valid) const;
+
+	UFUNCTION(BlueprintCallable)
+	void SortInventory();
+
+	UFUNCTION(BlueprintCallable)
+	void RestackInventory();
 
 protected:
 	// Called when the game starts
@@ -69,12 +91,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UDataTable* ItemDataTable;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TArray<FInventoryData> CurrentInventory;
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
 };

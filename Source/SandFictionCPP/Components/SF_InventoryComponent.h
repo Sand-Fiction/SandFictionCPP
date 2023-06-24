@@ -38,7 +38,7 @@ struct FInventoryData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FDataTableRowHandle ItemData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -56,6 +56,8 @@ struct FInventoryData
 		Quantity = 0;
 	}
 };
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemAddedToInventory, FInventoryData, ItemData);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SANDFICTIONCPP_API USF_InventoryComponent : public UActorComponent
@@ -97,5 +99,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnItemAddedToInventory OnItemAddedToInventory;
 
 };

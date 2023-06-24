@@ -16,6 +16,7 @@ USF_InventoryComponent::USF_InventoryComponent()
 void USF_InventoryComponent::AddItemToInventory(FInventoryData InventoryDataToAdd)
 {
 	CurrentInventory.Add(InventoryDataToAdd);
+	OnItemAddedToInventory.Broadcast(InventoryDataToAdd);
 	RestackInventory();
 }
 

@@ -73,5 +73,11 @@ void USF_InteractableComponent::BeginPlay()
 void USF_InteractableComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+
 	UnRegisterInteractable();
+
+	if (InteractWidgetComponent)
+	{
+		InteractWidgetComponent->DestroyComponent();
+	}
 }

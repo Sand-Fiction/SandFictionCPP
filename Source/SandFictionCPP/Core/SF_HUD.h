@@ -51,12 +51,17 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void SpawnSideDialogue();
 
-	
+	// Dialogue Delegates
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FDialogueLinesFinished OnAllDialogueLinesFinished;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FPlayerReplyGiven OnPlayerAnswered;
+
+	// Menu Functions
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ToggleMenu();
 	
 };

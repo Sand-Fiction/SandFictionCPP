@@ -16,6 +16,7 @@
 #include <EnhancedInputComponent.h>
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
+#include "SandFictionCPP/Core/SF_HUD.h"
 
 ASF_PlayerController::ASF_PlayerController()
 {
@@ -89,6 +90,7 @@ void ASF_PlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Triggered, this, &ASF_PlayerController::Jump);
 		EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Completed, this, &ASF_PlayerController::JumpEnd);
 		EnhancedInputComponent->BindAction(InputTargetLock, ETriggerEvent::Started, this, &ASF_PlayerController::TargetLock);
+		EnhancedInputComponent->BindAction(OpenMenu, ETriggerEvent::Started, this, &ASF_PlayerController::ToggleInGameMenu);
 		EnhancedInputComponent->BindAction(InputSkill, ETriggerEvent::Triggered, this, &ASF_PlayerController::Skill);
 		EnhancedInputComponent->BindAction(InputZoomCamera, ETriggerEvent::Triggered, this, &ASF_PlayerController::ZoomCamera);
 	}
@@ -196,6 +198,14 @@ void ASF_PlayerController::Skill(const FInputActionValue& InputActionValue)
 void ASF_PlayerController::ZoomCamera(const FInputActionValue& InputActionValue)
 {
 	FollowCamera->ZoomCamera(InputActionValue.Get<float>());
+}
+
+void ASF_PlayerController::ToggleInGameMenu(const FInputActionValue& InputActionValue)
+{
+	if (const auto SFHUD = Cast<ASF_HUD>(GetHUD()))
+	{
+		SFHUD->ToggleMenu();
+	}
 }
 
 bool ASF_PlayerController::JumpCheck() const

@@ -80,6 +80,10 @@ protected:
 	UInputAction* InputZoomCamera;
 	void ZoomCamera(const FInputActionValue& InputActionValue);
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+	UInputAction* OpenMenu;
+	void ToggleInGameMenu(const FInputActionValue& InputActionValue);
+
 #pragma endregion
 
 	// State Checks

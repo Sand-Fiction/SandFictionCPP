@@ -9,6 +9,7 @@
 class USF_InventoryComponent;
 class USF_CharacterTargetSystem;
 class USF_InteractionSystem;
+class USF_BuildingComponent;
 
 /**
  * 
@@ -34,6 +35,9 @@ public:
 	/** Returns InventoryComponent SubObject **/
 	FORCEINLINE USF_InventoryComponent* GetInventoryComponent() const { return InventoryComponent; }
 
+	/** Returns BuildingComponent SubObject **/
+	FORCEINLINE USF_BuildingComponent* GetBuildingComponent() const { return BuildingComponent; }
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
 	bool IsSafe;
 
@@ -50,6 +54,10 @@ private:
 	/** Inventory Component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	USF_InventoryComponent* InventoryComponent;
+
+	/** Building Component */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	USF_BuildingComponent* BuildingComponent;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float DefaultMaxWalkSpeed;

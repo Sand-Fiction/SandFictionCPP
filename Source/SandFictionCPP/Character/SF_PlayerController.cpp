@@ -16,6 +16,7 @@
 #include <EnhancedInputComponent.h>
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
+#include "SandFictionCPP/Components/SF_BuildingComponent.h"
 #include "SandFictionCPP/Core/SF_HUD.h"
 
 ASF_PlayerController::ASF_PlayerController()
@@ -81,6 +82,7 @@ void ASF_PlayerController::SetupInputComponent()
 			Subsystem->AddMappingContext(InputMapping, 0);
 		}
 
+		// Gameplay Bindings
 		EnhancedInputComponent->BindAction(InputMove, ETriggerEvent::Triggered, this, &ASF_PlayerController::Move);
 		EnhancedInputComponent->BindAction(InputAttack, ETriggerEvent::Triggered, this, &ASF_PlayerController::Attack);
 		EnhancedInputComponent->BindAction(InputInteract, ETriggerEvent::Started, this, &ASF_PlayerController::Interact);
@@ -93,6 +95,10 @@ void ASF_PlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(OpenMenu, ETriggerEvent::Started, this, &ASF_PlayerController::ToggleInGameMenu);
 		EnhancedInputComponent->BindAction(InputSkill, ETriggerEvent::Triggered, this, &ASF_PlayerController::Skill);
 		EnhancedInputComponent->BindAction(InputZoomCamera, ETriggerEvent::Triggered, this, &ASF_PlayerController::ZoomCamera);
+
+		//BuildingBindings
+		EnhancedInputComponent->BindAction(InputBuildActor, ETriggerEvent::Started, this, &ASF_PlayerController::BuildActor);
+
 	}
 }
 
@@ -206,6 +212,21 @@ void ASF_PlayerController::ToggleInGameMenu(const FInputActionValue& InputAction
 	{
 		SFHUD->ToggleMenu();
 	}
+}
+
+void ASF_PlayerController::BuildActor(const FInputActionValue& InputActionValue)
+{
+	if (!PawnReference)
+	{
+		return;
+	}
+
+	if (!PawnReference->GetBuildingComponent())
+	{
+		return;
+	}
+
+	PawnReference->GetBuildingComponent()->BuildActor();
 }
 
 bool ASF_PlayerController::JumpCheck() const

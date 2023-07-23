@@ -31,6 +31,9 @@ public:
 	UFUNCTION()
 	void SetIsActive(bool isActive);
 
+	UFUNCTION()
+	void SetIsInteractable(bool Interactable);
+
 	UPROPERTY(BlueprintAssignable)
 	FOnInteraction OnInteraction;
 

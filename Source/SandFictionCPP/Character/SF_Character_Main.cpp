@@ -4,6 +4,7 @@
 #include "SF_Character_Main.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "SandFictionCPP/Components/SF_BuildingComponent.h"
 #include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
 #include "SandFictionCPP/Components/SF_InteractionSystem.h"
 #include "SandFictionCPP/Components/SF_InventoryComponent.h"
@@ -14,6 +15,7 @@ ASF_Character_Main::ASF_Character_Main()
 	TargetSystem = CreateDefaultSubobject<USF_CharacterTargetSystem>(TEXT("TargetSystem"));
 	InteractionSystem = CreateDefaultSubobject<USF_InteractionSystem>(TEXT("InteractionSystem"));
 	InventoryComponent = CreateDefaultSubobject<USF_InventoryComponent>(TEXT("InventoryComponent"));
+	BuildingComponent = CreateDefaultSubobject<USF_BuildingComponent>(TEXT("BuildingComponent"));
 
 	IsSafe = false;
 	DefaultMaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;

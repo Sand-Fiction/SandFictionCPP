@@ -31,6 +31,11 @@ void USF_InteractableComponent::SetIsActive(bool isActive)
 	OnStatusChanged.Broadcast();
 }
 
+void USF_InteractableComponent::SetIsInteractable(bool Interactable)
+{
+	Interactable ? RegisterInteractable() : UnRegisterInteractable();
+}
+
 void USF_InteractableComponent::RegisterInteractable()
 {
 	if (const auto CharacterRef = Cast<ASF_Character_Main>(UGameplayStatics::GetPlayerCharacter(this, 0)))
@@ -43,10 +48,11 @@ void USF_InteractableComponent::UnRegisterInteractable()
 {
 	if (const auto CharacterRef = Cast<ASF_Character_Main>(UGameplayStatics::GetPlayerCharacter(this, 0)))
 	{
+		SetIsActive(false);
+		SetInRange(false);
 		CharacterRef->GetInteractionSystem()->UnRegisterInteractable(this);
 	}
 }
-
 
 // Called when the game starts
 void USF_InteractableComponent::BeginPlay()

@@ -84,6 +84,10 @@ protected:
 	UInputAction* OpenMenu;
 	void ToggleInGameMenu(const FInputActionValue& InputActionValue);
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+	UInputAction* InputBuildActor;
+	void BuildActor(const FInputActionValue& InputActionValue);
+
 #pragma endregion
 
 	// State Checks

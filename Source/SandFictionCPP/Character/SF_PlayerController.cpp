@@ -44,6 +44,8 @@ void ASF_PlayerController::PlayerTick(float DeltaTime)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("PawnNotValid"));
 	}
 
+	SetAudioListenerOverride(PawnReference->GetRootComponent(), FVector(), GetFollowCamera()->GetActorRotation());
+
 	if (PawnReference && PawnReference->GetTargetSystem())
 	{
 		if (PawnReference->GetTargetSystem()->IsLockedOn)

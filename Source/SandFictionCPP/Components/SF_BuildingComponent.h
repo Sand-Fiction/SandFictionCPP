@@ -64,6 +64,9 @@ protected:
 	UPROPERTY()
 	ASF_BuildActor* CurrentBuildActor;
 
+	UFUNCTION()
+	void OnBuildAnimFinished();
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

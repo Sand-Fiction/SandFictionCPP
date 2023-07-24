@@ -86,25 +86,15 @@ void USF_BuildingComponent::BuildActor()
 	FVector Location;
 	if (FindBuildLocation(Location))
 	{
-		const auto DetachmentRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, false);
-		CurrentBuildActor->DetachFromActor(DetachmentRules);
-
-		FTransform Transform;
-		Transform.SetLocation(Location);
-		CurrentBuildActor->SetActorTransform(Transform);
-		CurrentBuildActor->OnBuild();
-
-		//ToDo: TellBuildActor to do stuff (VFX, Anims etc...)
-
 		if (GetOwner())
 		{
 			if (const auto Character = Cast<ASF_Character>(GetOwner()))
 			{
-				Character->PlayAnimMontage(BuildAnimMontage);
+				const float AnimDuration = Character->PlayAnimMontage(BuildAnimMontage);
+				FTimerHandle TimerHandle;
+				GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &USF_BuildingComponent::OnBuildAnimFinished, AnimDuration);
 			}
 		}
-
-		EndBuildingMode();
 	}
 	else
 	{
@@ -136,6 +126,25 @@ bool USF_BuildingComponent::FindBuildLocation(FVector& BuildLocation) const
 	}
 
 	return false;
+}
+
+void USF_BuildingComponent::OnBuildAnimFinished()
+{
+	FVector Location;
+	if (FindBuildLocation(Location))
+	{
+		const auto DetachmentRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, false);
+		CurrentBuildActor->DetachFromActor(DetachmentRules);
+
+		FTransform Transform;
+		Transform.SetLocation(Location);
+		CurrentBuildActor->SetActorTransform(Transform);
+		CurrentBuildActor->OnBuild();
+
+		//ToDo: TellBuildActor to do stuff (VFX, Anims etc...)
+
+		EndBuildingMode();
+	}
 }
 
 // Called every frame

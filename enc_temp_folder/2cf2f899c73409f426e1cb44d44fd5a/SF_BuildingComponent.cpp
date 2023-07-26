@@ -117,7 +117,7 @@ bool USF_BuildingComponent::FindBuildLocation(FVector& BuildLocation) const
 
 	//ToDo: No simple LineTrace but rather an ActorBoundsCollisionCheck
 	FHitResult HitResult;
-	const FVector StartLocation = GetOwner()->GetActorForwardVector() * 250.f + GetOwner()->GetActorLocation();
+	const FVector StartLocation = GetOwner()->GetActorForwardVector() * 200.f + GetOwner()->GetActorLocation();
 	const FVector EndLocation = StartLocation - FVector(0.f, 0.f, 150.f);
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_WorldStatic))
 	{

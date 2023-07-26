@@ -21,16 +21,13 @@ ASF_BuildActor::ASF_BuildActor()
 	ActorMesh = CreateDefaultSubobject<UStaticMeshComponent>("ActorMesh");
 	ActorMesh->SetupAttachment(RootComponent);
 	ActorMesh->SetHiddenInGame(true);
-	ActorMesh->SetUsingAbsoluteRotation(true);
 
 	PreviewMesh = CreateDefaultSubobject<UStaticMeshComponent>("PreviewMesh");
 	PreviewMesh->SetupAttachment(RootComponent);
 	PreviewMesh->SetHiddenInGame(true);
-	PreviewMesh->SetUsingAbsoluteRotation(true);
 
 	MiniatureMesh = CreateDefaultSubobject<UStaticMeshComponent>("MiniatureMesh");
 	MiniatureMesh->SetupAttachment(RootComponent);
-	MiniatureMesh->SetUsingAbsoluteRotation(true);
 
 	InteractableComponent = CreateDefaultSubobject<USF_InteractableComponent>("Interactable");
 	InteractableComponent->SetupAttachment(RootComponent);
@@ -55,7 +52,6 @@ void ASF_BuildActor::PostInitializeComponents()
 
 	InteractableComponent->OnInteraction.AddDynamic(this, &ASF_BuildActor::OnInteract);
 	PreviewMID = UMaterialInstanceDynamic::Create(PreviewMesh->GetMaterial(0), this);
-	// PreviewMesh->GetNumMaterials()
 	PreviewMesh->SetMaterial(0, PreviewMID);
 }
 

@@ -15,6 +15,8 @@ class SANDFICTIONCPP_API ASF_HUD : public AHUD
 {
 	GENERATED_BODY()
 
+		ASF_HUD();
+
 public:
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FDialogueLineStruct> DialogueLineArray;
@@ -63,5 +65,18 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void ToggleMenu();
+
+	// LoadingScreen Functions
+
+	UPROPERTY(EditDefaultsOnly)
+	float LoadingScreenFadeTime;
+
+	// returns -1 if Widget already valid
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	float ShowLoadingScreen();
+
+	// returns -1 if Widget not valid
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	float HideLoadingScreen();
 	
 };

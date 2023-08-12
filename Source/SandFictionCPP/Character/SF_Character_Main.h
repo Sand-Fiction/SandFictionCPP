@@ -10,6 +10,7 @@ class USF_InventoryComponent;
 class USF_CharacterTargetSystem;
 class USF_InteractionSystem;
 class USF_BuildingComponent;
+class USF_RecipeBookComponent;
 
 /**
  * 
@@ -38,6 +39,9 @@ public:
 	/** Returns BuildingComponent SubObject **/
 	FORCEINLINE USF_BuildingComponent* GetBuildingComponent() const { return BuildingComponent; }
 
+	/** Returns RecipeBookComponent SubObject **/
+	FORCEINLINE USF_RecipeBookComponent* GetRecipeBookComponent() const { return RecipeBookComponent; }
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Gameplay)
 	bool IsSafe;
 
@@ -58,6 +62,10 @@ private:
 	/** Building Component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	USF_BuildingComponent* BuildingComponent;
+
+	/** Building Component */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	USF_RecipeBookComponent* RecipeBookComponent;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float DefaultMaxWalkSpeed;

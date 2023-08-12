@@ -59,6 +59,7 @@ struct FCraftingRecipe : public FTableRowBase
 	}
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRecipeEvent, FCraftingRecipe, Recipe);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SANDFICTIONCPP_API USF_RecipeBookComponent : public UActorComponent
@@ -72,13 +73,26 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddRecipe(const FCraftingRecipe Recipe);
 
+	UPROPERTY(BlueprintAssignable)
+	FRecipeEvent OnRecipeAdded;
+
 	UFUNCTION(BlueprintCallable)
 	void RemoveRecipe(const FCraftingRecipe Recipe);
+
+	UPROPERTY(BlueprintAssignable)
+	FRecipeEvent OnRecipeRemoved;
 
 	UFUNCTION(BlueprintCallable)
 	bool HasRecipe(const FDataTableRowHandle RecipeData) const;
 
+	UFUNCTION(BlueprintPure)
+	bool HasRecipeItems(const FCraftingRecipe& Recipe) const;
+
 protected:
+
+	UFUNCTION()
+	void CheckRecipeUnlock(FInventoryData ItemData);
+
 	// Called when the game starts
 	virtual void BeginPlay() override;
 

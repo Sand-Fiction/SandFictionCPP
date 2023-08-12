@@ -8,6 +8,7 @@
 #include "SandFictionCPP/Components/SF_CharacterTargetSystem.h"
 #include "SandFictionCPP/Components/SF_InteractionSystem.h"
 #include "SandFictionCPP/Components/SF_InventoryComponent.h"
+#include "SandFictionCPP/Components/SF_RecipeBookComponent.h"
 
 
 ASF_Character_Main::ASF_Character_Main()
@@ -16,6 +17,7 @@ ASF_Character_Main::ASF_Character_Main()
 	InteractionSystem = CreateDefaultSubobject<USF_InteractionSystem>(TEXT("InteractionSystem"));
 	InventoryComponent = CreateDefaultSubobject<USF_InventoryComponent>(TEXT("InventoryComponent"));
 	BuildingComponent = CreateDefaultSubobject<USF_BuildingComponent>(TEXT("BuildingComponent"));
+	RecipeBookComponent = CreateDefaultSubobject<USF_RecipeBookComponent>(TEXT("RecipeBookComponent"));
 
 	IsSafe = false;
 	DefaultMaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;

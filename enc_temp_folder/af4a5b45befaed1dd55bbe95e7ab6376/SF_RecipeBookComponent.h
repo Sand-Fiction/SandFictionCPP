@@ -8,14 +8,6 @@
 #include "Engine/DataTable.h"
 #include "SF_RecipeBookComponent.generated.h"
 
-UENUM()
-enum class ECraftingCategory
-{
-	Basics,
-	Furniture,
-	Decoration
-};
-
 USTRUCT(BlueprintType)
 struct FCraftingRecipe : public FTableRowBase
 {
@@ -29,9 +21,6 @@ struct FCraftingRecipe : public FTableRowBase
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FInventoryData> RecipeData;
-
-	UPROPERTY(BlueprintReadOnly)
-	TArray<ECraftingCategory> CraftingCategory;
 
 	bool operator==(const FCraftingRecipe& Other) const
 	{

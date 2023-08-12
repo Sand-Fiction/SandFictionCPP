@@ -8,12 +8,12 @@
 #include "Engine/DataTable.h"
 #include "SF_RecipeBookComponent.generated.h"
 
-UENUM()
-enum class ECraftingCategory
+UENUM(BlueprintType)
+enum class ECraftingCategory : uint8
 {
 	Basics,
 	Furniture,
-	Decoration
+	Decorations
 };
 
 USTRUCT(BlueprintType)
@@ -21,16 +21,22 @@ struct FCraftingRecipe : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FName Name;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FText Description;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UTexture2D* Icon;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<AActor> ItemClass;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FInventoryData> RecipeData;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<ECraftingCategory> CraftingCategory;
 
 	bool operator==(const FCraftingRecipe& Other) const
@@ -46,7 +52,10 @@ struct FCraftingRecipe : public FTableRowBase
 	FCraftingRecipe()
 	{
 		Name = FName("RecipeName");
+		Description = FText::FromString(TEXT("Here goes the Item Description..."));
 		Icon = nullptr;
+		ItemClass = nullptr;
+		CraftingCategory.AddUnique(ECraftingCategory::Basics);
 	}
 };
 

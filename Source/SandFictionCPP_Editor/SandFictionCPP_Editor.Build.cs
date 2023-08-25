@@ -2,6 +2,8 @@
 
 using UnrealBuildTool;
 
+
+
 public class SandFictionCPP_Editor : ModuleRules
 {
 	public SandFictionCPP_Editor(ReadOnlyTargetRules Target) : base(Target)
@@ -9,21 +11,25 @@ public class SandFictionCPP_Editor : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
         PublicDependencyModuleNames.AddRange(new string[] { "SandFictionCPP" });
+
         PrivateDependencyModuleNames.AddRange(new string[]
         {
+
             "Core",
             "CoreUObject",
             "Engine",
+            
             "UnrealEd",
-            "InputCore",
-            "Flow",
             "FlowEditor",
-            "Slate",
-            "SlateCore",
             "GraphEditor",
             "KismetWidgets",
-            "EditorStyle"
+            "EditorStyle",
+
+            "InputCore",
+            "Flow",
+            "Slate",
+            "SlateCore",
         });
-        
+
     }
 }

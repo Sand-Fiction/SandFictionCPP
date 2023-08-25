@@ -3,10 +3,7 @@
 #include "FlowEditorStyle.h"
 #include "GraphEditorSettings.h"
 #include "SCommentBubble.h"
-#include "SLevelOfDetailBranchNode.h"
-#include "SlateOptMacros.h"
 #include "TutorialMetaData.h"
-#include "Materials/MaterialInstance.h"
 
 #include "SandFictionCPP/Flow/Nodes/FlowNode_DialogueMessage.h"
 #include "Widgets/Text/SInlineEditableTextBlock.h"

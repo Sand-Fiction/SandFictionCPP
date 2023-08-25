@@ -27,11 +27,13 @@ FLinearColor UFlowNode_PlayerReply::GetSpeakerColor()
 	return FLinearColor::White;
 }
 
+#if WITH_EDITOR
 void UFlowNode_PlayerReply::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 	UpdateReplyPins();
 }
+#endif
 
 void UFlowNode_PlayerReply::UpdateReplyPins()
 {

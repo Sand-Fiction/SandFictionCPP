@@ -19,4 +19,15 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* LoadingScreenWidget;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SaveGame();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void LoadGame();
+
+protected:
+
+	UPROPERTY(BlueprintReadWrite)
+	class USF_SaveGame* SaveGameObject;
+
 };

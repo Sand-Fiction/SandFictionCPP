@@ -2,3 +2,13 @@
 
 
 #include "SF_GameInstance.h"
+
+void USF_GameInstance::SaveGame_Implementation()
+{
+
+}
+
+void USF_GameInstance::LoadGame_Implementation()
+{
+
+}

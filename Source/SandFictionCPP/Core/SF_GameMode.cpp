@@ -2,6 +2,7 @@
 
 #include "SF_GameMode.h"
 
+#include "SF_GameInstance.h"
 #include "SF_HUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "SandFictionCPP/Character/SF_PlayerController.h"
@@ -34,6 +35,13 @@ ASF_GameMode::ASF_GameMode()
 void ASF_GameMode::TravelToMap(FString MapName)
 {
 	NextLevelName = MapName;
+	OnMapTravelInitialized();
+
+	if (const auto GameInstance = Cast<USF_GameInstance>(UGameplayStatics::GetGameInstance(this)))
+	{
+		GameInstance->SaveGame();
+	}
+
 	StartLoadingScreenFadeDelay();
 }
 

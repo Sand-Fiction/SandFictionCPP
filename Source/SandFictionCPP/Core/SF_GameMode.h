@@ -17,6 +17,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TravelToMap(FString MapString);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnMapTravelInitialized();
+
 	UFUNCTION(BlueprintCallable)
 	void ReturnToSpaceship();
 

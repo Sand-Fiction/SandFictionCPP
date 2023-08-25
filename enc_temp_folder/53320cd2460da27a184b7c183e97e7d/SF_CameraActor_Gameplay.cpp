@@ -47,9 +47,7 @@ ASF_CameraActor_Gameplay::ASF_CameraActor_Gameplay()
 void ASF_CameraActor_Gameplay::BeginPlay()
 {
 	Super::BeginPlay();
-
-	const auto NewCameraTarget = UGameplayStatics::GetPlayerCharacter(this, 0);
-	SwitchCameraTarget(NewCameraTarget, USF_CameraTransition::StaticClass());
+	CurrentCameraTarget = UGameplayStatics::GetPlayerCharacter(this, 0);
 }
 
 void ASF_CameraActor_Gameplay::ZoomCamera(float Input)
@@ -100,14 +98,4 @@ void ASF_CameraActor_Gameplay::Rotate(float Pitch, float Yaw)
 void ASF_CameraActor_Gameplay::SwitchCameraTarget(AActor* NewTarget, TSubclassOf<USF_CameraTransition> Transition)
 {
 	CurrentCameraTarget = NewTarget;
-
-	if (CurrentCameraTarget)
-	{
-		const float Pitch = GetActorRotation().Pitch;
-		const float Roll = GetActorRotation().Roll;
-		const float Yaw = CurrentCameraTarget->GetActorRotation().Yaw;
-
-		SetActorRotation(FRotator(Pitch, Yaw, Roll));
-	}
-	
 }

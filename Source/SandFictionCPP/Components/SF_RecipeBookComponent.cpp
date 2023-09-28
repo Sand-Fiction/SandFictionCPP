@@ -59,6 +59,11 @@ bool USF_RecipeBookComponent::HasRecipeItems(const FCraftingRecipe& Recipe) cons
 
 void USF_RecipeBookComponent::CheckRecipeUnlock(FInventoryData ItemData)
 {
+	if (!RecipeDataTable)
+	{
+		return;
+	}
+
 	const auto RowNames = RecipeDataTable->GetRowNames();
 	for (const auto RowName : RowNames)
 	{

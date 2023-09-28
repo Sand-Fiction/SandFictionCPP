@@ -16,8 +16,10 @@
 #include <EnhancedInputComponent.h>
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "SandFictionCPP/Components/SF_BuildingComponent.h"
 #include "SandFictionCPP/Core/SF_HUD.h"
+#include "SandFictionCPP/Core/Gameplay/SF_GameMode_Gameplay.h"
 
 ASF_PlayerController::ASF_PlayerController()
 {
@@ -97,9 +99,10 @@ void ASF_PlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Triggered, this, &ASF_PlayerController::Jump);
 		EnhancedInputComponent->BindAction(InputJump, ETriggerEvent::Completed, this, &ASF_PlayerController::JumpEnd);
 		EnhancedInputComponent->BindAction(InputTargetLock, ETriggerEvent::Started, this, &ASF_PlayerController::TargetLock);
-		EnhancedInputComponent->BindAction(OpenMenu, ETriggerEvent::Started, this, &ASF_PlayerController::ToggleInGameMenu);
+		EnhancedInputComponent->BindAction(InputOpenMenu, ETriggerEvent::Started, this, &ASF_PlayerController::ToggleInGameMenu);
 		EnhancedInputComponent->BindAction(InputSkill, ETriggerEvent::Triggered, this, &ASF_PlayerController::Skill);
 		EnhancedInputComponent->BindAction(InputZoomCamera, ETriggerEvent::Triggered, this, &ASF_PlayerController::ZoomCamera);
+		EnhancedInputComponent->BindAction(InputQuickTravel, ETriggerEvent::Triggered, this, &ASF_PlayerController::QuickTravel);
 
 		//BuildingBindings
 		EnhancedInputComponent->BindAction(InputBuildActor, ETriggerEvent::Started, this, &ASF_PlayerController::BuildActor);
@@ -232,6 +235,14 @@ void ASF_PlayerController::BuildActor(const FInputActionValue& InputActionValue)
 	}
 
 	PawnReference->GetBuildingComponent()->BuildActor();
+}
+
+void ASF_PlayerController::QuickTravel(const FInputActionValue& InputActionValue)
+{
+	if (const auto GameMode = Cast<ASF_GameMode_Gameplay>(UGameplayStatics::GetGameMode(this)))
+	{
+		GameMode->ReturnToSpaceship();
+	}
 }
 
 bool ASF_PlayerController::JumpCheck() const

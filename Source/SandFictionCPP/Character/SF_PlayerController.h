@@ -81,12 +81,17 @@ protected:
 	void ZoomCamera(const FInputActionValue& InputActionValue);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
-	UInputAction* OpenMenu;
+	UInputAction* InputOpenMenu;
 	void ToggleInGameMenu(const FInputActionValue& InputActionValue);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
 	UInputAction* InputBuildActor;
 	void BuildActor(const FInputActionValue& InputActionValue);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+	UInputAction* InputQuickTravel;
+	void QuickTravel(const FInputActionValue& InputActionValue);
+
 
 #pragma endregion
 

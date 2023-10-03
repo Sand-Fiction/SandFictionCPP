@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "FlowSave.h"
 #include "GameplayTagContainer.h"
+#include "SandFictionCPP/Components/SF_InventoryComponent.h"
 #include "Subsystems/Room/SFRoomSystem.h"
 #include "SF_SaveGame.generated.h"
 
@@ -32,11 +33,13 @@ struct FSFSaveData
 	UPROPERTY(SaveGame, BlueprintReadWrite)
 	TArray<FGameplayTag> KnownRecipes;
 
+	/// Inventory
+
+	UPROPERTY(VisibleAnywhere)
+	TArray<FInventoryData> CurrentInventory;
+
 	/**
 	 * ToDo: Gather all Properties, that need to be saved!
-	 *
-	 * ToDo: Recipes?
-	 * ToDo: Inventory?
 	 *
 	 * ToDo: UFlowSystem	- Dialogues (Rest should be handled already)
 	 *

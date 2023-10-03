@@ -3,12 +3,94 @@
 
 #include "SF_GameInstance.h"
 
+#include "SF_SaveGame.h"
+#include "Kismet/GameplayStatics.h"
+#include "SandFictionCPP/Character/SF_Character_Main.h"
+#include "SandFictionCPP/Components/SF_RecipeBookComponent.h"
+#include "Subsystems/Quest/SFQuestSystem.h"
+#include "Subsystems/Room/SFRoomSystem.h"
+
 void USF_GameInstance::SaveGame_Implementation()
 {
+	if (!SaveGameObject)
+	{
+		SaveGameObject = Cast<USF_SaveGame>(UGameplayStatics::CreateSaveGameObject(USF_SaveGame::StaticClass()));
+	}
 
+	// Gather RoomData
+	if (const auto RoomSystem = GetSubsystem<USFRoomSystem>())
+	{
+		SaveGameObject->SaveData.Rooms = RoomSystem->Rooms;
+	}
+
+	// Gather QuestData
+	if (const auto QuestSystem = GetSubsystem<USFQuestSystem>())
+	{
+		SaveGameObject->SaveData.ActiveQuests = QuestSystem->ActiveQuests;
+		SaveGameObject->SaveData.CompletedQuests = QuestSystem->CompletedQuests;
+	}
+
+	// Gather Inventory & Recipes
+	if (const auto World = GetWorld())
+	{
+		if (const auto Player = Cast<ASF_Character_Main>(UGameplayStatics::GetPlayerCharacter(World, 0)))
+		{
+			if (const USF_InventoryComponent* Inventory = Player->GetInventoryComponent())
+			{
+				SaveGameObject->SaveData.CurrentInventory = Inventory->GetInventory();
+			}
+
+			if (const USF_RecipeBookComponent* RecipeBook = Player->GetRecipeBookComponent())
+			{
+				SaveGameObject->SaveData.KnownRecipes = RecipeBook->KnownRecipes;
+			}
+		}
+	}
+
+	UGameplayStatics::SaveGameToSlot(SaveGameObject, "SandFiction", 0);
 }
 
 void USF_GameInstance::LoadGame_Implementation()
 {
+	if (!UGameplayStatics::DoesSaveGameExist("SandFiction", 0))
+	{
+		return;
+	}
 
+	SaveGameObject = Cast<USF_SaveGame>(UGameplayStatics::LoadGameFromSlot("SandFiction", 0));
+
+	if (!SaveGameObject)
+	{
+		return;
+	}
+
+	// Apply RoomData
+	if (const auto RoomSystem = GetSubsystem<USFRoomSystem>())
+	{
+		RoomSystem->Rooms = SaveGameObject->SaveData.Rooms;
+	}
+
+	// Apply QuestData
+	if (const auto QuestSystem = GetSubsystem<USFQuestSystem>())
+	{
+		QuestSystem->ActiveQuests = SaveGameObject->SaveData.ActiveQuests;
+		QuestSystem->CompletedQuests = SaveGameObject->SaveData.CompletedQuests;
+	}
+
+	// Apply Inventory & Recipes
+	if (const auto World = GetWorld())
+	{
+		if (const auto Player = Cast<ASF_Character_Main>(UGameplayStatics::GetPlayerCharacter(World, 0)))
+		{
+			if (USF_InventoryComponent* Inventory = Player->GetInventoryComponent())
+			{
+				Inventory->CurrentInventory = SaveGameObject->SaveData.CurrentInventory;
+			}
+
+			if (USF_RecipeBookComponent* RecipeBook = Player->GetRecipeBookComponent())
+			{
+				RecipeBook->KnownRecipes = SaveGameObject->SaveData.KnownRecipes;
+			}
+		}
+	}
 }

@@ -86,11 +86,11 @@ struct FSFRoomStruct : public FTableRowBase
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	int32 MaxBuildActors;
 
-	bool IsBuildLimitReached(int32& FreeSpace);
+	bool IsBuildLimitReached(int32& FreeSpace) const;
 };
 
 
-UCLASS()
+UCLASS(DisplayName = RoomSystem)
 class SANDFICTIONCPP_API USFRoomSystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
@@ -101,10 +101,12 @@ class SANDFICTIONCPP_API USFRoomSystem : public UGameInstanceSubsystem
 	UPROPERTY()
 	UDataTable* RecipeDT;
 
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override { return false; }
+
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void Init(UDataTable* RoomDataTable, UDataTable* BuildActorsDataTable, TArray<FSFRoomStruct> RoomsData);
+	void Init(UDataTable* RoomDataTable, UDataTable* RecipeDataTable);
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FSFRoomStruct> Rooms;

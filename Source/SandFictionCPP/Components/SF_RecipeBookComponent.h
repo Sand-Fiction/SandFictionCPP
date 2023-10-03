@@ -111,9 +111,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FGameplayTag> KnownRecipes;
-
-	UPROPERTY(EditDefaultsOnly)
 	UDataTable* RecipeDataTable;
 
+public:
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FGameplayTag> KnownRecipes;
 };

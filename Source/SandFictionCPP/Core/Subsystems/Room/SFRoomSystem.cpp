@@ -20,17 +20,16 @@ TArray<FSFRoomActor> FSFRoomStruct::GetAllActorStructsWithTag(FGameplayTag Actor
 	return ReturnArray;
 }
 
-bool FSFRoomStruct::IsBuildLimitReached(int32& FreeSpace)
+bool FSFRoomStruct::IsBuildLimitReached(int32& FreeSpace) const
 {
 	FreeSpace = MaxBuildActors - BuildActors.Num();
 	return BuildActors.Num() >= MaxBuildActors;
 }
 
-void USFRoomSystem::Init(UDataTable* RoomDataTable, UDataTable* BuildActorsDataTable, TArray<FSFRoomStruct> RoomsData)
+void USFRoomSystem::Init(UDataTable* RoomDataTable, UDataTable* RecipeDataTable)
 {
-	RecipeDT = BuildActorsDataTable;
+	RecipeDT = RecipeDataTable;
 	RoomDT = RoomDataTable;
-	Rooms = RoomsData;
 }
 
 void USFRoomSystem::InitializeActorsInRoom (FGameplayTag RoomTag)

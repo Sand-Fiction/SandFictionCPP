@@ -6,11 +6,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "SandFictionCPP/Core/Subsystems/Room/SFRoomSystem.h"
 
-void USFQuestSystem::Init(UDataTable* QuestData, TArray<FGameplayTag> ActiveQuestArray,	TArray<FGameplayTag> CompletedQuestArray)
+void USFQuestSystem::Init(UDataTable* QuestData)
 {
 	QuestDT = QuestData;
-	ActiveQuests = ActiveQuestArray;
-	CompletedQuests = CompletedQuestArray;
 }
 
 void USFQuestSystem::AddQuest(FGameplayTag QuestTag)

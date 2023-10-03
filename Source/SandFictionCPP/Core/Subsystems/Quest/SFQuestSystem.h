@@ -48,7 +48,7 @@ struct FSFQuestStruct : public FTableRowBase
 };
 
 
-UCLASS()
+UCLASS(DisplayName = QuestSystem)
 class SANDFICTIONCPP_API USFQuestSystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
@@ -56,10 +56,12 @@ class SANDFICTIONCPP_API USFQuestSystem : public UGameInstanceSubsystem
 	UPROPERTY()
 	UDataTable* QuestDT;
 
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override { return false; }
+
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void Init(UDataTable* QuestData, TArray<FGameplayTag> ActiveQuestArray, TArray<FGameplayTag> CompletedQuestArray);
+	void Init(UDataTable* QuestData);
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FGameplayTag> ActiveQuests;

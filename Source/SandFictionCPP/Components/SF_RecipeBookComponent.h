@@ -9,6 +9,8 @@
 #include "Engine/DataTable.h"
 #include "SF_RecipeBookComponent.generated.h"
 
+// ToDo: REWRITE THIS INTO A GAMEINSTANCE SUBSYSTEM!!! (for better SaveData Handling)
+
 UENUM(BlueprintType)
 enum class ECraftingCategory : uint8
 {
@@ -80,22 +82,25 @@ public:
 	USF_RecipeBookComponent();
 
 	UFUNCTION(BlueprintCallable)
-	void AddRecipe(const FCraftingRecipe Recipe);
+	void AddRecipe(const FGameplayTag Recipe);
 
 	UPROPERTY(BlueprintAssignable)
 	FRecipeEvent OnRecipeAdded;
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveRecipe(const FCraftingRecipe Recipe);
+	void RemoveRecipe(const FGameplayTag RecipeTag);
 
 	UPROPERTY(BlueprintAssignable)
 	FRecipeEvent OnRecipeRemoved;
 
 	UFUNCTION(BlueprintCallable)
-	bool HasRecipe(const FDataTableRowHandle RecipeData) const;
+	bool HasRecipe(const FGameplayTag RecipeTag) const;
 
 	UFUNCTION(BlueprintPure)
-	bool HasRecipeItems(const FCraftingRecipe& Recipe) const;
+	bool HasRecipeItems(const FGameplayTag& RecipeTag) const;
+
+	UFUNCTION(BlueprintPure)
+	bool GetRecipeDataByTag(const FGameplayTag& RecipeTag, FCraftingRecipe& RecipeData) const;
 
 protected:
 
@@ -106,13 +111,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FCraftingRecipe> KnownRecipes;
+	TArray<FGameplayTag> KnownRecipes;
 
 	UPROPERTY(EditDefaultsOnly)
 	UDataTable* RecipeDataTable;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 };

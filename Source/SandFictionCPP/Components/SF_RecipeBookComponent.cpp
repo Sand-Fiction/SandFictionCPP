@@ -13,30 +13,28 @@ USF_RecipeBookComponent::USF_RecipeBookComponent()
 	// ...
 }
 
-void USF_RecipeBookComponent::AddRecipe(const FCraftingRecipe Recipe)
+void USF_RecipeBookComponent::AddRecipe(const FGameplayTag RecipeTag)
 {
-	KnownRecipes.AddUnique(Recipe);
-	OnRecipeAdded.Broadcast(Recipe);
+	KnownRecipes.AddUnique(RecipeTag);
+	FCraftingRecipe RecipeData;
+	GetRecipeDataByTag(RecipeTag, RecipeData);
+	OnRecipeAdded.Broadcast(RecipeData);
 }
 
-void USF_RecipeBookComponent::RemoveRecipe(const FCraftingRecipe Recipe)
+void USF_RecipeBookComponent::RemoveRecipe(const FGameplayTag RecipeTag)
 {
-	KnownRecipes.Remove(Recipe);
-	OnRecipeRemoved.Broadcast(Recipe);
+	KnownRecipes.Remove(RecipeTag);
+	FCraftingRecipe RecipeData;
+	GetRecipeDataByTag(RecipeTag, RecipeData);
+	OnRecipeRemoved.Broadcast(RecipeData);
 }
 
-bool USF_RecipeBookComponent::HasRecipe(const FDataTableRowHandle RecipeData) const
+bool USF_RecipeBookComponent::HasRecipe(const FGameplayTag RecipeTag) const
 {
-	if (RecipeData.DataTable)
-	{
-		const auto RecipeStruct = RecipeData.DataTable->FindRow<FCraftingRecipe>(RecipeData.RowName, "", false);
-		return RecipeStruct->IsValid();
-	}
-
-	return false;
+	return KnownRecipes.Contains(RecipeTag);
 }
 
-bool USF_RecipeBookComponent::HasRecipeItems(const FCraftingRecipe& Recipe) const
+bool USF_RecipeBookComponent::HasRecipeItems(const FGameplayTag& RecipeTag) const
 {
 	bool HasItems = false;
 
@@ -44,9 +42,14 @@ bool USF_RecipeBookComponent::HasRecipeItems(const FCraftingRecipe& Recipe) cons
 	{
 		if (const auto Inventory = Cast<USF_InventoryComponent>(GetOwner()->FindComponentByClass<USF_InventoryComponent>()))
 		{
+			FCraftingRecipe Recipe;
+			GetRecipeDataByTag(RecipeTag, Recipe);
+
 			for (const auto InventoryData : Recipe.RecipeData)
 			{
 				HasItems = Inventory->HasItemInInventory(InventoryData);
+
+				// No need to check other Items, if already one misses
 				if (!HasItems)
 				{
 					break;
@@ -55,6 +58,28 @@ bool USF_RecipeBookComponent::HasRecipeItems(const FCraftingRecipe& Recipe) cons
 		}
 	}
 	return HasItems;
+}
+
+bool USF_RecipeBookComponent::GetRecipeDataByTag(const FGameplayTag& Recipe, FCraftingRecipe &RecipeData) const
+{
+	if (!RecipeDataTable)
+	{
+		return false;
+	}
+
+	TArray<FCraftingRecipe*> OutRows;
+	RecipeDataTable->GetAllRows<FCraftingRecipe>("", OutRows);
+
+	for (const auto TempRecipeData : OutRows)
+	{
+		if (TempRecipeData->Identifier == Recipe)
+		{
+			RecipeData = *TempRecipeData;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void USF_RecipeBookComponent::CheckRecipeUnlock(FInventoryData ItemData)
@@ -69,9 +94,9 @@ void USF_RecipeBookComponent::CheckRecipeUnlock(FInventoryData ItemData)
 	{
 		if (const auto Recipe = RecipeDataTable->FindRow<FCraftingRecipe>(RowName, ""))
 		{
-			if (HasRecipeItems(*Recipe))
+			if (HasRecipeItems(Recipe->Identifier))
 			{
-				AddRecipe(*Recipe);
+				AddRecipe(Recipe->Identifier);
 			}
 		}
 	}
@@ -90,14 +115,5 @@ void USF_RecipeBookComponent::BeginPlay()
 			Inventory->OnItemAddedToInventory.AddDynamic(this, &USF_RecipeBookComponent::CheckRecipeUnlock);
 		}
 	}
-}
-
-
-// Called every frame
-void USF_RecipeBookComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "SandFictionCPP/Components/SF_InteractionSystem.h"
 #include "SF_BuildActor.generated.h"
 
 class UNiagaraComponent;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "SF_InventoryComponent.h"
 #include "Components/ActorComponent.h"
 #include "Engine/DataTable.h"
@@ -20,6 +21,9 @@ USTRUCT(BlueprintType)
 struct FCraftingRecipe : public FTableRowBase
 {
 	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FGameplayTag Identifier;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FName Name;
@@ -42,6 +46,11 @@ struct FCraftingRecipe : public FTableRowBase
 	bool operator==(const FCraftingRecipe& Other) const
 	{
 		return Name == Other.Name;
+	}
+
+	bool operator==(const FGameplayTag& Other) const
+	{
+		return Identifier == Other;
 	}
 
 	bool IsValid() const

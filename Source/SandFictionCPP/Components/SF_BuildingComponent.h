@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "SF_BuildingComponent.generated.h"
 
@@ -28,7 +29,7 @@ public:
 	void EndBuildingMode();
 
 	UFUNCTION(BlueprintPure)
-	bool IsInBuildingMode();
+	bool IsInBuildingMode() const;
 
 	UFUNCTION(BlueprintCallable)
 	void SetBuildActor(ASF_BuildActor* Actor);
@@ -47,7 +48,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	bool FindBuildLocation(FVector& BuildLocation) const;
+	bool FindBuildLocation(FVector& BuildLocation, FGameplayTag& InsideRoom) const;
 
 	UPROPERTY(VisibleAnywhere)
 	bool bBuildingModeEnabled;

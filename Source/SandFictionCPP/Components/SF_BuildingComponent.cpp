@@ -4,8 +4,11 @@
 #include "SF_BuildingComponent.h"
 
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h"
 #include "SandFictionCPP/Actors/Items/SF_BuildActor.h"
 #include "SandFictionCPP/Character/SF_Character.h"
+#include "SandFictionCPP/Core/Subsystems/Room/SFRoomActor.h"
+#include "SandFictionCPP/Core/Subsystems/Room/SFRoomSystem.h"
 
 // Sets default values for this component's properties
 USF_BuildingComponent::USF_BuildingComponent()
@@ -71,7 +74,7 @@ void USF_BuildingComponent::EndBuildingMode()
 	}
 }
 
-bool USF_BuildingComponent::IsInBuildingMode()
+bool USF_BuildingComponent::IsInBuildingMode() const
 {
 	return bBuildingModeEnabled;
 }
@@ -84,7 +87,11 @@ void USF_BuildingComponent::SetBuildActor(ASF_BuildActor* Actor)
 void USF_BuildingComponent::BuildActor()
 {
 	FVector Location;
-	if (FindBuildLocation(Location))
+	FGameplayTag InRoom;
+
+	//ToDo: Tell Room that it got a new Actor!
+
+	if (FindBuildLocation(Location, InRoom))
 	{
 		if (GetOwner())
 		{
@@ -108,7 +115,7 @@ void USF_BuildingComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-bool USF_BuildingComponent::FindBuildLocation(FVector& BuildLocation) const
+bool USF_BuildingComponent::FindBuildLocation(FVector& BuildLocation, FGameplayTag& InsideRoom) const
 {
 	if (!GetWorld() || !GetOwner())
 	{
@@ -121,6 +128,33 @@ bool USF_BuildingComponent::FindBuildLocation(FVector& BuildLocation) const
 	const FVector EndLocation = StartLocation - FVector(0.f, 0.f, 150.f);
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_WorldStatic))
 	{
+		//ToDo: Tell Room that it is now inside of it!
+		if (const auto RoomSystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<USFRoomSystem>())
+		{
+			FSFRoomStruct RoomData;
+			if (RoomSystem->GetRoomDataByTag(RoomSystem->CurrentRoom, RoomData))
+			{
+				// Return false if you are in a Room but Build Limit is reached!
+				//ToDo: Proper Warning?
+				int32 FreeSpace;
+				if (RoomData.IsBuildLimitReached(FreeSpace))
+				{
+					return false;
+				}
+
+				if (const auto RoomActor = Cast<ASFRoomActor>(RoomData.ActorSoftReference.LoadSynchronous()))
+				{
+					//ToDo: CurrentBuildActor Bounds are probably wrong since it is attached to the Character
+					//ToDo: We need to check the BoundingBox of the Preview though
+					//ToDo: So the PreviewLocation should be the ActorLocation and only the Miniature should be attached to the Character
+					if (RoomActor->IsActorInsideRoom(CurrentBuildActor))
+					{
+						InsideRoom = RoomData.RoomIdentifier;
+					}
+				}
+			}
+		}
+
 		BuildLocation = HitResult.Location;
 		return true;
 	}
@@ -131,7 +165,8 @@ bool USF_BuildingComponent::FindBuildLocation(FVector& BuildLocation) const
 void USF_BuildingComponent::OnBuildAnimFinished()
 {
 	FVector Location;
-	if (FindBuildLocation(Location))
+	FGameplayTag InRoom;
+	if (FindBuildLocation(Location, InRoom))
 	{
 		const auto DetachmentRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, false);
 		CurrentBuildActor->DetachFromActor(DetachmentRules);
@@ -158,7 +193,8 @@ void USF_BuildingComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	}
 
 	FVector Location;
-	if (FindBuildLocation(Location))
+	FGameplayTag InRoom;
+	if (FindBuildLocation(Location, InRoom))
 	{
 		CurrentBuildActor->SetPreviewLocation(Location);
 		CurrentBuildActor->SetPreviewMID(true);
@@ -170,4 +206,3 @@ void USF_BuildingComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 		CurrentBuildActor->SetPreviewMID(false);
 	}
 }
-

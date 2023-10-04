@@ -78,6 +78,9 @@ struct FSFRoomStruct : public FTableRowBase
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int32 CurrentStageIndex;
 
+	UPROPERTY(BlueprintReadOnly)
+	TSoftObjectPtr<AActor> ActorSoftReference;
+
 	UPROPERTY()
 	TArray<FSFRoomActorStruct> BuildActors;
 
@@ -108,6 +111,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FSFRoomStruct> Rooms;
+
+	UPROPERTY(BlueprintReadWrite)
+	FGameplayTag CurrentRoom;
 
 	UFUNCTION(BlueprintCallable)
 	void InitializeActorsInRoom(FGameplayTag RoomTag);

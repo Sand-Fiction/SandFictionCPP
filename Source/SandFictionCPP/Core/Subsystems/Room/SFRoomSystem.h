@@ -9,7 +9,7 @@
 #include "SFRoomSystem.generated.h"
 
 USTRUCT(BlueprintType)
-struct FSFRoomActor
+struct FSFRoomActorStruct
 {
 	GENERATED_BODY()
 
@@ -25,24 +25,24 @@ struct FSFRoomActor
 	UPROPERTY(BlueprintReadOnly)
 	TSoftObjectPtr<AActor> ActorSoftReference;
 
-	bool operator== (const FSFRoomActor& Other) const
+	bool operator== (const FSFRoomActorStruct& Other) const
 	{
 		return Identifier == Other.Identifier && ActorSoftReference == Other.ActorSoftReference;
 	}
 
-	FSFRoomActor()
+	FSFRoomActorStruct()
 	{
 		
 	}
 
-	FSFRoomActor(FGameplayTag Identifier, FTransform Transform, TSubclassOf<AActor> ActorClass)
+	FSFRoomActorStruct(FGameplayTag Identifier, FTransform Transform, TSubclassOf<AActor> ActorClass)
 	{
 		this->Identifier = Identifier;
 		this->Transform = Transform;
 		this->ActorClass = ActorClass;
 	}
 
-	FSFRoomActor(FGameplayTag Identifier, FTransform Transform, TSubclassOf<AActor> ActorClass, TSoftObjectPtr<AActor> ActorSoftReference)
+	FSFRoomActorStruct(FGameplayTag Identifier, FTransform Transform, TSubclassOf<AActor> ActorClass, TSoftObjectPtr<AActor> ActorSoftReference)
 	{
 		this->Identifier = Identifier;
 		this->Transform = Transform;
@@ -79,12 +79,12 @@ struct FSFRoomStruct : public FTableRowBase
 	int32 CurrentStageIndex;
 
 	UPROPERTY()
-	TArray<FSFRoomActor> BuildActors;
+	TArray<FSFRoomActorStruct> BuildActors;
 
-	TArray<FSFRoomActor> GetAllActorStructsWithTag(FGameplayTag ActorTag);
+	TArray<FSFRoomActorStruct> GetAllActorStructsWithTag(FGameplayTag ActorTag);
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	int32 MaxBuildActors;
+	int32 MaxBuildActors = 8;
 
 	bool IsBuildLimitReached(int32& FreeSpace) const;
 };
@@ -100,8 +100,6 @@ class SANDFICTIONCPP_API USFRoomSystem : public UGameInstanceSubsystem
 
 	UPROPERTY()
 	UDataTable* RecipeDT;
-
-	virtual bool ShouldCreateSubsystem(UObject* Outer) const override { return false; }
 
 public:
 
@@ -121,10 +119,10 @@ public:
 	bool IsRoomStageCompleted(FGameplayTag RoomTag, int32 StageIndex);
 
 	UFUNCTION(BlueprintCallable)
-	void AddActorToRoom(FGameplayTag RoomTag, FSFRoomActor ActorStruct, int32 Quantity = 1);
+	void AddActorToRoom(FGameplayTag RoomTag, FSFRoomActorStruct ActorStruct, int32 Quantity = 1);
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveActorFromRoom(FGameplayTag RoomTag, FSFRoomActor ActorStruct, int32 Quantity = 1);
+	void RemoveActorFromRoom(FGameplayTag RoomTag, FSFRoomActorStruct ActorStruct, int32 Quantity = 1);
 
 	UFUNCTION(BlueprintPure)
 	TSubclassOf<AActor> GetBuildActorClassByTag(FGameplayTag ActorTag) const;

@@ -6,9 +6,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "SandFictionCPP/Components/SF_RecipeBookComponent.h"
 
-TArray<FSFRoomActor> FSFRoomStruct::GetAllActorStructsWithTag(FGameplayTag ActorTag)
+TArray<FSFRoomActorStruct> FSFRoomStruct::GetAllActorStructsWithTag(FGameplayTag ActorTag)
 {
-	TArray<FSFRoomActor> ReturnArray;
+	TArray<FSFRoomActorStruct> ReturnArray;
 	for (const auto ActorStruct: BuildActors)
 	{
 		if (ActorStruct.Identifier == ActorTag)
@@ -80,7 +80,7 @@ bool USFRoomSystem::IsRoomStageCompleted(FGameplayTag RoomTag, int32 StageIndex)
 	return false;
 }
 
-void USFRoomSystem::AddActorToRoom(FGameplayTag RoomTag, FSFRoomActor ActorStruct, int32 Quantity)
+void USFRoomSystem::AddActorToRoom(FGameplayTag RoomTag, FSFRoomActorStruct ActorStruct, int32 Quantity)
 {
 	FSFRoomStruct RoomData;
 	if (GetRoomDataByTag(RoomTag, RoomData))
@@ -93,7 +93,7 @@ void USFRoomSystem::AddActorToRoom(FGameplayTag RoomTag, FSFRoomActor ActorStruc
 	}
 }
 
-void USFRoomSystem::RemoveActorFromRoom(FGameplayTag RoomTag, FSFRoomActor ActorStruct, int32 Quantity)
+void USFRoomSystem::RemoveActorFromRoom(FGameplayTag RoomTag, FSFRoomActorStruct ActorStruct, int32 Quantity)
 {
 	FSFRoomStruct RoomData;
 	if (GetRoomDataByTag(RoomTag, RoomData))

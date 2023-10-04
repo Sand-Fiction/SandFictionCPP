@@ -56,8 +56,6 @@ class SANDFICTIONCPP_API USFQuestSystem : public UGameInstanceSubsystem
 	UPROPERTY()
 	UDataTable* QuestDT;
 
-	virtual bool ShouldCreateSubsystem(UObject* Outer) const override { return false; }
-
 public:
 
 	UFUNCTION(BlueprintCallable)

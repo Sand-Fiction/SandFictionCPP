@@ -3,6 +3,8 @@
 
 #include "SFRoomActor.h"
 
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ASFRoomActor::ASFRoomActor()
 {
@@ -43,19 +45,10 @@ FSFRoomStruct ASFRoomActor::GetRoomData() const
 
 bool ASFRoomActor::IsActorInsideRoom(const AActor* Actor) const
 {
-	// Room Bounding Box
-	FVector RoomOrigin;
-	FVector RoomExtent;
-	GetActorBounds(true, RoomOrigin, RoomExtent);
-	const FBox RoomBoundingBox = FBox::BuildAABB(RoomOrigin, RoomExtent);
-
-	// Actor Bounding Box
-	FVector ActorOrigin;
-	FVector ActorExtent;
-	Actor->GetActorBounds(true, ActorOrigin, ActorExtent);
-	const FBox ActorBoundingBox = FBox::BuildAABB(ActorOrigin, ActorExtent);
-
-	return ActorBoundingBox.IsInside(RoomBoundingBox);
+	const FBox RoomBoundingBox = GetComponentsBoundingBox();
+	const FBox ActorBoundingBox = Actor->GetComponentsBoundingBox();
+	const bool ReturnValue = RoomBoundingBox.IsInside(ActorBoundingBox);
+	return ReturnValue;
 }
 
 // Called when the game starts or when spawned
@@ -88,5 +81,41 @@ void ASFRoomActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 	{
 		Name->SetText(FText::FromString("RoomName"));
 	}
+}
+
+void ASFRoomActor::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	if (!OtherActor)
+	{
+		return;
+	}
+
+	if (const auto RoomSystem = GetGameInstance()->GetSubsystem<USFRoomSystem>())
+	{
+		if (OtherActor == UGameplayStatics::GetPlayerPawn(this, 0))
+		{
+			RoomSystem->CurrentRoom = RoomIdentifier;
+		}
+	}
+
+	Super::NotifyActorBeginOverlap(OtherActor);
+}
+
+void ASFRoomActor::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	if (!OtherActor)
+	{
+		return;
+	}
+
+	if (const auto RoomSystem = GetGameInstance()->GetSubsystem<USFRoomSystem>())
+	{
+		if (OtherActor == UGameplayStatics::GetPlayerPawn(this, 0))
+		{
+			RoomSystem->CurrentRoom = FGameplayTag();
+		}
+	}
+
+	Super::NotifyActorEndOverlap(OtherActor);
 }
 

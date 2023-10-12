@@ -97,12 +97,14 @@ bool USFRoomSystem::AddActorToRoom(FGameplayTag RoomTag, FSFRoomActorStruct Acto
 		if (!RoomData.IsBuildLimitReached(FreeSpace))
 		{
 			RoomData.BuildActors.AddUnique(ActorStruct);
+
 			Rooms.Remove(RoomData);
 			Rooms.AddUnique(RoomData);
 
 			return true;
 		}	
 	}
+
 	return false;
 }
 
@@ -111,20 +113,11 @@ void USFRoomSystem::RemoveActorFromRoom(FGameplayTag RoomTag, FSFRoomActorStruct
 	FSFRoomStruct RoomData;
 	if (GetRoomDataByTag(RoomTag, RoomData))
 	{
-		FSFRoomActorStruct ActorToRemove;
-		for (const auto BuildActor : RoomData.BuildActors)
-		{
-			if (BuildActor == ActorStruct)
-			{
-				ActorToRemove = BuildActor;
-				break;
-			}
-		}
+		RoomData.BuildActors.Remove(ActorStruct);
+	}
 
-		RoomData.BuildActors.Remove(ActorToRemove);
-		Rooms.Remove(RoomData);
-		Rooms.AddUnique(RoomData);
-	}	
+	Rooms.Remove(RoomData);
+	Rooms.AddUnique(RoomData);
 }
 
 TSubclassOf<AActor> USFRoomSystem::GetBuildActorClassByTag(FGameplayTag ActorTag) const

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
 #include "SandFictionCPP/Components/SF_InteractionSystem.h"
 #include "SF_BuildActor.generated.h"
@@ -19,7 +20,14 @@ public:
 	// Sets default values for this actor's properties
 	ASF_BuildActor();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Gameplay)
+	FGameplayTag Identifier;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Gameplay)
+	FGameplayTag Room;
+
 private:
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* ActorMesh;
 

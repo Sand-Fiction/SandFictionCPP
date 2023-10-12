@@ -5,10 +5,12 @@
 
 #include "NiagaraComponent.h"
 #include "Components/AudioComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "SandFictionCPP/Character/SF_Character_Main.h"
 #include "SandFictionCPP/Components/SF_BuildingComponent.h"
 #include "SandFictionCPP/Components/SF_InteractableComponent.h"
 #include "SandFictionCPP/Components/SF_InteractionSystem.h"
+#include "SandFictionCPP/Core/Subsystems/Room/SFRoomSystem.h"
 
 // Sets default values
 ASF_BuildActor::ASF_BuildActor()
@@ -74,7 +76,7 @@ void ASF_BuildActor::OnInteract(USF_InteractionSystem* Interactor)
 	}
 
 	InteractableComponent->SetIsInteractable(false);
-	SetActorEnableCollision(false);
+	ActorMesh->SetCollisionProfileName("OverlapAllDynamic", false);
 	PreviewMesh->SetHiddenInGame(false);
 	MiniatureMesh->SetHiddenInGame(false);
 	ActorMesh->SetHiddenInGame(true);
@@ -93,6 +95,12 @@ void ASF_BuildActor::OnInteract(USF_InteractionSystem* Interactor)
 		BuildingComponent->SetBuildActor(this);
 		BuildingComponent->StartBuildingMode();
 	}
+
+	if (const auto RoomSystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<USFRoomSystem>())
+	{
+		const FSFRoomActorStruct ActorStruct = FSFRoomActorStruct(Identifier, this);
+		RoomSystem->RemoveActorFromRoom(Room, ActorStruct);
+	}
 }
 
 // Called every frame
@@ -110,6 +118,7 @@ void ASF_BuildActor::OnBuild() const
 	AudioComponent->Play();
 
 	ActorMesh->SetHiddenInGame(false);
+	ActorMesh->SetCollisionProfileName("BlockAllDynamic", false);
 	PreviewMesh->SetHiddenInGame(true);
 	MiniatureMesh->SetHiddenInGame(true);
 }

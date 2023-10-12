@@ -173,7 +173,7 @@ void USF_BuildingComponent::OnBuildAnimFinished()
 			FTransform Transform;
 			Transform.SetLocation(Location);
 
-			const FSFRoomActorStruct NewActor = FSFRoomActorStruct(CurrentBuildActor->Identifier, Transform, CurrentBuildActor->StaticClass(), CurrentBuildActor);
+			const FSFRoomActorStruct NewActor = FSFRoomActorStruct(FGameplayTag(), Transform, CurrentBuildActor->StaticClass(), CurrentBuildActor);
 			if (RoomSystem->AddActorToRoom(InRoom, NewActor))
 			{
 				const auto DetachmentRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, false);

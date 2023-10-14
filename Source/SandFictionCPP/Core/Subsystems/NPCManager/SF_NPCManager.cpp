@@ -17,9 +17,9 @@ void USF_NPCManager::Init(UDataTable* NPCDataTable)
 	TArray<FNPCData*> AllNPCData;
 	NPCData->GetAllRows<FNPCData>("", AllNPCData);
 
-	for (const auto NPCData : AllNPCData)
+	for (const auto TempNPCData : AllNPCData)
 	{
-		NPCWorldStates.AddUnique(FNPCWorldState(NPCData->GameplayTag, NPCData->DefaultWorld));
+		NPCWorldStates.AddUnique(FNPCWorldState(TempNPCData->GameplayTag, TempNPCData->DefaultWorld));
 	}
 }
 

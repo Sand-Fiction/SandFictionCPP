@@ -35,13 +35,13 @@ struct FSFRoomActorStruct
 		
 	}
 
-	FSFRoomActorStruct(FGameplayTag Identifier, TSoftObjectPtr<AActor> ActorSoftReference)
+	FSFRoomActorStruct(FGameplayTag Identifier, const TSoftObjectPtr<AActor>& ActorSoftReference)
 	{
 		this->Identifier = Identifier;
 		this->ActorSoftReference = ActorSoftReference;
 	}
 
-	FSFRoomActorStruct(FGameplayTag Identifier, FTransform Transform, TSubclassOf<AActor> ActorClass)
+	FSFRoomActorStruct(FGameplayTag Identifier, const FTransform& Transform, const TSubclassOf<AActor> ActorClass)
 	{
 		this->Identifier = Identifier;
 		this->Transform = Transform;
@@ -108,6 +108,8 @@ struct FSFRoomStruct : public FTableRowBase
 	}
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRoomEvent, FGameplayTag, RoomTag);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRoomActorEvent, FGameplayTag, RoomTag, FSFRoomActorStruct, ActorStruct);
 
 UCLASS(DisplayName = RoomSystem)
 class SANDFICTIONCPP_API USFRoomSystem : public UGameInstanceSubsystem
@@ -148,5 +150,14 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	TSubclassOf<AActor> GetBuildActorClassByTag(FGameplayTag ActorTag) const;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnRoomActorEvent OnActorAddedToRoom;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnRoomActorEvent OnActorRemovedFromRoom;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnRoomEvent OnRoomStageFinished;
 
 };

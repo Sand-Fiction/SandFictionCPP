@@ -22,16 +22,19 @@ struct FNPCData : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FText Name;
+	FText Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FText Description;
+	FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FLinearColor NodeColor;
+	FLinearColor NodeColor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FGameplayTag GameplayTag;
+	FGameplayTag GameplayTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTag DefaultWorld;
 
 };
 

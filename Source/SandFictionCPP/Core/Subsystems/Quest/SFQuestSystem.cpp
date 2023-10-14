@@ -9,23 +9,30 @@
 void USFQuestSystem::Init(UDataTable* QuestData)
 {
 	QuestDT = QuestData;
+
+	if (const auto RoomSystem = GetGameInstance()->GetSubsystem<USFRoomSystem>())
+	{
+		RoomSystem->OnRoomStageFinished.AddDynamic(this, &USFQuestSystem::OnRoomStageFinished);
+	}
 }
 
-void USFQuestSystem::AddQuest(FGameplayTag QuestTag)
+void USFQuestSystem::AddQuest(const FGameplayTag QuestTag)
 {
 	ActiveQuests.AddUnique(QuestTag);
+	OnQuestAdded.Broadcast(QuestTag);
 }
 
-void USFQuestSystem::TryCompleteQuest(FGameplayTag QuestTag)
+void USFQuestSystem::TryCompleteQuest(const FGameplayTag QuestTag)
 {
 	if (CanCompleteQuest(QuestTag))
 	{
 		ActiveQuests.Remove(QuestTag);
 		CompletedQuests.AddUnique(QuestTag);
+		OnQuestCompleted.Broadcast(QuestTag);
 	}
 }
 
-bool USFQuestSystem::GetQuestDataByTag(FGameplayTag QuestTag, FSFQuestStruct& Data) const
+bool USFQuestSystem::GetQuestDataByTag(const FGameplayTag QuestTag, FSFQuestStruct& QuestData) const
 {
 	if (!QuestDT)
 	{
@@ -36,9 +43,10 @@ bool USFQuestSystem::GetQuestDataByTag(FGameplayTag QuestTag, FSFQuestStruct& Da
 	QuestDT->GetAllRows<FSFQuestStruct>("", RowStructs);
 	for (const auto Struct : RowStructs)
 	{
-		if (Struct->RoomIdentifier == QuestTag)
+
+		if (Struct->QuestIdentifier == QuestTag)
 		{
-			Data = *Struct;
+			QuestData = *Struct;
 			return true;
 		}
 	}
@@ -46,7 +54,25 @@ bool USFQuestSystem::GetQuestDataByTag(FGameplayTag QuestTag, FSFQuestStruct& Da
 	return false;
 }
 
-bool USFQuestSystem::CanCompleteQuest(FGameplayTag QuestTag) const
+TArray<FGameplayTag> USFQuestSystem::GetAllQuestTagsForRoom(const FGameplayTag RoomTag)
+{
+	TArray<FGameplayTag> QuestsForRoom;
+	for (const auto QuestTag : ActiveQuests)
+	{
+		FSFQuestStruct QuestData;
+		if (GetQuestDataByTag(QuestTag, QuestData))
+		{
+			if (QuestData.RoomIdentifier == RoomTag)
+			{
+				QuestsForRoom.AddUnique(QuestTag);
+			}
+		}
+	}
+
+	return QuestsForRoom;
+}
+
+bool USFQuestSystem::CanCompleteQuest(const FGameplayTag QuestTag) const
 {
 	const auto GameInstance = UGameplayStatics::GetGameInstance(this);
 	const auto RoomSystem = GameInstance->GetSubsystem<USFRoomSystem>();
@@ -63,4 +89,14 @@ bool USFQuestSystem::CanCompleteQuest(FGameplayTag QuestTag) const
 	}
 
 	return false;
+}
+
+void USFQuestSystem::OnRoomStageFinished(const FGameplayTag RoomTag)
+{
+	// Try to complete all active quests, that are part of that Room
+	TArray<FGameplayTag> QuestsForRoom = GetAllQuestTagsForRoom(RoomTag);
+	for (const auto QuestTag : QuestsForRoom)
+	{
+		TryCompleteQuest(QuestTag);
+	}
 }

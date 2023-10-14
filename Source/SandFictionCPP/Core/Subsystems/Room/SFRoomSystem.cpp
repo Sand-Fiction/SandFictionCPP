@@ -100,6 +100,13 @@ bool USFRoomSystem::AddActorToRoom(FGameplayTag RoomTag, FSFRoomActorStruct Acto
 			Rooms.Remove(RoomData);
 			Rooms.AddUnique(RoomData);
 
+			if (IsRoomStageCompleted(RoomTag, RoomData.CurrentStageIndex))
+			{
+				OnRoomStageFinished.Broadcast(RoomTag);
+			}
+
+			OnActorAddedToRoom.Broadcast(RoomTag, ActorStruct);
+
 			return true;
 		}	
 	}
@@ -117,13 +124,16 @@ void USFRoomSystem::RemoveActorFromRoom(FGameplayTag RoomTag, FSFRoomActorStruct
 			if (BuildActor == ActorStruct)
 			{
 				ActorToRemove = BuildActor;
+
+				RoomData.BuildActors.Remove(ActorToRemove);
+				Rooms.Remove(RoomData);
+				Rooms.AddUnique(RoomData);
+
+				OnActorRemovedFromRoom.Broadcast(RoomTag, ActorStruct);
+
 				break;
 			}
 		}
-
-		RoomData.BuildActors.Remove(ActorToRemove);
-		Rooms.Remove(RoomData);
-		Rooms.AddUnique(RoomData);
 	}	
 }
 

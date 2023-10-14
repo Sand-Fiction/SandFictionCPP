@@ -13,22 +13,22 @@ struct FSFQuestStruct : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FGameplayTag QuestIdentifier;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FGameplayTag RoomIdentifier;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 RoomStageTargetIndex;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	FName Name;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FText Name;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FText Description;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UTexture2D* Icon;
 
 	bool IsValid() const
@@ -36,17 +36,12 @@ struct FSFQuestStruct : public FTableRowBase
 		return RoomIdentifier.IsValid();
 	}
 
-	FSFQuestStruct()
+	FSFQuestStruct(): RoomStageTargetIndex(0), Icon(nullptr)
 	{
-		QuestIdentifier = FGameplayTag();
-		RoomIdentifier = FGameplayTag();
-		RoomStageTargetIndex = 0;
-		Name = TEXT("QuestName");
-		Description = FText::FromString("");
-		Icon = nullptr;
 	}
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestEvent, const FGameplayTag, QuestTag);
 
 UCLASS(DisplayName = QuestSystem)
 class SANDFICTIONCPP_API USFQuestSystem : public UGameInstanceSubsystem
@@ -57,14 +52,14 @@ class SANDFICTIONCPP_API USFQuestSystem : public UGameInstanceSubsystem
 	UDataTable* QuestDT;
 
 public:
-
+	
 	UFUNCTION(BlueprintCallable)
 	void Init(UDataTable* QuestData);
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	TArray<FGameplayTag> ActiveQuests;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	TArray<FGameplayTag> CompletedQuests;
 
 	UFUNCTION(BlueprintCallable)
@@ -74,9 +69,21 @@ public:
 	void TryCompleteQuest(FGameplayTag QuestTag);
 
 	UFUNCTION(BlueprintPure)
-	bool GetQuestDataByTag(FGameplayTag QuestTag, FSFQuestStruct& Data) const;
+	bool GetQuestDataByTag(FGameplayTag QuestTag, FSFQuestStruct& QuestData) const;
+
+	UFUNCTION(BlueprintPure)
+	TArray<FGameplayTag> GetAllQuestTagsForRoom(FGameplayTag RoomTag);
 
 	UFUNCTION(BlueprintPure)
 	bool CanCompleteQuest(FGameplayTag QuestTag) const;
+
+	UFUNCTION()
+	void OnRoomStageFinished(FGameplayTag RoomTag);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnQuestEvent OnQuestAdded;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnQuestEvent OnQuestCompleted;
 	
 };

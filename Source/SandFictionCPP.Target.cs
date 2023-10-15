@@ -10,6 +10,6 @@ public class SandFictionCPPTarget : TargetRules
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.Add("SandFictionCPP");
-        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_3;
     }
 }

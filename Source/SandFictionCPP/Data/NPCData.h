@@ -36,5 +36,12 @@ struct FNPCData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGameplayTag DefaultWorld;
 
+	FNPCData()
+	{
+		Name = FText::FromString("NPC Name");
+		Description = FText::FromString("NPC Description");
+		NodeColor = FColor::White;
+	}
+
 };
 

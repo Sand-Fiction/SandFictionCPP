@@ -82,7 +82,7 @@ struct FSFRoomStruct : public FTableRowBase
 	TArray<FSFRoomStageStruct> Stages;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	int32 CurrentStageIndex;
+	int32 CurrentStageIndex = 0;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSoftObjectPtr<AActor> ActorSoftReference;
@@ -94,7 +94,7 @@ struct FSFRoomStruct : public FTableRowBase
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	int32 MaxBuildActors = 8;
-
+	
 	bool IsBuildLimitReached(int32& FreeSpace) const;
 
 	bool operator== (const FSFRoomStruct &Other) const
@@ -105,7 +105,7 @@ struct FSFRoomStruct : public FTableRowBase
 	bool operator== (const FGameplayTag& Other) const
 	{
 		return RoomIdentifier == Other;
-	}
+	}	
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRoomEvent, FGameplayTag, RoomTag);

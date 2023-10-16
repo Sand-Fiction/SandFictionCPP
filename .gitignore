@@ -9,9 +9,10 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .vsconfig
-Content/StarterContent/
+Content/StarterContent/*
 Platforms/HoloLens/Config/HoloLensEngine.ini
-Plugins/Developer/
+Plugins/Developer/*
+.idea
 
 # Compiled Object files
 *.slo

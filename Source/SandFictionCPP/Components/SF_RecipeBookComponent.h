@@ -115,6 +115,6 @@ protected:
 
 public:
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FGameplayTag> KnownRecipes;
 };

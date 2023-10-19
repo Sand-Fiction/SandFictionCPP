@@ -1,5 +1,6 @@
-# Visual Studio 2015 user specific files
+# Visual Studio user specific files
 .vs/
+.vsconfig
 
 ### JetBrains ###
 # User-specific stuff
@@ -8,11 +9,11 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-.vsconfig
-Content/StarterContent/*
-Platforms/HoloLens/Config/HoloLensEngine.ini
 Plugins/Developer/*
 .idea
+
+# Starter Content
+Content/StarterContent/*
 
 # Compiled Object files
 *.slo

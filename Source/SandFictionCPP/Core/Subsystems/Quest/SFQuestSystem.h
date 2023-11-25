@@ -47,7 +47,7 @@ UCLASS(DisplayName = QuestSystem)
 class SANDFICTIONCPP_API USFQuestSystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-
+	
 	UPROPERTY()
 	UDataTable* QuestDT;
 

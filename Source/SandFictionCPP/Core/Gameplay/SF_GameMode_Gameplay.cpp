@@ -5,11 +5,17 @@
 #include "FlowComponent.h"
 #include "FlowWorldSettings.h"
 #include "Kismet/GameplayStatics.h"
+#include "SandFictionCPP/Core/SF_GameInstance.h"
 #include "SandFictionCPP/Core/Subsystems/NPCManager/SF_NPCManager.h"
 
 void ASF_GameMode_Gameplay::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (const auto GameInstance = Cast<USF_GameInstance>(GetGameInstance()))
+	{
+		GameInstance->LoadGame();
+	}
 }
 
 void ASF_GameMode_Gameplay::SpawnAllNPCs()

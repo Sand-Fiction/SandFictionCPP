@@ -57,10 +57,10 @@ class SANDFICTIONCPP_API USF_NPCManager : public UGameInstanceSubsystem
 	UPROPERTY()
 	UDataTable* NPCWorldData;
 
+public:
+	
 	UPROPERTY()
 	TArray<FNPCWorldState> NPCWorldStates;
-
-public:
 
 	UFUNCTION(BlueprintPure)
 	TArray<FNPCWorldState> GetAllNPCWorldStages();

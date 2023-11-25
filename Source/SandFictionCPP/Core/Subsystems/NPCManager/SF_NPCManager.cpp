@@ -13,7 +13,7 @@ TArray<FNPCWorldState> USF_NPCManager::GetAllNPCWorldStages()
 
 void USF_NPCManager::Init(UDataTable* NPCDataTable)
 {
-	// Initialize NPCWorldStates ToDo: Load From SaveGame instead!
+	// Initialize Default NPCWorldStates because this should never be empty
 	NPCWorldData = NPCDataTable;
 	TArray<FNPCData*> AllNPCData;
 	NPCWorldData->GetAllRows<FNPCData>("", AllNPCData);

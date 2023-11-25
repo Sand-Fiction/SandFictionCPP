@@ -14,6 +14,8 @@ class ASF_GameMode : public AGameModeBase
 public:
 	ASF_GameMode();
 
+	virtual void BeginPlay() override;
+
 	UFUNCTION(BlueprintCallable)
 	void TravelToMap(FString MapString);
 

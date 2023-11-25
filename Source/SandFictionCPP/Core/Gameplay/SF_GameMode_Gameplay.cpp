@@ -11,11 +11,6 @@
 void ASF_GameMode_Gameplay::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (const auto GameInstance = Cast<USF_GameInstance>(GetGameInstance()))
-	{
-		GameInstance->LoadGame();
-	}
 }
 
 void ASF_GameMode_Gameplay::SpawnAllNPCs()

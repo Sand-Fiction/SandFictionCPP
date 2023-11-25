@@ -26,6 +26,12 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void LoadGame();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void DeleteGame();
+
+	UFUNCTION(BlueprintPure)
+	static bool DoesSaveGameExist();
+
 	UFUNCTION(BlueprintPure)
 	USF_SaveGame* GetSaveGameObject() const;
 

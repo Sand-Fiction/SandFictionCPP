@@ -16,6 +16,11 @@ ASF_GameMode::ASF_GameMode()
 	bUseSeamlessTravel = true;
 }
 
+void ASF_GameMode::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 
 void ASF_GameMode::TravelToMap(FString MapName)
 {

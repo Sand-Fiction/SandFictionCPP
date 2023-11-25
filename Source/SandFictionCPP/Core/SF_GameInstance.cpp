@@ -132,6 +132,16 @@ void USF_GameInstance::LoadGame_Implementation()
 	}
 }
 
+void USF_GameInstance::DeleteGame_Implementation()
+{
+	UGameplayStatics::DeleteGameInSlot("SandFiction", 0);
+}
+
+bool USF_GameInstance::DoesSaveGameExist()
+{
+	return UGameplayStatics::DoesSaveGameExist("SandFiction", 0);
+}
+
 USF_SaveGame* USF_GameInstance::GetSaveGameObject() const
 {
 	return SaveGameObject;

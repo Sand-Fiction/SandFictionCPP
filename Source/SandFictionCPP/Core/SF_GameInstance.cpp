@@ -3,6 +3,7 @@
 
 #include "SF_GameInstance.h"
 
+#include "FlowSubsystem.h"
 #include "SF_SaveGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "SandFictionCPP/Character/SF_Character_Main.h"
@@ -12,25 +13,32 @@
 
 void USF_GameInstance::SaveGame_Implementation()
 {
+	// Gather Subsystems
+	const auto NPCManager = GetSubsystem<USF_NPCManager>();
+	const auto FlowSubsystem = GetSubsystem<UFlowSubsystem>();
+	const auto RoomSystem = GetSubsystem<USFRoomSystem>();
+	const auto QuestSystem = GetSubsystem<USFQuestSystem>();
+
+	// Check SaveGameObject and create if necessary
 	if (!SaveGameObject)
 	{
 		SaveGameObject = Cast<USF_SaveGame>(UGameplayStatics::CreateSaveGameObject(USF_SaveGame::StaticClass()));
 	}
 
 	// Gather RoomData
-	if (const auto RoomSystem = GetSubsystem<USFRoomSystem>())
+	if (RoomSystem)
 	{
 		SaveGameObject->SaveData.Rooms = RoomSystem->Rooms;
 	}
 
 	// Gather QuestData
-	if (const auto QuestSystem = GetSubsystem<USFQuestSystem>())
+	if (QuestSystem)
 	{
 		SaveGameObject->SaveData.ActiveQuests = QuestSystem->ActiveQuests;
 		SaveGameObject->SaveData.CompletedQuests = QuestSystem->CompletedQuests;
 	}
 
-	// Gather Inventory & Recipes
+	// Gather Inventory & Recipes of Player
 	if (const auto World = GetWorld())
 	{
 		if (const auto Player = Cast<ASF_Character_Main>(UGameplayStatics::GetPlayerCharacter(World, 0)))
@@ -43,6 +51,29 @@ void USF_GameInstance::SaveGame_Implementation()
 			if (const USF_RecipeBookComponent* RecipeBook = Player->GetRecipeBookComponent())
 			{
 				SaveGameObject->SaveData.KnownRecipes = RecipeBook->KnownRecipes;
+			}
+		}
+	}
+
+	// Gather NPC WorldStates
+	if (NPCManager)
+	{
+		SaveGameObject->SaveData.NPCWorldStates = NPCManager->NPCWorldStates;
+	}
+
+	// Gather NPC Dialogues
+	if (NPCManager && FlowSubsystem)
+	{
+		for (const auto NPCWorldState : NPCManager->NPCWorldStates)
+		{
+			const auto NPCsWithTag = FlowSubsystem->GetFlowActorsByTag(NPCWorldState.Identifier, ASF_Character_NPC::StaticClass());
+			// Only check first Actor with Tag because usually there should always only be one NPC with the same Tag
+			if (NPCsWithTag.Array().IsValidIndex(0))
+			{
+				if (const auto NPC = Cast<ASF_Character_NPC>(NPCsWithTag.Array()[0]))
+				{
+					SaveGameObject->SaveData.DialogueTags.Emplace(NPCWorldState.Identifier, NPC->Dialogue);
+				}
 			}
 		}
 	}
@@ -93,4 +124,15 @@ void USF_GameInstance::LoadGame_Implementation()
 			}
 		}
 	}
+
+	// Apply NPC WorldState Data
+	if (const auto NPCManager = GetSubsystem<USF_NPCManager>())
+	{
+		NPCManager->NPCWorldStates = SaveGameObject->SaveData.NPCWorldStates;
+	}
+}
+
+USF_SaveGame* USF_GameInstance::GetSaveGameObject() const
+{
+	return SaveGameObject;
 }

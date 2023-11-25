@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Engine/DataTable.h"
+#include "SandFictionCPP/Data/NPCData.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "SF_NPCManager.generated.h"
 
@@ -24,12 +25,12 @@ struct FNPCWorldState
 
 	}
 
-	FNPCWorldState(FGameplayTag Identifier)
+	FNPCWorldState(const FGameplayTag Identifier)
 	{
 		this->Identifier = Identifier;
 	}
 
-	FNPCWorldState(FGameplayTag Identifier, FGameplayTag World)
+	FNPCWorldState(const FGameplayTag Identifier, const FGameplayTag World)
 	{
 		this->Identifier = Identifier;
 		this->World = World;
@@ -54,12 +55,12 @@ class SANDFICTIONCPP_API USF_NPCManager : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 	UPROPERTY()
-	UDataTable* NPCData;
-
-	UPROPERTY()
-	TArray<FNPCWorldState> NPCWorldStates;
+	UDataTable* NPCWorldData;
 
 public:
+	
+	UPROPERTY()
+	TArray<FNPCWorldState> NPCWorldStates;
 
 	UFUNCTION(BlueprintPure)
 	TArray<FNPCWorldState> GetAllNPCWorldStages();
@@ -73,9 +74,15 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool GetNPCWorldStageByTag(const FGameplayTag NPCTag, FNPCWorldState &WorldState) const;
 
+	UFUNCTION(BlueprintPure)
+	bool GetNPCDataByTag(const FGameplayTag NPCTag, FNPCData &OutNPCData) const;
+
 	UFUNCTION(BlueprintCallable)
 	void SetNPCWorld(FGameplayTag NPCTag, FGameplayTag WorldTag);
 
 	UPROPERTY(BlueprintAssignable)
 	FOnNPCWorldStateChange OnNPCWorldStateChange;
+
+	void SpawnAllNPCsInWorld(FGameplayTag WorldTag);
+	void SpawnNPC(FNPCData NPCData, FGameplayTag WorldTag) const;
 };

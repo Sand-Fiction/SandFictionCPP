@@ -6,6 +6,7 @@
 #include "FlowSave.h"
 #include "GameplayTagContainer.h"
 #include "SandFictionCPP/Components/SF_InventoryComponent.h"
+#include "Subsystems/NPCManager/SF_NPCManager.h"
 #include "Subsystems/Room/SFRoomSystem.h"
 #include "SF_SaveGame.generated.h"
 
@@ -16,36 +17,36 @@ struct FSFSaveData
 
 	/// Quest Data
 
-	UPROPERTY(SaveGame, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	TArray<FGameplayTag> ActiveQuests;
 
-	UPROPERTY(SaveGame, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	TArray<FGameplayTag> CompletedQuests;
-
-
+	
 	/// RoomData
 	
-	UPROPERTY(SaveGame, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	TArray<FSFRoomStruct> Rooms;
 
 	/// CraftingData
 
-	UPROPERTY(SaveGame, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	TArray<FGameplayTag> KnownRecipes;
 
 	/// Inventory
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly)
 	TArray<FInventoryData> CurrentInventory;
 
-	/**
-	 * ToDo: Gather all Properties, that need to be saved!
-	 *
-	 * ToDo: UFlowSystem	- Dialogues (Rest should be handled already)
-	 *
-	 * ToDo: NPCs on Earth / Ship?
-	 *
-	 */
+	/// NPC WorldStates
+	
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FNPCWorldState> NPCWorldStates;
+
+	/// NPC Dialogues
+	
+	UPROPERTY(BlueprintReadOnly)
+	TMap<FGameplayTag, FGameplayTag> DialogueTags; // NPCTag / DialogueTag
 
 };
 

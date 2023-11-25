@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "GameplayTagContainer.h"
+#include "Engine/TargetPoint.h"
+#include "SandFictionCPP/Character/SF_Character_NPC.h"
 #include "NPCData.generated.h"
 
 
@@ -35,6 +37,15 @@ struct FNPCData : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGameplayTag DefaultWorld;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FGameplayTag, TSoftObjectPtr<ATargetPoint>> WorldSpawnPositions;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTag DefaultDialogue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<ASF_Character_NPC> ActorClass;
 
 	FNPCData()
 	{

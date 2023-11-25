@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SF_SaveGame.h"
 #include "Engine/GameInstance.h"
 #include "SF_GameInstance.generated.h"
 
@@ -25,9 +26,12 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void LoadGame();
 
+	UFUNCTION(BlueprintPure)
+	USF_SaveGame* GetSaveGameObject() const;
+
 protected:
 
 	UPROPERTY(BlueprintReadWrite)
-	class USF_SaveGame* SaveGameObject;
+	USF_SaveGame* SaveGameObject;
 
 };

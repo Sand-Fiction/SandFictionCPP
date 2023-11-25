@@ -66,7 +66,7 @@ public:
 	void AddQuest(FGameplayTag QuestTag);
 
 	UFUNCTION(BlueprintCallable)
-	void TryCompleteQuest(FGameplayTag QuestTag);
+	bool TryCompleteQuest(FGameplayTag QuestTag);
 
 	UFUNCTION(BlueprintPure)
 	bool GetQuestDataByTag(FGameplayTag QuestTag, FSFQuestStruct& QuestData) const;

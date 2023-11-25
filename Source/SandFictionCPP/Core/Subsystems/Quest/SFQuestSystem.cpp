@@ -22,14 +22,16 @@ void USFQuestSystem::AddQuest(const FGameplayTag QuestTag)
 	OnQuestAdded.Broadcast(QuestTag);
 }
 
-void USFQuestSystem::TryCompleteQuest(const FGameplayTag QuestTag)
+bool USFQuestSystem::TryCompleteQuest(const FGameplayTag QuestTag)
 {
 	if (CanCompleteQuest(QuestTag))
 	{
 		ActiveQuests.Remove(QuestTag);
 		CompletedQuests.AddUnique(QuestTag);
 		OnQuestCompleted.Broadcast(QuestTag);
+		return true;
 	}
+	return false;
 }
 
 bool USFQuestSystem::GetQuestDataByTag(const FGameplayTag QuestTag, FSFQuestStruct& QuestData) const

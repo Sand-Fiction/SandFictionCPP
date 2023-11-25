@@ -3,7 +3,9 @@
 
 #include "SF_NPCManager.h"
 
+#include "FlowComponent.h"
 #include "SandFictionCPP/Character/SF_Character_NPC.h"
+#include "SandFictionCPP/Core/SF_GameInstance.h"
 #include "SandFictionCPP/Data/NPCData.h"
 
 TArray<FNPCWorldState> USF_NPCManager::GetAllNPCWorldStages()
@@ -89,8 +91,24 @@ void USF_NPCManager::SpawnNPC(FNPCData NPCData, const FGameplayTag WorldTag) con
 		const FTransform SpawnTransform = TransformActor->GetTransform();
 		if (ASF_Character_NPC* NPC = GetWorld()->SpawnActorDeferred<ASF_Character_NPC>(NPCData.ActorClass, SpawnTransform))
 		{
-			// ToDo: Do not use Default Dialogue but rather NPCSaveGameData
-			NPC->Dialogue = NPCData.DefaultDialogue;
+			// Check if there is a saved Dialogue for this NPC
+			if (const auto GameInstance = Cast<USF_GameInstance>(GetGameInstance()))
+			{
+				if (GameInstance->DoesSaveGameExist())
+				{
+					if (GameInstance->GetSaveGameObject()->SaveData.DialogueTags.Contains(NPCData.GameplayTag))
+					{
+						NPC->Dialogue = GameInstance->GetSaveGameObject()->SaveData.DialogueTags[NPCData.GameplayTag];
+					}
+				}
+			}
+			// Use default Dialogue if no saved Dialogue was found
+			else
+			{
+				NPC->Dialogue = NPCData.DefaultDialogue;
+			}
+			
+			NPC->GetFlowComponent()->AddIdentityTag(NPCData.GameplayTag);
 			NPC->FinishSpawning(SpawnTransform);
 			
 			UE_LOG(LogTemp, Warning, TEXT("Successfully spawned NPC %s!"), *NPCData.Name.ToString());

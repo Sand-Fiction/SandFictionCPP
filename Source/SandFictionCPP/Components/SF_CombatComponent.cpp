@@ -251,12 +251,19 @@ void USF_CombatComponent::StartKillOwner()
 			if (AnimData && AnimData->AnimMontage)
 			{
 				OwningCharacter->PlayAnimMontage(AnimData->AnimMontage);
-				// OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Attacking);
+				OwningCharacter->GetCharacterStateComponent()->ChangeCharacterState(ECharacterState::Dying);
 			}
 		}
 
-		// Disable Collision / Enable Ragdoll?
+		// ToDo: Handle Character Death in Character itself (Bind to OnStateChange-Dying)
+		
+		// Disable Collision
 		OwningCharacter->SetActorEnableCollision(false);
+
+		// Enable Ragdoll
+		OwningCharacter->GetMesh()->SetAllBodiesSimulatePhysics(true);
+		OwningCharacter->GetMesh()->SetSimulatePhysics(true);
+		OwningCharacter->GetMesh()->WakeAllRigidBodies();
 
 		// ToDo: Spawn VFX Effect
 	}

@@ -16,7 +16,8 @@ enum class ECharacterState : uint8
 	GettingHit,
 	Blocking,
 	Rolling,
-	Interacting
+	Interacting,
+	Dying
 };
 
 UENUM(BlueprintType)

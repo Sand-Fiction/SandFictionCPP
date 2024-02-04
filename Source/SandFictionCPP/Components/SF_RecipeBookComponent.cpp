@@ -15,6 +15,12 @@ USF_RecipeBookComponent::USF_RecipeBookComponent()
 
 void USF_RecipeBookComponent::AddRecipe(const FGameplayTag RecipeTag)
 {
+	// return if Recipe is already learned
+	if (HasRecipe(RecipeTag))
+	{
+		return;
+	}
+	
 	KnownRecipes.AddUnique(RecipeTag);
 	FCraftingRecipe RecipeData;
 	GetRecipeDataByTag(RecipeTag, RecipeData);
@@ -23,6 +29,12 @@ void USF_RecipeBookComponent::AddRecipe(const FGameplayTag RecipeTag)
 
 void USF_RecipeBookComponent::RemoveRecipe(const FGameplayTag RecipeTag)
 {
+	// return if Recipe is not learned
+	if (!HasRecipe(RecipeTag))
+	{
+		return;
+	}
+	
 	KnownRecipes.Remove(RecipeTag);
 	FCraftingRecipe RecipeData;
 	GetRecipeDataByTag(RecipeTag, RecipeData);
@@ -96,10 +108,7 @@ void USF_RecipeBookComponent::CheckRecipeUnlock(FInventoryData ItemData)
 		{
 			if (HasRecipeItems(Recipe->Identifier))
 			{
-				if (!HasRecipe(Recipe->Identifier))
-				{
-					AddRecipe(Recipe->Identifier);
-				}
+				AddRecipe(Recipe->Identifier);
 			}
 		}
 	}

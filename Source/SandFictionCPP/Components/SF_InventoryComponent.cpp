@@ -13,14 +13,14 @@ USF_InventoryComponent::USF_InventoryComponent()
 	// ...
 }
 
-void USF_InventoryComponent::AddItemToInventory(FInventoryData InventoryDataToAdd)
+void USF_InventoryComponent::AddItemToInventory(const FInventoryData ItemDataToAdd)
 {
-	CurrentInventory.Add(InventoryDataToAdd);
-	OnItemAddedToInventory.Broadcast(InventoryDataToAdd);
+	CurrentInventory.Add(ItemDataToAdd);
 	RestackInventory();
+	OnItemAddedToInventory.Broadcast(ItemDataToAdd);
 }
 
-bool USF_InventoryComponent::HasItemInInventory(FInventoryData InventoryData) const
+bool USF_InventoryComponent::HasItemInInventory(const FInventoryData& InventoryData) const
 {
 	return CurrentInventory.Contains(InventoryData);
 }
@@ -52,9 +52,37 @@ void USF_InventoryComponent::SortInventory()
 
 void USF_InventoryComponent::RestackInventory()
 {
+	TArray<FInventoryData> RestackedInventory;
 
+	// Loop through all Inventory Items
+	for (FInventoryData InventoryItem : CurrentInventory)
+	{		
+		int32 StackIndex = -1;
+		
+		// Check if there is a stack of the same type in the restacked Inventory
+		for (FInventoryData StackedItem: RestackedInventory)
+		{
+			// save StackIndex
+			if (StackedItem.IsSameType(InventoryItem))
+			{
+				StackIndex = RestackedInventory.Find(StackedItem);
+				break;
+			}
+		}
+
+		// if Stack was found, combine Quantity
+		if (StackIndex>=0)
+		{
+			RestackedInventory[StackIndex].Quantity = RestackedInventory[StackIndex].Quantity + InventoryItem.Quantity;
+		}
+		// if no stack of the same type was found, add this item to the restacked inventory
+		else
+		{
+			RestackedInventory.Add(InventoryItem);
+		}
+	}
+	CurrentInventory = RestackedInventory;
 }
-
 
 // Called when the game starts
 void USF_InventoryComponent::BeginPlay()

@@ -38,7 +38,7 @@ struct FInventoryData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 	FDataTableRowHandle ItemData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -48,6 +48,11 @@ struct FInventoryData
 	bool operator==(const FInventoryData& Other) const
 	{
 		return (ItemData == Other.ItemData) && (Quantity == Other.Quantity);
+	}
+
+	bool IsSameType(const FInventoryData& Other) const
+	{
+		return ItemData == Other.ItemData;
 	}
 
 	FInventoryData()
@@ -72,7 +77,7 @@ public:
 	void AddItemToInventory(FInventoryData ItemDataToAdd);
 
 	UFUNCTION(BlueprintPure)
-	bool HasItemInInventory(FInventoryData InventoryData) const;
+	bool HasItemInInventory(const FInventoryData& InventoryData) const;
 
 	UFUNCTION(BlueprintPure)
 	TArray<FInventoryData> GetInventory() const;

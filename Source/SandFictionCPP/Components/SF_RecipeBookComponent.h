@@ -7,6 +7,7 @@
 #include "SF_InventoryComponent.h"
 #include "Components/ActorComponent.h"
 #include "Engine/DataTable.h"
+#include "SandFictionCPP/Actors/Items/SF_BuildActor.h"
 #include "SF_RecipeBookComponent.generated.h"
 
 // ToDo: REWRITE THIS INTO A GAMEINSTANCE SUBSYSTEM!!! (for better SaveData Handling)
@@ -37,7 +38,7 @@ struct FCraftingRecipe : public FTableRowBase
 	UTexture2D* Icon;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TSubclassOf<AActor> ItemClass;
+	TSubclassOf<ASF_BuildActor> ItemClass;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FInventoryData> RecipeData;
@@ -115,6 +116,6 @@ protected:
 
 public:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FGameplayTag> KnownRecipes;
 };

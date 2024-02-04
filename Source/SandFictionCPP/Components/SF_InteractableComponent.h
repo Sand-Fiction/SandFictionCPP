@@ -31,7 +31,7 @@ public:
 	UFUNCTION()
 	void SetIsActive(bool isActive);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void SetIsInteractable(bool Interactable);
 
 	UPROPERTY(BlueprintAssignable)

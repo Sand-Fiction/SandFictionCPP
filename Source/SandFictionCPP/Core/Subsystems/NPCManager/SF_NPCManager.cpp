@@ -91,6 +91,9 @@ void USF_NPCManager::SpawnNPC(FNPCData NPCData, const FGameplayTag WorldTag) con
 		const FTransform SpawnTransform = TransformActor->GetTransform();
 		if (ASF_Character_NPC* NPC = GetWorld()->SpawnActorDeferred<ASF_Character_NPC>(NPCData.ActorClass, SpawnTransform))
 		{
+			// Use default Dialogue upfront, if SaveData exists it will be replaced
+			NPC->Dialogue = NPCData.DefaultDialogue;
+			
 			// Check if there is a saved Dialogue for this NPC
 			if (const auto GameInstance = Cast<USF_GameInstance>(GetGameInstance()))
 			{
@@ -101,11 +104,6 @@ void USF_NPCManager::SpawnNPC(FNPCData NPCData, const FGameplayTag WorldTag) con
 						NPC->Dialogue = GameInstance->GetSaveGameObject()->SaveData.DialogueTags[NPCData.GameplayTag];
 					}
 				}
-			}
-			// Use default Dialogue if no saved Dialogue was found
-			else
-			{
-				NPC->Dialogue = NPCData.DefaultDialogue;
 			}
 			
 			NPC->GetFlowComponent()->AddIdentityTag(NPCData.GameplayTag);

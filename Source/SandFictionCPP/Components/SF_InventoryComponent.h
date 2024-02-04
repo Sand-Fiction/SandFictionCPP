@@ -38,7 +38,7 @@ struct FInventoryData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FDataTableRowHandle ItemData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -96,7 +96,10 @@ void USF_RecipeBookComponent::CheckRecipeUnlock(FInventoryData ItemData)
 		{
 			if (HasRecipeItems(Recipe->Identifier))
 			{
-				AddRecipe(Recipe->Identifier);
+				if (!HasRecipe(Recipe->Identifier))
+				{
+					AddRecipe(Recipe->Identifier);
+				}
 			}
 		}
 	}

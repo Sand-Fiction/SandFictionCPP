@@ -72,7 +72,7 @@ public:
 	void Init(UDataTable* NPCDataTable);
 
 	UFUNCTION(BlueprintPure)
-	bool GetNPCWorldStageByTag(const FGameplayTag NPCTag, FNPCWorldState &WorldState) const;
+	bool GetNPCWorldStateByTag(const FGameplayTag NPCTag, FNPCWorldState &WorldState) const;
 
 	UFUNCTION(BlueprintPure)
 	bool GetNPCDataByTag(const FGameplayTag NPCTag, FNPCData &OutNPCData) const;

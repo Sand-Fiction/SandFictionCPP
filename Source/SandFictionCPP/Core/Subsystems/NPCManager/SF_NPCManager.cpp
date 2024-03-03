@@ -25,7 +25,7 @@ void USF_NPCManager::Init(UDataTable* NPCDataTable)
 	}
 }
 
-bool USF_NPCManager::GetNPCWorldStageByTag(const FGameplayTag NPCTag, FNPCWorldState &WorldState) const
+bool USF_NPCManager::GetNPCWorldStateByTag(const FGameplayTag NPCTag, FNPCWorldState &WorldState) const
 {
 	for (FNPCWorldState TempWorldState  : NPCWorldStates)
 	{

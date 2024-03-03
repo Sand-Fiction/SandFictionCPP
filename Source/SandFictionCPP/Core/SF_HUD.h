@@ -68,7 +68,7 @@ public:
 
 	// LoadingScreen Functions
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float LoadingScreenFadeTime;
 
 	// returns -1 if Widget already valid

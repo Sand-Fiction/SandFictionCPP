@@ -3,6 +3,7 @@
 
 #include "SFRoomSystem.h"
 
+#include "AsyncTreeDifferences.h"
 #include "Kismet/GameplayStatics.h"
 #include "SandFictionCPP/Components/SF_RecipeBookComponent.h"
 
@@ -61,7 +62,7 @@ void USFRoomSystem::InitializeActorsInRoom (FGameplayTag RoomTag)
 	}
 }
 
- bool USFRoomSystem::GetRoomDataByTag(FGameplayTag RoomTag, FSFRoomStruct& RoomData) const
+ bool USFRoomSystem::GetRoomDataByTag(const FGameplayTag RoomTag, FSFRoomStruct& RoomData) const
 {
 	for (const auto Room : Rooms)
 	{
@@ -75,7 +76,7 @@ void USFRoomSystem::InitializeActorsInRoom (FGameplayTag RoomTag)
 	return false;
 }
 
-bool USFRoomSystem::IsRoomStageCompleted(FGameplayTag RoomTag, int32 StageIndex)
+bool USFRoomSystem::IsRoomStageCompleted(const FGameplayTag RoomTag, const int32 StageIndex)
 {
 	for (const auto Room : Rooms)
 	{
@@ -86,6 +87,53 @@ bool USFRoomSystem::IsRoomStageCompleted(FGameplayTag RoomTag, int32 StageIndex)
 	}
 
 	return false;
+}
+
+void USFRoomSystem::TryCompleteRoomStage(FGameplayTag RoomTag)
+{
+	FSFRoomStruct RoomData;
+	if (GetRoomDataByTag(RoomTag, RoomData))
+	{
+		if (RoomData.Stages.IsValidIndex(RoomData.CurrentStageIndex))
+		{
+			// Iterate all needed Actors and check if enough;
+			FSFRoomStageStruct CurrentStageData = RoomData.Stages[RoomData.CurrentStageIndex];
+			bool ReturnValue = true;
+			for (const auto NeededActor : CurrentStageData.NeededBuildActors)
+			{
+				int32 ActorQuantity = 0;
+				for (const auto BuildActorData : RoomData.BuildActors)
+				{
+					if (BuildActorData.Identifier == NeededActor.Key)
+					{
+						ActorQuantity++;
+					}
+				}
+				
+				ActorQuantity < NeededActor.Value ? ReturnValue = false : ReturnValue = true;
+
+				// Already break if one of the needed Actors is not in the room with the needed quantity
+				if (!ReturnValue)
+				{
+					break;
+				}
+			}
+
+			// Update CurrentStageIndex if RoomStage is complete
+			if (ReturnValue)
+			{
+				FSFRoomStruct TempRoom;
+				for (const auto Room : Rooms)
+				{
+					if (Room.RoomIdentifier == RoomTag)
+					{
+						TempRoom = Room;
+					}
+				}
+				Rooms[Rooms.Find(TempRoom)].CurrentStageIndex++;
+			}
+		}
+	}
 }
 
 bool USFRoomSystem::AddActorToRoom(FGameplayTag RoomTag, FSFRoomActorStruct ActorStruct)
@@ -100,6 +148,8 @@ bool USFRoomSystem::AddActorToRoom(FGameplayTag RoomTag, FSFRoomActorStruct Acto
 			Rooms.Remove(RoomData);
 			Rooms.AddUnique(RoomData);
 
+			TryCompleteRoomStage(RoomTag);
+			
 			if (IsRoomStageCompleted(RoomTag, RoomData.CurrentStageIndex))
 			{
 				OnRoomStageFinished.Broadcast(RoomTag);

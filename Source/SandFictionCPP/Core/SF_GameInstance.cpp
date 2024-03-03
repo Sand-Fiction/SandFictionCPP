@@ -4,6 +4,7 @@
 #include "SF_GameInstance.h"
 
 #include "FlowSubsystem.h"
+#include "IContentBrowserSingleton.h"
 #include "SF_SaveGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "SandFictionCPP/Character/SF_Character_Main.h"
@@ -78,7 +79,7 @@ void USF_GameInstance::SaveGame_Implementation()
 			}
 		}
 	}
-
+	FlowSubsystem->OnGameSaved(SaveGameObject);
 	UGameplayStatics::SaveGameToSlot(SaveGameObject, "SandFiction", 0);
 }
 

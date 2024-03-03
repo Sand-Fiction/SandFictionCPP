@@ -143,6 +143,9 @@ public:
 	bool IsRoomStageCompleted(FGameplayTag RoomTag, int32 StageIndex);
 
 	UFUNCTION(BlueprintCallable)
+	void TryCompleteRoomStage(FGameplayTag RoomTag);
+	
+	UFUNCTION(BlueprintCallable)
 	bool AddActorToRoom(FGameplayTag RoomTag, FSFRoomActorStruct ActorStruct);
 
 	UFUNCTION(BlueprintCallable)

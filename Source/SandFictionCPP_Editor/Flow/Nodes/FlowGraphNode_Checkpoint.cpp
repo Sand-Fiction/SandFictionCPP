@@ -19,13 +19,13 @@ UFlowGraphNode_Checkpoint::UFlowGraphNode_Checkpoint(const FObjectInitializer& O
 void UFlowGraphNode_Checkpoint::ExecuteInput(const FName& PinName)
 {
 	// Save Flow Data
-	if (GetFlowSubsystem())
-	{
-		UFlowSaveGame* NewSaveGame = Cast<UFlowSaveGame>(UGameplayStatics::CreateSaveGameObject(UFlowSaveGame::StaticClass()));
-		GetFlowSubsystem()->OnGameSaved(NewSaveGame);
-
-		UGameplayStatics::SaveGameToSlot(NewSaveGame, NewSaveGame->SaveSlotName, 0);
-	}
+	// if (GetFlowSubsystem())
+	// {
+	// 	UFlowSaveGame* NewSaveGame = Cast<UFlowSaveGame>(UGameplayStatics::CreateSaveGameObject(UFlowSaveGame::StaticClass()));
+	// 	GetFlowSubsystem()->OnGameSaved(NewSaveGame);
+	//
+	// 	UGameplayStatics::SaveGameToSlot(NewSaveGame, NewSaveGame->SaveSlotName, 0);
+	// }
 
 	// Save SandFiction Data
 	if (GetWorld())

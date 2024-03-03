@@ -37,6 +37,11 @@ void ASF_GameMode::TravelToMap(FString MapName)
 
 void ASF_GameMode::ReturnToSpaceship()
 {
+	if (const auto GameInstance = Cast<USF_GameInstance>(UGameplayStatics::GetGameInstance(this)))
+	{
+		GameInstance->SaveGame();
+	}
+	
 	NextLevelName = "/Game/Maps/Spaceship/Map_Spaceship";
 	StartLoadingScreenFadeDelay();
 }

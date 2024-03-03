@@ -23,6 +23,7 @@ void USF_GameInstance::SaveGame_Implementation()
 	if (!SaveGameObject)
 	{
 		SaveGameObject = Cast<USF_SaveGame>(UGameplayStatics::CreateSaveGameObject(USF_SaveGame::StaticClass()));
+		SaveGameObject->SaveData = {};
 	}
 
 	// Gather RoomData
@@ -140,6 +141,11 @@ void USF_GameInstance::DeleteGame_Implementation()
 bool USF_GameInstance::DoesSaveGameExist()
 {
 	return UGameplayStatics::DoesSaveGameExist("SandFiction", 0);
+}
+
+bool USF_GameInstance::IsSaveGameLoaded() const
+{
+	return SaveGameObject != nullptr;
 }
 
 USF_SaveGame* USF_GameInstance::GetSaveGameObject() const

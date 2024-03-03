@@ -97,7 +97,7 @@ void USF_NPCManager::SpawnNPC(FNPCData NPCData, const FGameplayTag WorldTag) con
 			// Check if there is a saved Dialogue for this NPC
 			if (const auto GameInstance = Cast<USF_GameInstance>(GetGameInstance()))
 			{
-				if (GameInstance->DoesSaveGameExist())
+				if (GameInstance->IsSaveGameLoaded())
 				{
 					if (GameInstance->GetSaveGameObject()->SaveData.DialogueTags.Contains(NPCData.GameplayTag))
 					{

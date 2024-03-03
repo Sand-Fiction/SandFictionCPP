@@ -31,6 +31,9 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static bool DoesSaveGameExist();
+	
+	UFUNCTION(BlueprintPure)
+	bool IsSaveGameLoaded() const;
 
 	UFUNCTION(BlueprintPure)
 	USF_SaveGame* GetSaveGameObject() const;

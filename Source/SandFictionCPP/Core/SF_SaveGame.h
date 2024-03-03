@@ -48,6 +48,10 @@ struct FSFSaveData
 	UPROPERTY(BlueprintReadOnly)
 	TMap<FGameplayTag, FGameplayTag> DialogueTags; // NPCTag / DialogueTag
 
+	FSFSaveData()
+	{
+		
+	}
 };
 
 

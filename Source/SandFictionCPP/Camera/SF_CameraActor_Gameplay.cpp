@@ -25,7 +25,7 @@ ASF_CameraActor_Gameplay::ASF_CameraActor_Gameplay()
 	// Defaults for SpringArmLength;
 	MinSpringArmLength = 200.0f;
 	MaxSpringArmLength = 1000.0f;
-	CurrentSpringArmLength = 800.0f;
+	CurrentSpringArmLength = 500.0f;
 	SpringArmComponent->TargetArmLength = CurrentSpringArmLength;
 	SpringArmZoomTarget = CurrentSpringArmLength;
 

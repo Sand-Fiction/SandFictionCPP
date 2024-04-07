@@ -79,7 +79,12 @@ void USF_GameInstance::SaveGame_Implementation()
 			}
 		}
 	}
-	FlowSubsystem->OnGameSaved(SaveGameObject);
+
+	// Save FlowData
+	if (FlowSubsystem)
+	{
+		FlowSubsystem->OnGameSaved(SaveGameObject);
+	}
 	UGameplayStatics::SaveGameToSlot(SaveGameObject, "SandFiction", 0);
 }
 
@@ -131,6 +136,12 @@ void USF_GameInstance::LoadGame_Implementation()
 	if (const auto NPCManager = GetSubsystem<USF_NPCManager>())
 	{
 		NPCManager->NPCWorldStates = SaveGameObject->SaveData.NPCWorldStates;
+	}
+
+	// Apply Flow Data
+	if (const auto FlowSystem = GetSubsystem<UFlowSubsystem>())
+	{
+		FlowSystem->OnGameLoaded(SaveGameObject);
 	}
 }
 

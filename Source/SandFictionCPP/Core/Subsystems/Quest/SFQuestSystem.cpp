@@ -87,7 +87,7 @@ bool USFQuestSystem::CanCompleteQuest(const FGameplayTag QuestTag) const
 	FSFQuestStruct QuestData;
 	if (GetQuestDataByTag(QuestTag, QuestData))
 	{
-		return RoomSystem->IsRoomStageCompleted(QuestData.RoomIdentifier, QuestData.RoomStageTargetIndex);
+ 		return RoomSystem->IsRoomStageCompleted(QuestData.RoomIdentifier, QuestData.RoomStageTargetIndex);
 	}
 
 	return false;
